@@ -1,0 +1,128 @@
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = true;
+  IGNORE_CASE = false;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+  
+  MULTI = true;
+  NODE_CLASS = "AstNode";
+  NODE_PREFIX = "Ast";
+  NODE_PACKAGE = "de.haukerehfeld.hlisp.parser";
+  VISITOR = true;
+  VISITOR_EXCEPTION = "de.haukerehfeld.hlisp.semantics.SemanticException";
+}
+
+PARSER_BEGIN(HLispParser)
+package de.haukerehfeld.hlisp.parser;
+
+public class HLispParser {}
+
+PARSER_END(HLispParser)
+
+SKIP: { " " | "\t"  | "\r" | "\n"}
+
+TOKEN:
+{
+  <DEFINE: "define" >
+
+  | < IDENTIFIER: (["-", "_", "=", ":", "<", ">", "[", "]", "+", "*", "/", "\\",
+                   "A"-"Z", "a"-"z"])+ >
+
+  | < BRACKETOPEN: "(" >
+  | < BRACKETCLOSED: ")" >
+  | < DONTEVAL: "'" > 
+
+  | < INTEGER: ( <DECIMAL> )+ >
+
+  | <STRING: "\"" (~["\""])* "\"" >
+
+  | < FLOAT: <FLOATED> | ("-")? (<DECIMAL>)+ (<FLOATED>)? >
+  | < #FLOATED: "." (<DECIMAL>)+ >
+
+  | < DECIMAL: ["0"-"9"] >
+}
+
+/** Main production. */
+AstRoot Start() #Root: {}
+{
+  Expression()
+  { return jjtThis; }
+}
+ 
+void Expression() #void:
+{}
+{
+    DontEval() 
+  | LOOKAHEAD(4) Define() 
+  | LOOKAHEAD(4) Instantiate()
+  | Literal()
+  | Identifier() 
+  | List() #List
+
+}
+
+
+void DontEval() : {} { <DONTEVAL> List() #List }
+
+void Identifier() : { Token t; } { t=<IDENTIFIER> { jjtThis.setName(t.image); }
+}
+
+void Define() : {} { 
+  //define name ((Type name) (param list)) (<function body>)
+  ListStart()
+    <DEFINE> 
+    Identifier() 
+    ParameterList()
+    Body()
+  ListEnd()
+}
+
+void ParameterList() #List: {} {
+  ListStart()
+    (
+      ParameterPair()
+    )*
+  ListEnd()
+}
+
+void ParameterPair() #List: {} {
+   ListStart()
+      Identifier()
+      Identifier() 
+    ListEnd()
+}
+
+void Body(): {} {
+    List()
+}
+
+void Instantiate(): {} { 
+  //define Type name (list or value or Type)
+  ListStart() <DEFINE> Identifier() Identifier() Expression() ListEnd()
+}
+
+void Literal() #void: {} { Float() | String() | Integer() }
+
+void Float(): { Token t; }{ t=<FLOAT> { jjtThis.parse(t.image); }}
+void String(): { Token t; } { t=<STRING> { jjtThis.parse(t.image); }}
+void Integer(): { Token t; } { t=<INTEGER> { jjtThis.parse(t.image); }}
+
+void ListStart() #void: {} { <BRACKETOPEN> }
+void ListEnd() #void: {} { <BRACKETCLOSED> }
+/**
+ * A general List, doesn't create node, create  it yourself
+ */
+void List() #void: {} { ListStart() ( Expression() )*  ListEnd() }

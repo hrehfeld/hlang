@@ -1,0 +1,30 @@
+(define MyNamespace () (
+  (define HelloWorldClass () (
+    (define Int count 5)
+
+    (define run () (
+      (println out ("Hello World!" + count toString))
+    ))
+  ))
+  (define main ((Int param)) (
+    (define Int i 0)
+    (define List list ())
+    (while '(i < param) (
+      (println out "iteration")
+      (i ++)
+    ))
+    void
+  ))
+  (define + ((String lhs) (String rhs)) (
+    (lhs concat rhs)
+  ))
+  (define Int ((Int v)) (
+    (define ++ () ())
+    (define < ((Int other)) ())
+  ))
+  (define println ((PrintStream out) (String s)) (
+    (print out (+ s "\n"))
+    void
+  ))
+  (main 5)
+))
