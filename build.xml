@@ -1,0 +1,46 @@
+<project name="hlisp" default="compile" basedir=".">
+
+  <property name="javacc.home" value="javacc-5.0/"/>
+
+  <target name="clean">
+        <delete includeemptydirs="true">
+		  <fileset dir="bin" includes="**/*.class" />
+		  <fileset dir="tmp" includes="**/*" />
+		</delete>
+  </target>
+
+
+  <target name="compile" description="Build compiler">
+    <mkdir dir="tmp"/> 
+
+    <copy todir="tmp">
+		  <fileset dir="src" includes="**/*.java" />
+    </copy>
+
+    <copy file="src/HLisp.jjt" todir="tmp"/>
+    <property name="outputdir"
+              value="tmp/de/haukerehfeld/hlisp/parser" />
+    <mkdir dir="${outputdir}" />
+    <jjtree target="src/HLisp.jjt"
+            outputdirectory="${outputdir}"
+            javacchome="${javacc.home}"/>
+
+    <javacc target="${outputdir}/HLisp.jj" 
+            outputdirectory="${outputdir}" 
+            javacchome="${javacc.home}"/>
+
+    <mkdir dir="bin"/> 
+    <javac deprecation="false" srcdir="tmp" destdir="bin" debug="true"/>
+  </target>
+
+  <target name="run" description="run compiler" depends="compile">
+	<java fork="true" classname="de.haukerehfeld.hlisp.Lisp" dir="bin">
+	  <!--<jvmarg value="-Djava.library.path=${quakeinjector.library.path}" />-->
+	  <jvmarg value="-Xshare:off" />
+	  <jvmarg value="-ea" />
+      <arg value="../bla.hlisp" />
+	  <!--<classpath refid="quakeinjector.class.path"/>-->
+	</java>   
+    <javac srcdir="tmp" destdir="bin" classpath="bin"/>
+  </target>
+</project>
