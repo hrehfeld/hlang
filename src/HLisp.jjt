@@ -15,7 +15,7 @@ options {
   BUILD_PARSER = true;
   BUILD_TOKEN_MANAGER = true;
   SANITY_CHECK = true;
-  FORCE_LA_CHECK = false;
+  FORCE_LA_CHECK = true;
   
   MULTI = true;
   NODE_CLASS = "AstNode";
@@ -58,7 +58,7 @@ TOKEN:
 /** Main production. */
 AstRoot Start() #Root: {}
 {
-  Expression()
+  ( (Expression())+ <EOF>)
   { return jjtThis; }
 }
  

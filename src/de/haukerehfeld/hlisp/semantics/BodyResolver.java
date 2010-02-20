@@ -1,21 +1,26 @@
 package de.haukerehfeld.hlisp.semantics;
 
 import de.haukerehfeld.hlisp.parser.*;
+import java.util.*;
 
 
 /**
  * Walk through the types und resolve bodies
  */
 public class BodyResolver {
-	public void resolve(Type type) {
+	
+	public void resolve(Type type) throws SemanticException {
+		Body b = type.getBody();
+		if (!(b instanceof UnresolvedBody)) {
+			return;
+		}
+		UnresolvedBody body = (UnresolvedBody) b;
+		parseBody(body.getBodyNode(), type);
 	}
 
-	private Body parseBody(AstBody body, Object data, Type currentScope) throws SemanticException {
+	private Body parseBody(AstBody body, Type currentScope) throws SemanticException {
 		for (Node n: body) {
-			if (n instanceof AstDefine) {
-				//ignore
-			}
-			else if (n instanceof AstInstantiate) {
+			if (n instanceof AstInstantiate) {
 				parseInstantiate((AstInstantiate) n, currentScope);
 			}
 			else if (n instanceof AstList) {
@@ -43,15 +48,20 @@ public class BodyResolver {
 		                                "(Name-)%s expected, %s given.")
 		    .getName();
 
-		
+
+		Instance inst = null;
 		if (children.hasNext()) {
-			
+			inst = parseValue(children.next(), currentScope);
 		}
 		
 		ResolvedBody body = new ResolvedBody();
-		body.add(new Variable(type, name));
+		body.add(new Variable(type, name, inst));
 	}
 
 	public void parseBodyLine(AstList line, Type currentScope) {
+	}
+
+	public <T extends Type> Instance<T> parseValue(Node v, Type scope) {
+		return null;
 	}
 }

@@ -2,7 +2,7 @@ package de.haukerehfeld.hlisp.semantics;
 
 import java.util.*;
 
-public class Variable<T> {
+public class Variable<T extends Type> {
 	private final T type;
 	private final String name;
 	private final Instance<T> value;

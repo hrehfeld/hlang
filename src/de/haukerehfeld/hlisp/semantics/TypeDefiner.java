@@ -26,8 +26,11 @@ public class TypeDefiner implements HLispParserVisitor {
 		structs.offerLast(defined);
 
 		UnresolvedBody body = (UnresolvedBody) defined.getBody();
-
-		parseBody(body.getBodyNode(), data, defined);
+		for (Node n: body.getBodyNode()) {
+			if (n instanceof AstDefine) {
+				visit((AstDefine) n, data);
+			}
+		}
 		
 		structs.pollLast();
 

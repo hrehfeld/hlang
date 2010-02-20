@@ -14,4 +14,6 @@ public class VoidType extends HashType {
 	@Override public String emit(de.haukerehfeld.hlisp.JavaEmitter emitter) {
 		return emitter.emit(this);
 	}
+
+	@Override public Type getReturnType() { return this; }
 }

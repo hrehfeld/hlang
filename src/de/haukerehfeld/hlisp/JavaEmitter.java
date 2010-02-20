@@ -22,13 +22,14 @@ public class JavaEmitter {
 		}};
 	private final static List<String> reserved = new ArrayList<String>() {{
 			add("while");
+			add("Void");
 		}};
 	
 	private int indent = 0;
 	IndentStringBuilder r = new IndentStringBuilder();
 	
 	public String emit(Type s) {
-		emitClassStart(s, true);
+		emitClassStart(s);
 		indent++;
 
 		emitConstructor(s);
@@ -47,14 +48,14 @@ public class JavaEmitter {
 		r.append("import java.io.*;", true);		
 		r.append("", true);		
 		
-		emitClassStart(root, false);
+		emitClassStart(root);
 		indent++;
 
 		emitConstructor(root);
 		emitAction(root);
 		r.append("public static void main(String[] args) {", true);
 		indent++;
-		r.append("new Root(args)._hlisp_run();", true);
+		r.append("new Root(args)." + prefix + "_run();", true);
 		indent--;
 		r.append("}", true);		
 		emitMembers(root);
@@ -69,17 +70,22 @@ public class JavaEmitter {
 	}
 
 	
-	private void emitClassStart(Type s, boolean inner) {
+	private void emitClassStart(Type s) {
+		r.append("/**", true);
+		r.append(" * Type " + s.getName(), true);
+		r.append(" */", true);
 		String className = getClassName(s);
 
 		r.append("public ");
-		if (inner) {
+		if (!(s instanceof RootType)) {
 			r.append("static ");
 		}
 		r.append("class " + className);
-		r.append(" implements Function<");
-		r.append(s.getReturnType().getName());
-		r.append(">");
+		if (!(s instanceof RootType)) {
+			r.append(" implements Function<");
+			r.append(getClassName(s.getReturnType()));
+			r.append(">");
+		}
 		r.append(" {", true);
 	}
 
@@ -110,7 +116,11 @@ public class JavaEmitter {
 	}
 
 	private void emitAction(Type s) {
-		r.append("@Override public Void _hlisp_run() {", true);
+		if (!(s instanceof RootType)) {
+			r.append("@Override ");
+		}
+		r.append("public " + getClassName(s.getReturnType())
+		         + " " + prefix + "_run() {", true);
 		indent++;
 		r.append("/* <body here>; */", true);
 		r.append("return null;", true);
@@ -121,7 +131,7 @@ public class JavaEmitter {
 
 	private void emitMembers(Type s) {
 		for (Type member: s.getDefinedTypes()) {
-			String name = escapeIdentifier(member.getName());
+			String name = getClassName(member);
 			String parameters = Utils.join(getParameterStrings(member, " "), ", ");
 			r.append("public " + name + " " + name + "(" + parameters + ") {", true);
 			indent++;
