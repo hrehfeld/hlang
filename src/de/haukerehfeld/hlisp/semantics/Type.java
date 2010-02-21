@@ -22,11 +22,6 @@ public interface Type {
 	public Type getParent();
 
 	/**
-	 * get name
-	 */
-	public String getName();
-    
-	/**
 	 * get parameters
 	 */
 	public List<Parameter> getParameters();
@@ -40,4 +35,8 @@ public interface Type {
 	 */
 	public String emit(JavaEmitter e);
 
+	/**
+	 * get name
+	 */
+	public String getName();
 }

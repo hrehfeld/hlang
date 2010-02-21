@@ -7,6 +7,7 @@ import de.haukerehfeld.hlisp.parser.*;
 import de.haukerehfeld.hlisp.semantics.RootType;
 import de.haukerehfeld.hlisp.semantics.TypeDefiner;
 import de.haukerehfeld.hlisp.semantics.BodyResolver;
+import de.haukerehfeld.hlisp.semantics.TypeResolver;
 
 public class Lisp {
 	public static void main(String[] args) throws Exception {
@@ -34,6 +35,9 @@ public class Lisp {
 			TypeDefiner definer = new TypeDefiner(rootType);
 			rootnode.jjtAccept(definer, null);
 		}
+
+		TypeResolver s = new TypeResolver();
+		s.solve((RootType) rootType);
 
 		new BodyResolver().resolve(rootType);
 

@@ -2,15 +2,15 @@ package de.haukerehfeld.hlisp.semantics;
 
 import java.util.*;
 
-public class Instance<T extends Type> {
-	private final T value;
+public class Instance implements Value {
+	private final Object value;
 	
-	public Instance(T value) {
+	public Instance(Object value) {
 		this.value = value;
 	}
 
 	/**
 	 * get value
 	 */
-	public T getValue() { return value; }
+	public Object getValue() { return value; }
 }

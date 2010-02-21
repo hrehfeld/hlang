@@ -33,6 +33,10 @@ import java.util.List;
 
 import java.util.zip.CRC32;
 
+import java.io.*;
+
+import java.util.Scanner;
+
 public class Utils {
 	public static final int BUFFERSIZE = 4096;
 
@@ -123,5 +127,21 @@ public class Utils {
 		public void write(int b) {}
 		public void write(byte[] b) {}
 		public void write(byte[] b, int off, int len) {}
+	}
+
+	public static List<String> getLines(File f) throws FileNotFoundException {
+		List<String> lines = new ArrayList<String>();
+		Scanner scanner = new Scanner(f);
+		try {
+//first use a Scanner to get each line
+			while (scanner.hasNextLine()){
+				lines.add(scanner.nextLine());
+			}
+		}
+		finally {
+//ensure the underlying stream is always closed
+			scanner.close();
+		}
+		return lines;
 	}
 }

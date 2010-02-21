@@ -41,4 +41,10 @@ class PrintAstVisitor implements HLispParserVisitor {
 	public Object visit(AstString node, Object data) { visit((SimpleNode) node, data); return null;}
 	public Object visit(AstInteger node, Object data) { visit((SimpleNode) node, data); return null;}
 	public Object visit(AstList node, Object data) { visit((SimpleNode) node, data); return null;}
+	@Override public Object visit(AstParameterList node, Object data) throws SemanticException {
+		visit((SimpleNode) node, data); return null;
+	}
+	@Override public Object visit(AstReturnType node, Object data) throws SemanticException {
+		visit((SimpleNode) node, data); return null;
+	}
 }

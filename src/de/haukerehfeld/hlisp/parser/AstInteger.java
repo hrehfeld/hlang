@@ -1,6 +1,6 @@
 package de.haukerehfeld.hlisp.parser;
 
-public class AstInteger extends AstNode {
+public class AstInteger extends AstNode implements AstValue<Integer> {
 	public AstInteger(int id) {
 		super(id);
 	}

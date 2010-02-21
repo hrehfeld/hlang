@@ -25,10 +25,14 @@ public class TypeDefiner implements HLispParserVisitor {
 
 		structs.offerLast(defined);
 
-		UnresolvedBody body = (UnresolvedBody) defined.getBody();
-		for (Node n: body.getBodyNode()) {
-			if (n instanceof AstDefine) {
-				visit((AstDefine) n, data);
+		AstBody body = ((UnresolvedBody) defined.getBody()).getBodyNode();
+		Iterator<AstNode> it = body.iterator();
+		AstNode b;
+		if (it.hasNext() && (b = it.next()) instanceof AstList) {
+			for (AstNode n: b) {
+				if (n instanceof AstDefine) {
+					visit((AstDefine) n, data);
+				}
 			}
 		}
 		
@@ -37,14 +41,14 @@ public class TypeDefiner implements HLispParserVisitor {
 		return null;
 	}
 
-	private List<Parameter> getParameters(Node node) throws SemanticException {
-		AstList parameterNode = SemanticsUtils.castNode(node, AstList.class,
+	private List<Parameter> getParameters(AstNode node) throws SemanticException {
+		AstParameterList parameterNode = SemanticsUtils.castNode(node, AstParameterList.class,
 		                                  "start of parameterlist expected to be %1$s,"
 		                                  + " but %2$s given!");
 		
 		List<Parameter> parameters = new ArrayList<Parameter>(parameterNode.jjtGetNumChildren());
-		for (Node parameter: parameterNode) {
-			Iterator<Node> pair = SemanticsUtils.castNode(parameter,
+		for (AstNode parameter: parameterNode) {
+			Iterator<AstNode> pair = SemanticsUtils.castNode(parameter,
 			                                AstList.class,
 			                                "parameter needs to be a %1$s, but %2$s given!")
 			    .iterator();
@@ -76,8 +80,7 @@ public class TypeDefiner implements HLispParserVisitor {
 	 * @return function body list
 	 */
 	public Type read(AstDefine node, Type currentScope) throws SemanticException {
-		
-		Iterator<Node> children = node.iterator();
+		Iterator<AstNode> children = node.iterator();
 		
 		String identifier = SemanticsUtils.castNode(children.next(), AstIdentifier.class,
 			                        "(Type-)%s expected, but %s given!")
@@ -89,25 +92,73 @@ public class TypeDefiner implements HLispParserVisitor {
 
 		List<Parameter> parameters = getParameters(children.next());
 
+		AstReturnType returnNode = SemanticsUtils.castNode(children.next(),
+		                                                   AstReturnType.class,
+		                                                   "(Returntype-)%s expected,"
+		                                                   + " but %s given!");
+		
+		
+		
+		Type returnType = parseReturnType(returnNode, currentScope, identifier);
+		
+		
 		System.out.println("Defining new Type " + identifier);
 
-		AstBody unresolvedBody = SemanticsUtils.castNode(children.next(), AstBody.class,
-		                                           "body (e.g. a %s) expected, but %2$s given!");
-		Type t = new HashType(currentScope,
-		                      identifier,
-		                      parameters,
+		AstBody unresolvedBody = SemanticsUtils.castNode(children.next(),
+		                                                 AstBody.class,
+		                                                 "(Body)%s expected, but %s given!");
+		
+		Type t = new FullType(currentScope,
 		                      new UnresolvedBody(unresolvedBody),
-		                      new UnresolvedType("Void"));
+		                      returnType,
+		                      parameters,
+		                      identifier
+		    );
 		return t;
 	}
-	
+
+	private Type parseReturnType(final AstReturnType r, final Type scope, final String identifier)
+		throws SemanticException {
+		if (r.isEmpty()) {
+			throw new RuntimeException("no type inference yet!");
+		}
+		else {
+			String returnTypeName;
+			AstNode n = (AstNode) r.jjtGetChild(0);
+			if (n instanceof AstIdentifier) {
+				returnTypeName = SemanticsUtils.castNode(n, AstIdentifier.class,
+				                                                "(Returntype-)%s expected,"
+				                                                + " but %s given!")
+				    .getName();
+				if (returnTypeName.equals("=")) {
+					returnTypeName = identifier;
+				}
+			}
+			else if (n instanceof AstList) {
+				returnTypeName = "";
+				for (AstNode c: n) {
+					
+					returnTypeName += SemanticsUtils.castNode(c, AstIdentifier.class,
+					                                          "(partial Returntype-)%s expected,"
+					                                          + " but %s given!")
+					    .getName();
+				}
+			}
+			else {
+				throw new SemanticException("ReturnType expected!");
+			}
+			return new UnresolvedType(returnTypeName);
+		}
+	}
+
+
 	public Object visit(AstBody body, Object data) throws SemanticException {
 		throw new RuntimeException("Should never happen!");
 	}
 
 	
 	public Object visit(AstRoot node, Object data) throws SemanticException {
-		for (Node n: node) {
+		for (AstNode n: node) {
 			n.jjtAccept(this, data);
 		}
 
@@ -149,10 +200,17 @@ public class TypeDefiner implements HLispParserVisitor {
 
 	public Object visit(AstList node, Object data) throws SemanticException {
 		System.out.println("List: " + node.jjtGetNumChildren());
-		for (Node n: node) {
+		for (AstNode n: node) {
 			n.jjtAccept(this, data);
 		}
 
 		return null;
 	}
+	@Override public Object visit(AstParameterList node, Object data) throws SemanticException {
+		throw new RuntimeException("Parameterlist should never be visited!");
+	}
+	@Override public Object visit(AstReturnType node, Object data) throws SemanticException {
+		throw new RuntimeException("Returntype should never be visited!");
+	}
+
 }

@@ -1,6 +1,6 @@
 package de.haukerehfeld.hlisp.parser;
 
-public class AstFloat extends AstNode {
+public class AstFloat extends AstNode implements AstValue<Float> {
 	public AstFloat(int id) {
 		super(id);
 	}

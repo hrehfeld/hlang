@@ -68,13 +68,13 @@ public class Root {
 	private class main implements Function<Void> {
 		private final Int param;
 
-		Int i = new Int(0);
 
 		public main(Int param) {
 			this.param = param;
 		}
 		
 		@Override public Void _hlisp_run() {
+			Int i = new Int(0);
 			new _hlisp_reserved_while(i._hlisp_escape_smallerthan(param),
 			                          new Function<Void>() {
 			                              public Void _hlisp_run() {

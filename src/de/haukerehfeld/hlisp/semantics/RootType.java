@@ -3,26 +3,43 @@ package de.haukerehfeld.hlisp.semantics;
 import java.util.*;
 
 
-public class RootType extends HashType {
+public class RootType extends ParametricType implements Type {
 	public RootType() {
 		super(null,
-		      "Root", new ArrayList<Parameter>() {{
-		            add(new Parameter(new UnresolvedType("String[]"), "args"));
-		        }},
 		      new ResolvedBody(),
-		    new UnresolvedType("Void"));
+		      new UnresolvedType("Void"),
+		      new ArrayList<Parameter>() {{
+		              add(new Parameter(new UnresolvedType("List"), "args"));
+		          }}
+		    );
 
-		VoidType voidType = new VoidType(this);
+		final AbstractNativeType objectType = new AbstractNativeType(this, null, "Object", "Object");
+		objectType.setReturnType(objectType);
+
+		final VoidType voidType = new VoidType(this);
 		defineType(voidType);
 
-		defineType(new HashType(this, "List",
-		                        new ArrayList<Parameter>() {{
-		                            }},
+		final StringNativeType stringType = new StringNativeType(this);
+		defineType(stringType);
+
+		final ListNativeType listType = new ListNativeType(this);
+		defineType(listType);
+
+
+		defineType(new FullType(this,
 		                        new ResolvedBody(),
-		                        voidType));
+		                        voidType,
+		                        new ArrayList<Parameter>() {{
+		                                add(new Parameter(stringType, "value"));
+		                            }},
+		                        "String"
+		               ));
 		                        
+		setReturnType(voidType);
 		                        
 	}
+
+	@Override public String getName() { return "Root"; }
 	
 	@Override public String emit(de.haukerehfeld.hlisp.JavaEmitter emitter) {
 		return emitter.emit(this);

@@ -1,6 +1,8 @@
 package de.haukerehfeld.hlisp;
 
 import java.util.*;
+import java.io.*;
+
 
 import de.haukerehfeld.hlisp.semantics.*;
 
@@ -10,6 +12,7 @@ public class JavaEmitter {
 	private final static String prefix = "_hlisp";
 	private final static String escapePrefix = "_escape";
 	private final static String reservedPrefix = "_reserved";
+	private final static String nativePrefix = "_native";
 	
 	private final static HashMap<String, String> illegal = new HashMap<String, String>() {{
 			put("+", "plus");
@@ -23,11 +26,13 @@ public class JavaEmitter {
 	private final static List<String> reserved = new ArrayList<String>() {{
 			add("while");
 			add("Void");
+			add("void");
+			add("String");
 		}};
-	
+
 	private int indent = 0;
 	IndentStringBuilder r = new IndentStringBuilder();
-	
+
 	public String emit(Type s) {
 		emitClassStart(s);
 		indent++;
@@ -42,31 +47,69 @@ public class JavaEmitter {
 	}
 
 	public String emit(RootType root) {
-		r.append("package de.haukerehfeld.hlisp;", true);
+		try {
+			r.append("package de.haukerehfeld.hlisp;", true);
 
-		r.append("import de.haukerehfeld.hlisp.java.*;", true);		
-		r.append("import java.io.*;", true);		
-		r.append("", true);		
-		
-		emitClassStart(root);
-		indent++;
+			r.append("import de.haukerehfeld.hlisp.java.*;", true);		
+			r.append("import java.io.*;", true);		
+			r.append("", true);		
+			
+			emitClassStart(root);
+			indent++;
 
-		emitConstructor(root);
-		emitAction(root);
-		r.append("public static void main(String[] args) {", true);
-		indent++;
-		r.append("new Root(args)." + prefix + "_run();", true);
-		indent--;
-		r.append("}", true);		
-		emitMembers(root);
+			emitConstructor(root);
+			emitAction(root);
 
-		indent--;
-		emitClassEnd(root);
-		return r.toString();
+			List<String> rootDefs = null;
+			File f = new File("../native/java/Root.java");
+			try {
+				rootDefs = Utils.getLines(f);
+			}
+			catch (FileNotFoundException e) {
+				System.err.println("Couldn't load RootType Definitions from " + f);
+			}
+
+			
+			for (String line: rootDefs) {
+				r.append(line, true);
+			}
+			emitMembers(root);
+
+			indent--;
+			emitClassEnd(root);
+			return r.toString();
+		}
+		catch (RuntimeException e) {
+			System.out.println(r.toString() + "\n------------------------");
+			throw e;
+		}
 	}
 
-	private String getClassName(Type s) {
+	private String getNativeName(NativeType s) {
+		return prefix + nativePrefix + "_" + s.getNativeName();
+	}
+
+	private String getName(Type s) {
+		if (s instanceof NativeType) {
+			return getNativeName((NativeType) s);
+		}
 		return escapeIdentifier(s.getName());
+	}
+	
+	private String getFullName(Type s) {
+		if (s instanceof NativeType) {
+			return getNativeName((NativeType) s);
+		}
+
+		List<String> name = new ArrayList<String>();
+
+		Type parent = s;
+		while (parent != null) {
+			name.add(escapeIdentifier(parent.getName()));
+			parent = parent.getParent();
+		}
+		Collections.reverse(name);
+		return Utils.join(name, ".");
 	}
 
 	
@@ -74,7 +117,7 @@ public class JavaEmitter {
 		r.append("/**", true);
 		r.append(" * Type " + s.getName(), true);
 		r.append(" */", true);
-		String className = getClassName(s);
+		String className = getName(s);
 
 		r.append("public ");
 		if (!(s instanceof RootType)) {
@@ -83,7 +126,7 @@ public class JavaEmitter {
 		r.append("class " + className);
 		if (!(s instanceof RootType)) {
 			r.append(" implements Function<");
-			r.append(getClassName(s.getReturnType()));
+			r.append(getFullName(s.getReturnType()));
 			r.append(">");
 		}
 		r.append(" {", true);
@@ -101,7 +144,7 @@ public class JavaEmitter {
 			}
 			r.append("", true);
 
-			r.append("public " + getClassName(s) + "(");
+			r.append("public " + getName(s) + "(");
 			r.append(Utils.join(getParameterStrings(s, " "), ", "));
 			r.append(")");
 			r.append(" {", true);
@@ -119,7 +162,7 @@ public class JavaEmitter {
 		if (!(s instanceof RootType)) {
 			r.append("@Override ");
 		}
-		r.append("public " + getClassName(s.getReturnType())
+		r.append("public " + getFullName(s.getReturnType())
 		         + " " + prefix + "_run() {", true);
 		indent++;
 		r.append("/* <body here>; */", true);
@@ -131,7 +174,7 @@ public class JavaEmitter {
 
 	private void emitMembers(Type s) {
 		for (Type member: s.getDefinedTypes()) {
-			String name = getClassName(member);
+			String name = getName(member);
 			String parameters = Utils.join(getParameterStrings(member, " "), ", ");
 			r.append("public " + name + " " + name + "(" + parameters + ") {", true);
 			indent++;
@@ -208,7 +251,7 @@ public class JavaEmitter {
 	public List<String> getParameterTypeNames(Type t) {
 		List<String> names = new ArrayList<String>();
 		for (Parameter p: t.getParameters()) {
-			names.add(p.getType().getName());
+			names.add(getFullName(p.getType()));
 		}
 		return names;
 	}
@@ -216,7 +259,7 @@ public class JavaEmitter {
 	public List<String> getParameterStrings(Type t, String join) {
 		List<String> params = new ArrayList<String>();
 		for (Parameter p: t.getParameters()) {
-			params.add(p.getType().getName() + join + p.getName());
+			params.add(getFullName(p.getType()) + join + p.getName());
 		}
 		return params;
 	}

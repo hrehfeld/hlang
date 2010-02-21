@@ -37,6 +37,7 @@ SKIP: { " " | "\t"  | "\r" | "\n"}
 TOKEN:
 {
   <DEFINE: "define" >
+  | <INSTANTIATE: "make" >
 
   | < IDENTIFIER: (["-", "_", "=", ":", "<", ">", "[", "]", "+", "*", "/", "\\",
                    "A"-"Z", "a"-"z"])+ >
@@ -77,41 +78,37 @@ void Expression() #void:
 
 void DontEval() : {} { <DONTEVAL> List() #List }
 
-void Identifier() : { Token t; } { t=<IDENTIFIER> { jjtThis.setName(t.image); }
-}
+void Identifier() : { Token t; } { t=<IDENTIFIER> { jjtThis.setName(t.image); }}
 
 void Define() : {} { 
-  //define name ((Type name) (param list)) (<function body>)
   ListStart()
-    <DEFINE> 
-    Identifier() 
+    <DEFINE>
+    Identifier() //name
     ParameterList()
+    ReturnType()
     Body()
   ListEnd()
 }
 
-void ParameterList() #List: {} {
-  ListStart()
-    (
-      ParameterPair()
-    )*
-  ListEnd()
+void Type() #void: {} { Identifier() | ( ListStart() Identifier() (Identifier())+ ListEnd()) }
+
+void ParameterList(): {} {
+    [ ListStart() ( ParameterPair() )* ListEnd() ] 
 }
 
 void ParameterPair() #List: {} {
-   ListStart()
-      Identifier()
-      Identifier() 
-    ListEnd()
+   ListStart() Identifier() Identifier() ListEnd()
 }
 
+void ReturnType(): {} { Type() }
+
 void Body(): {} {
-    List()
+    Expression()
 }
 
 void Instantiate(): {} { 
-  //define Type name (list or value or Type)
-  ListStart() <DEFINE> Identifier() Identifier() Expression() ListEnd()
+  //make (Type) name (list or value or Type)
+  ListStart() <INSTANTIATE> (Identifier() | ListStart() (Identifier())+ ListEnd()) Identifier() Expression() ListEnd()
 }
 
 void Literal() #void: {} { Float() | String() | Integer() }
