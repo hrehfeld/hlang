@@ -1,67 +1,90 @@
-(define List (-> this) (->
-  (define list _{ java.util.ArrayList }_ (_{ new java.util.ArrayList(); }_))
+(define List (-> this)
+(->
+    (define list _{ java.util.ArrayList }_ (_{ new java.util.ArrayList(); }_))
 
-  (define += (_{ java.lang.Object}_ -> List) (element ->
+    (define += (_{ java.lang.Object}_ -> List)
+    (element ->
+        _{
+            list.add(element);
+            return this;
+        }_
+    ))
+
+    (define get (Int -> _{ java.lang.Object }_)
+    ( i ->
+         _{ return list.get(i.toInt()._hlisp_run()); }_
+    ))
+))
+
+
+(define while ((-> Boolean) (->) ->) 
+(condition body ->
     _{
-      list.add(element);
-      return this;
+        while (condition._hlisp_run()) {
+            body._hlisp_run();
+        }
     }_
-  ))
-  (define get (Int -> _{ java.lang.Object }_) ( i ->
-     _{ return list.get(i.toInt()._hlisp_run()); }_
-  ))
 ))
-(define while ((-> Boolean) (->) ->) (condition body ->
-  _{
-    while (condition._hlisp_run()) {
-      body._hlisp_run();
-    }
-  }_
-))
-(define Int (_{int}_ -> this) (value ->
-  (define + (Int -> Int) (other -> _{ return Int(value + other.value); }_))
-  (define * (Int -> Int) (other -> _{ return Int(value * other.value); }_))
-  (define ++ (->) (-> ( _{value++;}_)))
-  (define < (Int -> Boolean) (other -> 
-    _{return value < other;}_
-  ))
-  (define toInt (-> _{java.lang.Integer}_) (-> _{return value;}_))
-  (define toString (-> String) (-> _{return String(java.lang.String.valueOf(value));}_))
-  
-))
-(define String (_{java.lang.String}_ -> this) (value ->
-  (define + (String -> String) (other -> String _{ String(value + other.value); }_))
-  (define print (->) (-> _{ System.out.print(value); }_))
-  (define println (->) (-> (this + "\n") print))
-))
-(define MyNamespace (-> this) (->
-  (define HelloWorldClass (-> this) (->
-    (define count Int (5))
 
-    (define run (->) (->
-      (("Hello World!" + (count toString)) print)
-    ))
-    (define function (Int Int -> Int) (a b -> (a + b)) )
-  ))
-  (define main (Int ->) (param ->
-    (define i Int (0))
-    (define eval Int (5 + (i * 4)))
-    (define error (-> Int) (-> 0))
-    (define k List (()) )
 
-    (define list List ( List += "some" += "elements") )
-    (define evalFun (-> Int) (-> 5 + (i * 4)))
+(define Int (_{int}_ -> this) 
+(value ->
+    (define + (Int -> Int) (other -> _{ return Int(value + other.value); }_))
+    (define * (Int -> Int) (other -> _{ return Int(value * other.value); }_))
+    (define ++ (->) (-> ( _{value++;}_)))
+    (define < (Int -> Boolean) (other -> _{return value < other;}_ ))
+    (define toInt (-> _{java.lang.Integer}_) (-> _{return value;}_))
+    (define toString (-> String) (-> _{return String(java.lang.String.valueOf(value));}_))
     
-    (define helloClass HelloWorldClass ( () ))
-    (define helloFun (Int -> (HelloWorldClass function)) (a ->
-      (helloClass function (a 2))
+))
+
+(define String (_{java.lang.String}_ -> this) (value ->
+    (define + (String -> String) (other -> String _{ String(value + other.value); }_))
+    (define print (->) (-> _{ System.out.print(value); }_))
+    (define println (->) (-> (this + "\n") print))
+))
+
+(define MyNamespace (-> this) 
+(->
+
+    (define HelloWorldClass (-> this) 
+    (->
+        (define count Int (5))
+
+        (define run (->)  
+        (->
+            (("Hello World!" + (count toString)) print)
+        ))
+
+        (define function (Int Int -> Int) (a b -> (a + b)) )
     ))
 
-    (while ((-> Boolean) (-> i < param)) ((->) (->
-      ("iteration" println)
-      (i ++)
-    )))
-    ((Int Int -> Int) (a b -> a + b))
-  ))
+    (define main (Int ->) 
+    (param ->
+        (define i Int (0))
+        (define eval Int (5 + (i * 4)))
+        (define error (-> Int) (-> 0))
+        (define k List (()) )
+
+        (define list List ( List += "some" += "elements") )
+        (define evalFun (-> Int) (-> 5 + (i * 4)))
+        
+        (define helloClass HelloWorldClass ( () ))
+
+        (define helloFun (Int -> (HelloWorldClass function)) 
+        (a ->
+            (helloClass function (a 2))
+        ))
+
+        (while ((-> Boolean) (-> i < param)) 
+        ((->) 
+        (->
+            ("iteration" println)
+            (i ++)
+        )))
+
+        ((Int Int -> Int) (a b -> a + b))
+    ))
 ))
+
 (MyNamespace main 5)
