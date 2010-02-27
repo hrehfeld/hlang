@@ -42,5 +42,11 @@
 	  <!--<classpath refid="quakeinjector.class.path"/>-->
 	</java>   
     <javac srcdir="tmp" destdir="bin" classpath="bin"/>
+	<java fork="true" classname="de.haukerehfeld.hlisp.Root" dir="bin">
+	  <!--<jvmarg value="-Djava.library.path=${quakeinjector.library.path}" />-->
+	  <jvmarg value="-Xshare:off" />
+	  <jvmarg value="-ea" />
+	  <!--<classpath refid="quakeinjector.class.path"/>-->
+	</java>   
   </target>
 </project>

@@ -3,7 +3,7 @@ package de.haukerehfeld.hlisp.semantics;
 import java.util.*;
 
 
-public class RootType extends AnonymousType {
+public class Root extends LambdaFunction {
 	private final static String RUNBODY
 	= "Root.List argList = List();\n"
 	    + "\n"
@@ -13,15 +13,10 @@ public class RootType extends AnonymousType {
 	    + "}\n"
 	    + "return null;";
 	
-	public RootType() {
-		super(null,
-		      VoidType.create(),
-		      true,
-		      new ArrayList<Type>() {{
-		              add(new NativeType("java.lang.String[]"));
-		          }}
-		    );
-
-		defineType(VoidType.NAME, new VoidType(this));
+	public Root() {
+		super(new RootType(),
+		      null,
+		      new ArrayList<String>() {{ add("args"); }});
+		add(new NativeValue(this, VoidType.create(), RUNBODY));
 	}
 }

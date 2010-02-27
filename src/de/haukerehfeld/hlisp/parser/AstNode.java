@@ -3,6 +3,8 @@ package de.haukerehfeld.hlisp.parser;
 import java.util.Iterator;
 
 public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
+	public int beginLine, endLine, beginColumn, endColumn;
+
 	public AstNode(int i) {
 		super(i);
 	}
@@ -23,7 +25,7 @@ public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
 			public void remove() { throw new java.lang.UnsupportedOperationException(); }
 		}
 
-	@Override public abstract Object jjtAccept(HLispParserVisitor v, Object data) throws
+	@Override public abstract Object jjtAccept(HLispParserVisitor v, de.haukerehfeld.hlisp.semantics.Value data) throws
 	    de.haukerehfeld.hlisp.semantics.SemanticException;
 
 
@@ -33,5 +35,12 @@ public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
 
 	@Override public String toString() {
 		return getClass().getSimpleName();
+	}
+
+	public void setPosition(Token t) {
+		this.beginLine = t.beginLine;
+		this.endLine = t.endLine;
+		this.beginColumn = t.beginColumn;
+		this.endColumn = t.endColumn;
 	}
 }

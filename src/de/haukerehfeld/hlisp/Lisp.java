@@ -4,10 +4,8 @@ import java.util.*;
 import java.io.*;
 
 import de.haukerehfeld.hlisp.parser.*;
-import de.haukerehfeld.hlisp.semantics.RootType;
-import de.haukerehfeld.hlisp.semantics.TypeDefiner;
-import de.haukerehfeld.hlisp.semantics.BodyResolver;
-import de.haukerehfeld.hlisp.semantics.TypeResolver;
+import de.haukerehfeld.hlisp.semantics.*;
+
 
 public class Lisp {
 	public static void main(String[] args) throws Exception {
@@ -24,24 +22,23 @@ public class Lisp {
 		}
 
 		List<AstRoot> rootnodes = parse(sourcefiles);
-		RootType rootType = new RootType();
+		Root root = new Root();
 		
 
-		PrintAstVisitor printer = new PrintAstVisitor();
 		for (AstRoot rootnode: rootnodes) {
 			rootnode.dump("");
 			
 			System.out.println("Defining Types...");
-			TypeDefiner definer = new TypeDefiner(rootType);
-			rootnode.jjtAccept(definer, null);
+			TypeDefiner definer = new TypeDefiner(root);
+			rootnode.jjtAccept(definer, root);
 		}
 
-		TypeResolver s = new TypeResolver();
-		s.solve((RootType) rootType);
+		Resolver s = new Resolver();
+		s.solve(root);
 
-		new BodyResolver().resolve(rootType);
+		//new BodyResolver().resolve(rootType);
 
-		String output = rootType.emit(new JavaEmitter());
+		String output = new JavaEmitter().emit(root);
 		System.out.println(output);
 
 		File file = new File("../tmp/de/haukerehfeld/hlisp/Root.java");

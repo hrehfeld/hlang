@@ -1,0 +1,618 @@
+Buildfile: build.xml
+
+clean:
+
+compile:
+     [copy] Copying 40 files to V:\Programming\lisp\tmp
+     [copy] Copying 1 file to V:\Programming\lisp\tmp
+   [jjtree] Java Compiler Compiler Version 5.0 (Tree Builder)
+   [jjtree] (type "jjtree" with no arguments for help)
+   [jjtree] Reading from file V:\Programming\lisp\src\HLisp.jjt . . .
+   [jjtree] File "Node.java" does not exist.  Will create one.
+   [jjtree] File "SimpleNode.java" does not exist.  Will create one.
+   [jjtree] File "AstRoot.java" does not exist.  Will create one.
+   [jjtree] File "AstList.java" does not exist.  Will create one.
+   [jjtree] File "AstDontEval.java" does not exist.  Will create one.
+   [jjtree] File "AstDefine.java" does not exist.  Will create one.
+   [jjtree] File "AstParameterList.java" does not exist.  Will create one.
+   [jjtree] File "AstReturnType.java" does not exist.  Will create one.
+   [jjtree] File "AstBody.java" does not exist.  Will create one.
+   [jjtree] File "AstInstantiate.java" does not exist.  Will create one.
+   [jjtree] File "HLispParserTreeConstants.java" does not exist.  Will create one.
+   [jjtree] File "HLispParserVisitor.java" does not exist.  Will create one.
+   [jjtree] File "JJTHLispParserState.java" does not exist.  Will create one.
+   [jjtree] Annotated grammar generated successfully in V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\parser\HLisp.jj
+   [javacc] Java Compiler Compiler Version 5.0 (Parser Generator)
+   [javacc] (type "javacc" with no arguments for help)
+   [javacc] Reading from file V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\parser\HLisp.jj . . .
+   [javacc] Note: UNICODE_INPUT option is specified. Please make sure you create the parser/lexer using a Reader with the correct character encoding.
+   [javacc] File "TokenMgrError.java" does not exist.  Will create one.
+   [javacc] File "ParseException.java" does not exist.  Will create one.
+   [javacc] File "Token.java" does not exist.  Will create one.
+   [javacc] File "SimpleCharStream.java" does not exist.  Will create one.
+   [javacc] Parser generated with 0 errors and 3 warnings.
+    [javac] Compiling 60 source files to V:\Programming\lisp\bin
+    [javac] Note: Some input files use unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+
+run:
+     [java] AstRoot
+     [java]  AstDefine
+     [java]   AstIdentifier('MyNamespace')
+     [java]   AstParameterList
+     [java]   AstReturnType
+     [java]    AstIdentifier('=')
+     [java]   AstBody
+     [java]    AstList
+     [java]     AstDefine
+     [java]      AstIdentifier('HelloWorldClass')
+     [java]      AstParameterList
+     [java]      AstReturnType
+     [java]       AstIdentifier('=')
+     [java]      AstBody
+     [java]       AstList
+     [java]        AstDefine
+     [java]         AstIdentifier('count')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('Int')
+     [java]         AstBody
+     [java]          AstInteger
+     [java]        AstDefine
+     [java]         AstIdentifier('run')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('=')
+     [java]         AstBody
+     [java]          AstList
+     [java]           AstList
+     [java]            AstIdentifier('println')
+     [java]            AstIdentifier('out')
+     [java]            AstList
+     [java]             AstString
+     [java]             AstIdentifier('+')
+     [java]             AstIdentifier('count')
+     [java]             AstIdentifier('toString')
+     [java]        AstDefine
+     [java]         AstIdentifier('function')
+     [java]         AstParameterList
+     [java]          AstList
+     [java]           AstIdentifier('Int')
+     [java]           AstIdentifier('a')
+     [java]          AstList
+     [java]           AstIdentifier('Int')
+     [java]           AstIdentifier('b')
+     [java]         AstReturnType
+     [java]          AstIdentifier('=')
+     [java]         AstBody
+     [java]          AstList
+     [java]           AstList
+     [java]            AstIdentifier('a')
+     [java]            AstIdentifier('+')
+     [java]            AstIdentifier('b')
+     [java]     AstDefine
+     [java]      AstIdentifier('main')
+     [java]      AstParameterList
+     [java]       AstList
+     [java]        AstIdentifier('Int')
+     [java]        AstIdentifier('param')
+     [java]      AstReturnType
+     [java]       AstIdentifier('=')
+     [java]      AstBody
+     [java]       AstList
+     [java]        AstDefine
+     [java]         AstIdentifier('i')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('Int')
+     [java]         AstBody
+     [java]          AstInteger
+     [java]        AstDefine
+     [java]         AstIdentifier('list')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('List')
+     [java]         AstBody
+     [java]          AstDontEval
+     [java]           AstList
+     [java]            AstString
+     [java]            AstString
+     [java]        AstDefine
+     [java]         AstIdentifier('eval')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('Int')
+     [java]         AstBody
+     [java]          AstList
+     [java]           AstInteger
+     [java]           AstIdentifier('+')
+     [java]           AstList
+     [java]            AstIdentifier('i')
+     [java]            AstIdentifier('*')
+     [java]            AstInteger
+     [java]        AstDefine
+     [java]         AstIdentifier('helloRun')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('HelloWorldClass')
+     [java]          AstIdentifier('run')
+     [java]         AstBody
+     [java]          AstList
+     [java]        AstDefine
+     [java]         AstIdentifier('helloFun')
+     [java]         AstParameterList
+     [java]          AstList
+     [java]           AstIdentifier('Int')
+     [java]           AstIdentifier('a')
+     [java]         AstReturnType
+     [java]          AstIdentifier('HelloWorldClass')
+     [java]          AstIdentifier('function')
+     [java]         AstBody
+     [java]          AstDontEval
+     [java]           AstList
+     [java]            AstIdentifier('a')
+     [java]            AstInteger
+     [java]        AstList
+     [java]         AstIdentifier('while')
+     [java]         AstDontEval
+     [java]          AstList
+     [java]           AstIdentifier('i')
+     [java]           AstIdentifier('<')
+     [java]           AstIdentifier('param')
+     [java]         AstList
+     [java]          AstList
+     [java]           AstIdentifier('println')
+     [java]           AstIdentifier('out')
+     [java]           AstString
+     [java]          AstList
+     [java]           AstIdentifier('i')
+     [java]           AstIdentifier('++')
+     [java]        AstIdentifier('void')
+     [java]     AstDefine
+     [java]      AstIdentifier('+')
+     [java]      AstParameterList
+     [java]       AstList
+     [java]        AstIdentifier('String')
+     [java]        AstIdentifier('lhs')
+     [java]       AstList
+     [java]        AstIdentifier('String')
+     [java]        AstIdentifier('rhs')
+     [java]      AstReturnType
+     [java]       AstIdentifier('=')
+     [java]      AstBody
+     [java]       AstList
+     [java]        AstList
+     [java]         AstIdentifier('lhs')
+     [java]         AstIdentifier('concat')
+     [java]         AstIdentifier('rhs')
+     [java]     AstDefine
+     [java]      AstIdentifier('Int')
+     [java]      AstParameterList
+     [java]       AstList
+     [java]        AstIdentifier('Int')
+     [java]        AstIdentifier('v')
+     [java]      AstReturnType
+     [java]       AstIdentifier('=')
+     [java]      AstBody
+     [java]       AstList
+     [java]        AstDefine
+     [java]         AstIdentifier('++')
+     [java]         AstParameterList
+     [java]         AstReturnType
+     [java]          AstIdentifier('=')
+     [java]         AstBody
+     [java]          AstList
+     [java]        AstDefine
+     [java]         AstIdentifier('<')
+     [java]         AstParameterList
+     [java]          AstList
+     [java]           AstIdentifier('Int')
+     [java]           AstIdentifier('other')
+     [java]         AstReturnType
+     [java]          AstIdentifier('=')
+     [java]         AstBody
+     [java]          AstList
+     [java]     AstDefine
+     [java]      AstIdentifier('println')
+     [java]      AstParameterList
+     [java]       AstList
+     [java]        AstIdentifier('String')
+     [java]        AstIdentifier('out')
+     [java]       AstList
+     [java]        AstIdentifier('String')
+     [java]        AstIdentifier('s')
+     [java]      AstReturnType
+     [java]       AstIdentifier('=')
+     [java]      AstBody
+     [java]       AstList
+     [java]        AstList
+     [java]         AstIdentifier('print')
+     [java]         AstIdentifier('out')
+     [java]         AstList
+     [java]          AstIdentifier('+')
+     [java]          AstIdentifier('s')
+     [java]          AstString
+     [java]        AstIdentifier('void')
+     [java]     AstList
+     [java]      AstIdentifier('main')
+     [java]      AstInteger
+     [java] Defining Types...
+     [java] Defining new Type MyNamespace
+     [java] Defining new Type HelloWorldClass
+     [java] Defining new Type count
+     [java] Defining new Type run
+     [java] Defining new Type function
+     [java] Defining new Type main
+     [java] Defining new Type i
+     [java] Defining new Type list
+     [java] Defining new Type eval
+     [java] Defining new Type helloRun
+     [java] Defining new Type helloFun
+     [java] Defining new Type +
+     [java] Defining new Type Int
+     [java] Defining new Type ++
+     [java] Defining new Type <
+     [java] Defining new Type println
+     [java] package de.haukerehfeld.hlisp;
+     [java] import de.haukerehfeld.hlisp.java.*;
+     [java] import java.io.*;
+     [java] 
+     [java] /**
+     [java]  * Type Root
+     [java]  */
+     [java] public class Root {
+     [java]     private final String[] args;
+     [java]     
+     [java]     public Root(String[] args) {
+     [java]         this.args = args;
+     [java]     }
+     [java]     
+     [java]     public Root._hlisp_reserved_void _hlisp_run() {
+     [java]         Root.List argList = List();
+     [java]         
+     [java]         for (String arg: args) {
+     [java]             argList._hlisp_escape_plusequal(String(arg));
+     [java]         }
+     [java]         return null;
+     [java]     }
+     [java]     
+     [java]     public static void main(String[] args) {
+     [java]     	new Root(args)._hlisp_run();
+     [java]     }
+     [java]     public _hlisp_reserved_void _hlisp_reserved_void() {
+     [java]         return new _hlisp_reserved_void();
+     [java]     }
+     [java]     /**
+     [java]      * Type void
+     [java]      */
+     [java]     public class _hlisp_reserved_void implements Function<Root._hlisp_reserved_void> {
+     [java]         @Override public Root._hlisp_reserved_void _hlisp_run() {
+     [java]             return null;
+     [java]         }
+     [java]         
+     [java]     }
+     [java]     
+     [java]     public String String(Root.String value) {
+     [java]         return new String(value);
+     [java]     }
+     [java]     /**
+     [java]      * Type String
+     [java]      */
+     [java]     public class String implements Function<Root._hlisp_reserved_void> {
+     [java]         private final Root.String value;
+     [java]         
+     [java]         public String(Root.String value) {
+     [java]             this.value = value;
+     [java]         }
+     [java]         
+     [java]         @Override public Root._hlisp_reserved_void _hlisp_run() {
+     [java]             
+     [java]         }
+     [java]         
+     [java]     }
+     [java]     
+     [java]     public List List() {
+     [java]         return new List();
+     [java]     }
+     [java]     /**
+     [java]      * Type List
+     [java]      */
+     [java]     public class List implements Function<Root.List> {
+     [java]         @Override public Root.List _hlisp_run() {
+     [java]             list = new java.util.ArrayList();
+     [java]             return this;
+     [java]         }
+     [java]         
+     [java]         private java.util.ArrayList list;
+     [java]         
+     [java]         public _hlisp_escape_plusequal _hlisp_escape_plusequal(java.lang.Object elem) {
+     [java]             return new _hlisp_escape_plusequal(elem);
+     [java]         }
+     [java]         /**
+     [java]          * Type +=
+     [java]          */
+     [java]         public class _hlisp_escape_plusequal implements Function<Root.List> {
+     [java]             private final java.lang.Object elem;
+     [java]             
+     [java]             public _hlisp_escape_plusequal(java.lang.Object elem) {
+     [java]                 this.elem = elem;
+     [java]             }
+     [java]             
+     [java]             @Override public Root.List _hlisp_run() {
+     [java]                 list.add(elem);
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]     }
+     [java]     
+     [java]     public MyNamespace MyNamespace() {
+     [java]         return new MyNamespace();
+     [java]     }
+     [java]     /**
+     [java]      * Type MyNamespace
+     [java]      */
+     [java]     public class MyNamespace implements Function<Root.MyNamespace> {
+     [java]         @Override public Root.MyNamespace _hlisp_run() {
+     [java]             return null;
+     [java]         }
+     [java]         
+     [java]         public HelloWorldClass HelloWorldClass() {
+     [java]             return new HelloWorldClass();
+     [java]         }
+     [java]         /**
+     [java]          * Type HelloWorldClass
+     [java]          */
+     [java]         public class HelloWorldClass implements Function<Root.MyNamespace.HelloWorldClass> {
+     [java]             @Override public Root.MyNamespace.HelloWorldClass _hlisp_run() {
+     [java]                 return null;
+     [java]             }
+     [java]             
+     [java]             public count count() {
+     [java]                 return new count();
+     [java]             }
+     [java]             /**
+     [java]              * Type count
+     [java]              */
+     [java]             public class count implements Function<Root.MyNamespace.Int> {
+     [java]                 @Override public Root.MyNamespace.Int _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public run run() {
+     [java]                 return new run();
+     [java]             }
+     [java]             /**
+     [java]              * Type run
+     [java]              */
+     [java]             public class run implements Function<Root.MyNamespace.HelloWorldClass.run> {
+     [java]                 @Override public Root.MyNamespace.HelloWorldClass.run _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public function function(Root.MyNamespace.Int a, Root.MyNamespace.Int b) {
+     [java]                 return new function(a, b);
+     [java]             }
+     [java]             /**
+     [java]              * Type function
+     [java]              */
+     [java]             public class function implements Function<Root.MyNamespace.HelloWorldClass.function> {
+     [java]                 private final Root.MyNamespace.Int a;
+     [java]                 private final Root.MyNamespace.Int b;
+     [java]                 
+     [java]                 public function(Root.MyNamespace.Int a, Root.MyNamespace.Int b) {
+     [java]                     this.a = a;
+     [java]                     this.b = b;
+     [java]                 }
+     [java]                 
+     [java]                 @Override public Root.MyNamespace.HelloWorldClass.function _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]         public main main(Root.MyNamespace.Int param) {
+     [java]             return new main(param);
+     [java]         }
+     [java]         /**
+     [java]          * Type main
+     [java]          */
+     [java]         public class main implements Function<Root.MyNamespace.main> {
+     [java]             private final Root.MyNamespace.Int param;
+     [java]             
+     [java]             public main(Root.MyNamespace.Int param) {
+     [java]                 this.param = param;
+     [java]             }
+     [java]             
+     [java]             @Override public Root.MyNamespace.main _hlisp_run() {
+     [java]                 return null;
+     [java]             }
+     [java]             
+     [java]             public i i() {
+     [java]                 return new i();
+     [java]             }
+     [java]             /**
+     [java]              * Type i
+     [java]              */
+     [java]             public class i implements Function<Root.MyNamespace.Int> {
+     [java]                 @Override public Root.MyNamespace.Int _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public list list() {
+     [java]                 return new list();
+     [java]             }
+     [java]             /**
+     [java]              * Type list
+     [java]              */
+     [java]             public class list implements Function<Root.List> {
+     [java]                 @Override public Root.List _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public eval eval() {
+     [java]                 return new eval();
+     [java]             }
+     [java]             /**
+     [java]              * Type eval
+     [java]              */
+     [java]             public class eval implements Function<Root.MyNamespace.Int> {
+     [java]                 @Override public Root.MyNamespace.Int _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public helloRun helloRun() {
+     [java]                 return new helloRun();
+     [java]             }
+     [java]             /**
+     [java]              * Type helloRun
+     [java]              */
+     [java]             public class helloRun implements Function<Root.MyNamespace.HelloWorldClass> {
+     [java]                 @Override public Root.MyNamespace.HelloWorldClass _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public helloFun helloFun(Root.MyNamespace.Int a) {
+     [java]                 return new helloFun(a);
+     [java]             }
+     [java]             /**
+     [java]              * Type helloFun
+     [java]              */
+     [java]             public class helloFun implements Function<Root.MyNamespace.HelloWorldClass> {
+     [java]                 private final Root.MyNamespace.Int a;
+     [java]                 
+     [java]                 public helloFun(Root.MyNamespace.Int a) {
+     [java]                     this.a = a;
+     [java]                 }
+     [java]                 
+     [java]                 @Override public Root.MyNamespace.HelloWorldClass _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]         public _hlisp_escape_plus _hlisp_escape_plus(Root.String lhs, Root.String rhs) {
+     [java]             return new _hlisp_escape_plus(lhs, rhs);
+     [java]         }
+     [java]         /**
+     [java]          * Type +
+     [java]          */
+     [java]         public class _hlisp_escape_plus implements Function<Root.MyNamespace._hlisp_escape_plus> {
+     [java]             private final Root.String lhs;
+     [java]             private final Root.String rhs;
+     [java]             
+     [java]             public _hlisp_escape_plus(Root.String lhs, Root.String rhs) {
+     [java]                 this.lhs = lhs;
+     [java]                 this.rhs = rhs;
+     [java]             }
+     [java]             
+     [java]             @Override public Root.MyNamespace._hlisp_escape_plus _hlisp_run() {
+     [java]                 return null;
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]         public Int Int(Root.MyNamespace.Int v) {
+     [java]             return new Int(v);
+     [java]         }
+     [java]         /**
+     [java]          * Type Int
+     [java]          */
+     [java]         public class Int implements Function<Root.MyNamespace.Int> {
+     [java]             private final Root.MyNamespace.Int v;
+     [java]             
+     [java]             public Int(Root.MyNamespace.Int v) {
+     [java]                 this.v = v;
+     [java]             }
+     [java]             
+     [java]             @Override public Root.MyNamespace.Int _hlisp_run() {
+     [java]                 return null;
+     [java]             }
+     [java]             
+     [java]             public _hlisp_escape_plusplus _hlisp_escape_plusplus() {
+     [java]                 return new _hlisp_escape_plusplus();
+     [java]             }
+     [java]             /**
+     [java]              * Type ++
+     [java]              */
+     [java]             public class _hlisp_escape_plusplus implements Function<Root.MyNamespace.Int._hlisp_escape_plusplus> {
+     [java]                 @Override public Root.MyNamespace.Int._hlisp_escape_plusplus _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]             public _hlisp_escape_smallerthan _hlisp_escape_smallerthan(Root.MyNamespace.Int other) {
+     [java]                 return new _hlisp_escape_smallerthan(other);
+     [java]             }
+     [java]             /**
+     [java]              * Type <
+     [java]              */
+     [java]             public class _hlisp_escape_smallerthan implements Function<Root.MyNamespace.Int._hlisp_escape_smallerthan> {
+     [java]                 private final Root.MyNamespace.Int other;
+     [java]                 
+     [java]                 public _hlisp_escape_smallerthan(Root.MyNamespace.Int other) {
+     [java]                     this.other = other;
+     [java]                 }
+     [java]                 
+     [java]                 @Override public Root.MyNamespace.Int._hlisp_escape_smallerthan _hlisp_run() {
+     [java]                     return null;
+     [java]                 }
+     [java]                 
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]         public println println(Root.String out, Root.String s) {
+     [java]             return new println(out, s);
+     [java]         }
+     [java]         /**
+     [java]          * Type println
+     [java]          */
+     [java]         public class println implements Function<Root.MyNamespace.println> {
+     [java]             private final Root.String out;
+     [java]             private final Root.String s;
+     [java]             
+     [java]             public println(Root.String out, Root.String s) {
+     [java]                 this.out = out;
+     [java]                 this.s = s;
+     [java]             }
+     [java]             
+     [java]             @Override public Root.MyNamespace.println _hlisp_run() {
+     [java]                 return null;
+     [java]             }
+     [java]             
+     [java]         }
+     [java]         
+     [java]     }
+     [java]     
+     [java] }
+     [java] 
+     [java] 
+     [java] Written V:\Programming\lisp\bin\..\tmp\de\haukerehfeld\hlisp\Root.java
+    [javac] Compiling 1 source file to V:\Programming\lisp\bin
+    [javac] V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\Root.java:55: missing return statement
+    [javac]         }
+    [javac]         ^
+    [javac] V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\Root.java:88: missing return statement
+    [javac]             }
+    [javac]             ^
+    [javac] Note: V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\Root.java uses unchecked or unsafe operations.
+    [javac] Note: Recompile with -Xlint:unchecked for details.
+    [javac] 2 errors

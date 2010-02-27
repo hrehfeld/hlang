@@ -2,38 +2,36 @@ package de.haukerehfeld.hlisp.semantics;
 
 import java.util.*;
 
-public class VoidType implements Type, Value {
+public class VoidType implements Type {
 	public static final String NAME = "void";
 	
 	private final Type parent;
+	@Override public Type getParent() { return this.parent; }
 	
 	public VoidType(Type parent) {
 		this.parent = parent;
 	}
 
+	@Override public boolean isStatic() { return false; } 
+	@Override public boolean isFunction() { return false; } 
 
 	@Override public Type getReturnType() { return this; }
 
-	@Override public String getName() { return NAME; }
+	@Override public List<Type> getParameterTypes() { return Collections.emptyList(); }
 
-	@Override public Type getParent() { return this.parent; }
-	
-	@Override public List<Parameter> getParameters() { return Collections.emptyList(); }
 	@Override public Type getDefinedType(String type) { return null; }
-	@Override public List<Type> getDefinedTypes() { return Collections.emptyList(); }
-	@Override public void defineType(Type t) {
+	@Override public Map<String, Type> getDefinedTypes() { return Collections.emptyMap(); }
+	@Override public void defineType(String name, Type t) {
 		throw new RuntimeException("VoidType cannot have child types.");
 	}
 	@Override public boolean isTypeDefined(String t) { return false; }
-	@Override public Body getBody() { return new ResolvedBody(); }
-
-	@Override public String emit(de.haukerehfeld.hlisp.JavaEmitter emitter) { return emitter.emit(this); }
-
-	@Override public VoidType getValue() {
-		return this;
-	}
 
 	@Override public String toString() {
 		return getClass().getSimpleName();
 	}
+
+	/**
+	 * Factory method to get a voidtype reference
+	 */
+	public static UnresolvedType create() { return new UnresolvedType(NAME); }
 }

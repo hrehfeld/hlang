@@ -5,56 +5,63 @@ import de.haukerehfeld.hlisp.Utils;
 import java.util.*;
 
 /**
- * Walk the type structure and link unresolved types
+ * Walk the value structure and link unresolved values
  */
-public class TypeResolver {
-	private List<UnresolvedType> unresolvables = new ArrayList<UnresolvedType>();
+public class Resolver {
+	private static final String PARENTTYPESYMBOL = "=";
+	private List<UnresolvedType> unresolvableTypes = new ArrayList<UnresolvedType>();
+	private List<Value> resolvedValues = new ArrayList<Value>();
 	private List<Type> resolvedTypes = new ArrayList<Type>();
 
 	/**
-	 * Types that still need to be checked
+	 * Values that still need to be checked
 	 */
+	private List<Value> solveValues = new ArrayList<Value>();
 	private List<Type> solveTypes = new ArrayList<Type>();
 
-	public void solve(RootType root) throws UnresolvedTypeException {
-		solveTypes.add(root);
-		while (!solveTypes.isEmpty()) {
+	public void solve(Root root) throws UnresolvedTypeException {
+		solveValues.add(root);
+		solveTypes.add(root.getType());
+		while (!solveValues.isEmpty()) {
 			//System.out.println("Still need to check:\n - "
-			//                   + Utils.join(solveTypes, ",\n - "));
-			Type t = solveTypes.iterator().next();
-			solveTypes.remove(t);
+			//                   + Utils.join(solveValues, ",\n - "));
+			Value t = solveValues.remove(0);
 			solve(t);
 		}
 
-		if (!unresolvables.isEmpty()) {
-			throw new UnresolvedTypeException(unresolvables.iterator().next());
+		if (!unresolvableTypes.isEmpty()) {
+			throw new UnresolvedTypeException(unresolvableTypes.get(0));
 		}
-		//System.out.println("Everything resolved...");
+		System.out.println("Everything resolved...");
 	}
 
 	private List<Type> collectTypes(Type scope) {
-		List<Type> types = new ArrayList<Type>(scope.getDefinedTypes());
+		List<Type> types = new ArrayList<Type>(scope.getDefinedTypes().values());
 		//add return and parameter
-		{
-			Type r = scope.getReturnType();
-			if (r != null) {
-				types.add(r);
-			}
-			for (Parameter p: scope.getParameters()) {
-				Type pt = p.getType();
-				////System.out.println("      Parameter: " + pt);
-				types.add(pt);
-			}
-		}
+		types.add(scope.getReturnType());
+		types.addAll(scope.getParameterTypes());
 		return types;
 	}
 
-	private boolean solve(Type scope) {
-		//System.out.println("\nScope " + scope);
+	private boolean solve(Value scope) {
+		solve(scope.getType());
 
-		List<Type> types = collectTypes(scope);
-		// //System.out.println("\n      collected Types:\n"
-		//                    + "        - " + Utils.join(types, ",\n      - "));
+		if (scope instanceof EvaluateValue) {
+			for (Value v: ((EvaluateValue) scope).getValues()) {
+				solve(v);
+			}
+		}
+
+		for (Map.Entry<String,Value> child: scope.getDefinedMembers().entrySet()) {
+			solve(child.getValue());
+		}
+		return true;
+	}
+
+	private boolean solve(Type type) {
+		List<Type> types = collectTypes(type);
+		// //System.out.println("\n      collected Values:\n"
+		//                    + "        - " + Utils.join(values, ",\n      - "));
 
 		List<UnresolvedType> unresolved = new ArrayList<UnresolvedType>();
 
@@ -86,8 +93,13 @@ public class TypeResolver {
 
 		boolean worked = false;
 		for (UnresolvedType u: unresolved) {
+			//special case
+			if (u.getName().equals(PARENTTYPESYMBOL)) {
+				u.setResolvedType(type);
+			}
+
 			//System.out.println("      trying to resolve " + u);
-			if (resolve(u, scope)) {
+			if (resolve(u, type)) {
 				worked = true;
 				Type r = u.getResolvedType();
 				if (!resolvedTypes.contains(r)) {
@@ -96,18 +108,17 @@ public class TypeResolver {
 			}
 			else {
 				//System.out.println("      Couldn't resolve " + u);
-				unresolvables.add(u);
+				unresolvableTypes.add(u);
 				continue;
 			}
 		}
 
-		resolvedTypes.add(scope);
+		resolvedTypes.add(type);
 
 		return worked;
 	}
 
-	private boolean resolve(Type t, Type scope) {
-		UnresolvedType u = (UnresolvedType) t;
+	private boolean resolve(UnresolvedType u, Type scope) {
 		String uName = u.getName();
 
 		if (scope.isTypeDefined(uName)) {

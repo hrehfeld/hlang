@@ -24,8 +24,27 @@ public class UnresolvedType implements Type {
 		return type != null;
 	}
 
-	@Override public String getName() { return name; }
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 
+
+	@Override public boolean isStatic() {
+		if (!isResolved()) {
+			throw new UnresolvedTypeException(this);
+		}
+
+		return type.isStatic();
+	}
+
+	@Override public boolean isFunction() {
+		if (!isResolved()) {
+			throw new UnresolvedTypeException(this);
+		}
+
+		return type.isFunction();
+	}
+
+	
 	@Override public Type getParent() {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
@@ -34,11 +53,11 @@ public class UnresolvedType implements Type {
 		return type.getParent();
 	}
 	
-	@Override public List<Parameter> getParameters() {
+	@Override public List<Type> getParameterTypes() {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
 		}
-		return type.getParameters();
+		return type.getParameterTypes();
 	}
 	@Override public Type getDefinedType(String type) {
 		if (!isResolved()) {
@@ -47,18 +66,18 @@ public class UnresolvedType implements Type {
 		return this.type.getDefinedType(type);
 	}
 
-	@Override public List<Type> getDefinedTypes() {
+	@Override public Map<String, Type> getDefinedTypes() {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
 		}
-		return this.type.getDefinedTypes();
+		return type.getDefinedTypes();
 	}
 
-	@Override public void defineType(Type t) {
+	@Override public void defineType(String name, Type t) {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
 		}
-		type.defineType(t);
+		type.defineType(name, t);
 	}
 
 	@Override public boolean isTypeDefined(String t) {
@@ -68,13 +87,6 @@ public class UnresolvedType implements Type {
 		return type.isTypeDefined(t);
 	}
 
-	@Override public Body getBody() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
-		return type.getBody();
-	}
-
 	@Override public Type getReturnType() {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
@@ -82,14 +94,9 @@ public class UnresolvedType implements Type {
 		return type.getReturnType();
 	}
 
-	@Override public String emit(de.haukerehfeld.hlisp.JavaEmitter emitter) {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
-		return type.emit(emitter);
+	@Override public String toString() {
+		return getClass().getSimpleName() + "(" + this.name + ")";
 	}
-
-	@Override public String toString() { return getClass().getSimpleName() + " " + this.name; }
 
 	@Override public boolean equals(Object o) {
 		return o instanceof UnresolvedType
@@ -99,6 +106,6 @@ public class UnresolvedType implements Type {
 	}
 
 	@Override public int hashCode() {
-		return 435435 + name.hashCode();
+		return isResolved() ? 23434 + type.hashCode() : 435435 + name.hashCode();
 	}
 }

@@ -8,5 +8,5 @@ public interface Body {
 	/**
 	 * get instructions
 	 */
-	public List<Instruction> getInstructions();
+	public String getInstructions();
 }

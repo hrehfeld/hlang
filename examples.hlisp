@@ -1,0 +1,70 @@
+#Return type void && no body instructions other than type define => static
+
+# identifier => call if all parameters are present
+
+#static
+(define namesp (->) 
+(->
+    #notstatic
+    (define pow (Int Int -> Int)
+    (base exp ->
+        (define r (Int) (0))
+        (while (-> Boolean) (-> exp > 0) (->) (-> ( r = (base * base)) (exp --)))
+    ))
+
+    #not static
+    (define Class (-> this) 
+    (->
+        (this)
+
+        (define fun (Int -> Int) 
+        (a ->
+            (a + 5)
+        ))
+        
+        (define do (StrategyUser ->) 
+        (user ->
+            (define i (Int) (0))
+            (while (-> (i < 5)) 
+            ( ->
+                (user message print)
+                (i ++)
+            ))
+        ))
+    ))
+
+    #not static
+    (define Strategy (-> this) (-> (define do (StrategyUser ->) (void)) ))
+
+    #not static
+    (define StrategyUser (Strategy -> this) (void) (define message (String) (void)))
+    #not static
+    (define ConcreteStategyUser (Strategy -> this) 
+    (s ->
+         (s do this)
+         (this)
+    ))
+
+    #static
+    (define subnamespace (->) 
+    (->
+        #not static
+        (define Foo (-> this)
+        (-> 
+            # define a new member variable of type namesp ConcreteStategyUser
+            #   with a new instance of that type that gets a new instance of class as its parameter
+            (define user (namesp ConcreteStategyUser) (namesp ConcreteStategyUser Class))
+
+            # a member that gives a namesp ConcreteStategyUser ~= import ? 
+            (define ConcreteStategyUser (Strategy -> namesp ConcreteStategyUser) 
+                (s -> namesp ConcreteStategyUser s))
+
+            (import ConcreteStrategyUser namesp)
+
+            # we're using the type of the member variable here
+            (define stratUser (ConcreteStrategyUser) (ConcreteStrategyUser Class))
+        )
+    
+))
+
+

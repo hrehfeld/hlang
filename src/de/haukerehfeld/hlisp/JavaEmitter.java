@@ -13,6 +13,7 @@ public class JavaEmitter {
 	private final static String escapePrefix = "_escape";
 	private final static String reservedPrefix = "_reserved";
 	private final static String nativePrefix = "_native";
+	private final static String run = "_run";
 	
 	private final static HashMap<String, String> illegal = new HashMap<String, String>() {{
 			put("+", "plus");
@@ -27,26 +28,42 @@ public class JavaEmitter {
 			add("while");
 			add("Void");
 			add("void");
-			add("String");
+
 		}};
 
 	private int indent = 0;
 	IndentStringBuilder r = new IndentStringBuilder();
 
-	public String emit(Type s) {
-		emitClassStart(s);
+	public String emit(StringValue v) {
+		String s = v.getString();
+		r.append("String(\"" + s + "\")");
+		return s;
+	}
+
+	public String emit(String name, Function f) {
+		emitClassStart(name, f);
 		indent++;
 
-		emitConstructor(s);
-		emitAction(s);
-		emitMembers(s);
+		emitConstructor(name, f);
+		emitAction(name, f);
+		emitMembers(f);
 
 		indent--;
-		emitClassEnd(s);
+		emitClassEnd();
 		return r.toString();
 	}
 
-	public String emit(RootType root) {
+	public String emit(String name, Value s) {
+		if (s instanceof Function) {
+			return emit(name, (Function) s);
+		}
+		r.append("private " + escapeIdentifier(s.getType())
+		         + " " + escapeIdentifier(name) + ";", true);
+		return r.toString();
+	}
+
+	public String emit(Root root) {
+		String name = "Root";
 		try {
 			r.append("package de.haukerehfeld.hlisp;", true);
 
@@ -54,11 +71,11 @@ public class JavaEmitter {
 			r.append("import java.io.*;", true);		
 			r.append("", true);		
 			
-			emitClassStart(root);
+			emitClassStart(name, root);
 			indent++;
 
-			emitConstructor(root);
-			emitAction(root);
+			emitConstructor(name, root);
+			emitAction(name, root);
 
 			List<String> rootDefs = null;
 			File f = new File("../native/java/Root.java");
@@ -76,7 +93,7 @@ public class JavaEmitter {
 			emitMembers(root);
 
 			indent--;
-			emitClassEnd(root);
+			emitClassEnd();
 			return r.toString();
 		}
 		catch (RuntimeException e) {
@@ -85,72 +102,46 @@ public class JavaEmitter {
 		}
 	}
 
-	private String getNativeName(NativeType s) {
-		return prefix + nativePrefix + "_" + s.getNativeName();
-	}
 
-	private String getName(Type s) {
-		if (s instanceof NativeType) {
-			return getNativeName((NativeType) s);
-		}
-		return escapeIdentifier(s.getName());
-	}
-	
-	private String getFullName(Type s) {
-		if (s instanceof NativeType) {
-			return getNativeName((NativeType) s);
-		}
-
-		List<String> name = new ArrayList<String>();
-
-		Type parent = s;
-		while (parent != null) {
-			name.add(escapeIdentifier(parent.getName()));
-			parent = parent.getParent();
-		}
-		Collections.reverse(name);
-		return Utils.join(name, ".");
-	}
-
-	
-	private void emitClassStart(Type s) {
+	private void emitClassStart(String name, Value v) {
 		r.append("/**", true);
-		r.append(" * Type " + s.getName(), true);
+		r.append(" * Type " + name, true);
 		r.append(" */", true);
-		String className = getName(s);
 
 		r.append("public ");
-		if (!(s instanceof RootType)) {
-			r.append("static ");
-		}
-		r.append("class " + className);
-		if (!(s instanceof RootType)) {
+		// if (!(s instanceof RootType)) {
+		// 	r.append("static ");
+		// }
+		r.append("class " + escapeIdentifier(name));
+		
+		Type s = v.getType();
+		if (!(v instanceof Root)) {
 			r.append(" implements Function<");
-			r.append(getFullName(s.getReturnType()));
+			r.append(escapeIdentifier(s.getReturnType()));
 			r.append(">");
 		}
 		r.append(" {", true);
 	}
 
-	private void emitClassEnd(Type s) {
+	private void emitClassEnd() {
 		r.append("}", true);
 		r.append("", true);
 	}
 
-	private void emitConstructor(Type s) {
-		if (!s.getParameters().isEmpty()) {
-			for (String p: getParameterStrings(s, " ")) {
-				r.append("private final " + p + ";", true);
-			}
+	private void emitConstructor(String name, Function v) {
+		Type s = v.getType();
+		if (!s.getParameterTypes().isEmpty()) {
+			List<String> paramNames = v.getParameterNames();
+			for (String p: getParameterStrings(v, " ")) { r.append("private " + p + ";", true); }
 			r.append("", true);
 
-			r.append("public " + getName(s) + "(");
-			r.append(Utils.join(getParameterStrings(s, " "), ", "));
+			r.append("public " + name + "(");
+			r.append(Utils.join(getParameterStrings(v, " "), ", "));
 			r.append(")");
 			r.append(" {", true);
 			indent++;
-			for (String p: getParameterNames(s)) {
-				r.append("this." + p + " = " + p + ";", true);
+			for (String p: v.getParameterNames()) {
+				r.append("this." + escapeIdentifier(p) + " = " + escapeIdentifier(p) + ";", true);
 			}
 			indent--;
 			r.append("}", true);
@@ -158,35 +149,31 @@ public class JavaEmitter {
 		}
 	}
 
-	private void emitAction(Type s) {
-		if (!(s instanceof RootType)) {
-			r.append("@Override ");
+	private void emitMembers(Value v) {
+		for (Map.Entry<String,Value> member: v.getDefinedMembers().entrySet()) {
+			emit(member.getKey(), member.getValue());
 		}
-		r.append("public " + getFullName(s.getReturnType())
-		         + " " + prefix + "_run() {", true);
+	}
+
+	private void emitAction(String name, Function f) {
+		
+		r.append("public " + escapeIdentifier(f.getType())
+		         + " " + prefix + run + "() {", true);
 		indent++;
-		r.append("/* <body here>; */", true);
-		r.append("return null;", true);
+		for (Value v: f.getValues()) {
+			r.append(v.toString(), true);
+		}
 		indent--;
 		r.append("}", true);
 		r.append("", true);
 	}
 
-	private void emitMembers(Type s) {
-		for (Type member: s.getDefinedTypes()) {
-			String name = getName(member);
-			String parameters = Utils.join(getParameterStrings(member, " "), ", ");
-			r.append("public " + name + " " + name + "(" + parameters + ") {", true);
-			indent++;
-			String paramsCall = Utils.join(getParameterNames(member), ", ");
-			r.append("return new " + name + "(" + paramsCall + ");", true);
-			indent--;
-			r.append("}", true);
-
-			member.emit(this);
-		}
+	private String escapeIdentifier(Type id) {
+		return escapeIdentifier(id.toString());
 	}
-
+	private String escapeIdentifier(Value id) {
+		return escapeIdentifier(id.toString());		
+	}
 	private String escapeIdentifier(String id) {
 		int lastPos = 0;
 		String escaped = id;
@@ -240,26 +227,14 @@ public class JavaEmitter {
 		}
 	}
 
-	public List<String> getParameterNames(Type t) {
-		List<String> names = new ArrayList<String>();
-		for (Parameter p: t.getParameters()) {
-			names.add(p.getName());
-		}
-		return names;
-	}
-
-	public List<String> getParameterTypeNames(Type t) {
-		List<String> names = new ArrayList<String>();
-		for (Parameter p: t.getParameters()) {
-			names.add(getFullName(p.getType()));
-		}
-		return names;
-	}
-
-	public List<String> getParameterStrings(Type t, String join) {
+	public List<String> getParameterStrings(Function v, String join) {
 		List<String> params = new ArrayList<String>();
-		for (Parameter p: t.getParameters()) {
-			params.add(getFullName(p.getType()) + join + p.getName());
+		int i = 0;
+		List<String> paramNames = v.getParameterNames();
+		for (Type t: v.getType().getParameterTypes()) {
+			String p = paramNames.get(i);
+			params.add(escapeIdentifier(t) + join + escapeIdentifier(p));
+			++i;
 		}
 		return params;
 	}

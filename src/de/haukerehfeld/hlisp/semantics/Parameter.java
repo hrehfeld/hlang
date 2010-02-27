@@ -30,4 +30,8 @@ public class Parameter {
  * set type
  */
 	public void setType(Type type) { this.type = type; }
+
+	public static List<Parameter> emptyList() {
+		return Collections.emptyList();
+	}
 }
