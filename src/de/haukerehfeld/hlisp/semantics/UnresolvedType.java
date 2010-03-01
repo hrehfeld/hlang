@@ -28,69 +28,54 @@ public class UnresolvedType implements Type {
 	public void setName(String name) { this.name = name; }
 
 
-	@Override public boolean isStatic() {
+	private void resolvedOrException() {
 		if (!isResolved()) {
 			throw new UnresolvedTypeException(this);
 		}
+	}
 
+	@Override public boolean isStatic() {
+		resolvedOrException();
 		return type.isStatic();
 	}
 
 	@Override public boolean isFunction() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
-
+		resolvedOrException();
 		return type.isFunction();
 	}
 
 	
 	@Override public Type getParent() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
-
+		resolvedOrException();
 		return type.getParent();
 	}
 	
 	@Override public List<Type> getParameterTypes() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		return type.getParameterTypes();
 	}
 	@Override public Type getDefinedType(String type) {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		return this.type.getDefinedType(type);
 	}
 
 	@Override public Map<String, Type> getDefinedTypes() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		return type.getDefinedTypes();
 	}
 
 	@Override public void defineType(String name, Type t) {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		type.defineType(name, t);
 	}
 
 	@Override public boolean isTypeDefined(String t) {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		return type.isTypeDefined(t);
 	}
 
 	@Override public Type getReturnType() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
+		resolvedOrException();
 		return type.getReturnType();
 	}
 
@@ -100,8 +85,8 @@ public class UnresolvedType implements Type {
 
 	@Override public boolean equals(Object o) {
 		return o instanceof UnresolvedType
-		    && ((UnresolvedType) o).getName().equals(getName())
 		    && isResolved() == ((UnresolvedType) o).isResolved()
+		    && ((UnresolvedType) o).getName().equals(getName())
 		    && (isResolved() ? type.equals(((UnresolvedType) o).getResolvedType()) : true);
 	}
 

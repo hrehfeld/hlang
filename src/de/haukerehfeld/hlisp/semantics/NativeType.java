@@ -7,7 +7,7 @@ public class NativeType extends AnonymousType {
 	String name;
 	
 	public NativeType(String name) {
-		super(null, VoidType.create(), false);
+		super(new UnresolvedType("NativeType"), VoidType.create(), false);
 		this.name = name;
 	}
 

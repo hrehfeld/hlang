@@ -16,7 +16,9 @@ public interface Value {
 	public void defineMember(String name, Value v);
 	public Map<String, Value> getDefinedMembers();
 	public boolean isMemberDefined(String v);
+	public boolean isMemberDefinedRecursive(String v);
 	public Value getDefinedMember(String v);
+	public Value getDefinedMemberRecursive(String v);
 
 
 	public interface ValueMethod<T> {

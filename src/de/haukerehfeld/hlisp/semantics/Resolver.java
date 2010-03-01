@@ -8,26 +8,21 @@ import java.util.*;
  * Walk the value structure and link unresolved values
  */
 public class Resolver {
-	private static final String PARENTTYPESYMBOL = "=";
-	private List<UnresolvedType> unresolvableTypes = new ArrayList<UnresolvedType>();
-	private List<Value> resolvedValues = new ArrayList<Value>();
-	private List<Type> resolvedTypes = new ArrayList<Type>();
+	public static final String PARENTTYPESYMBOL = "this";
 
-	/**
-	 * Values that still need to be checked
-	 */
-	private List<Value> solveValues = new ArrayList<Value>();
-	private List<Type> solveTypes = new ArrayList<Type>();
+	private List<UnresolvedType> unresolvableTypes = new ArrayList<UnresolvedType>();
+	private Set<Value> checkedValues = new HashSet<Value>();
+
+	private boolean runAgain = false;
 
 	public void solve(Root root) throws UnresolvedTypeException {
-		solveValues.add(root);
-		solveTypes.add(root.getType());
-		while (!solveValues.isEmpty()) {
-			//System.out.println("Still need to check:\n - "
-			//                   + Utils.join(solveValues, ",\n - "));
-			Value t = solveValues.remove(0);
-			solve(t);
-		}
+		do {
+			unresolvableTypes.clear();
+			System.out.println("---------- starting resolve iteration ----------");
+			runAgain = false;
+			solve((Value) root);
+		} while (runAgain);
+
 
 		if (!unresolvableTypes.isEmpty()) {
 			throw new UnresolvedTypeException(unresolvableTypes.get(0));
@@ -35,99 +30,125 @@ public class Resolver {
 		System.out.println("Everything resolved...");
 	}
 
-	private List<Type> collectTypes(Type scope) {
-		List<Type> types = new ArrayList<Type>(scope.getDefinedTypes().values());
-		//add return and parameter
-		types.add(scope.getReturnType());
-		types.addAll(scope.getParameterTypes());
-		return types;
-	}
+	private void solve(Value scope) {
+		if (checkedValues.contains(scope)) {
+			return;
+		}
+		if (scope instanceof UnresolvedIdentifierValue) {
+			UnresolvedIdentifierValue identifier = (UnresolvedIdentifierValue) scope;
+			String id = identifier.getIdentifier();
+			if (id.equals(Resolver.PARENTTYPESYMBOL)) {
+				identifier.setResolved(identifier.getScope());
+			}
+			else if (identifier.getScope().isMemberDefinedRecursive(id)) {
+				identifier.setResolved(identifier.getScope().getDefinedMemberRecursive(id));
+			}
+			else {
+				runAgain = true;
+				System.out.println("Couldnt' resolve Identifier " + identifier);
+				return;
+			}
+		}
 
-	private boolean solve(Value scope) {
-		solve(scope.getType());
+		checkedValues.add(scope);
+
+
+		
 
 		if (scope instanceof EvaluateValue) {
 			for (Value v: ((EvaluateValue) scope).getValues()) {
+				System.out.println("Solving value in an evaluate (" + v + ").");
 				solve(v);
 			}
 		}
+		else {
+			if (scope.getType() == null) {
+				System.out.println("ERROR: nulltype!" + scope);
+				//runAgain = true;
+				return;
+			}
 
+			System.out.println("Value of type '" + scope.getType() + "'.");
+
+
+			solve(scope.getType(), scope);
+		}
+		
 		for (Map.Entry<String,Value> child: scope.getDefinedMembers().entrySet()) {
+			System.out.println("Solving '" + child.getKey() + "' (" + child.getValue() + ").");
 			solve(child.getValue());
 		}
-		return true;
 	}
 
-	private boolean solve(Type type) {
-		List<Type> types = collectTypes(type);
-		// //System.out.println("\n      collected Values:\n"
-		//                    + "        - " + Utils.join(values, ",\n      - "));
 
-		List<UnresolvedType> unresolved = new ArrayList<UnresolvedType>();
+	private void solve(Type type, Value scope) {
+		List<Type> types = new ArrayList<Type>();
+		types.add(type);
 
 		//drop self and resolved types
-		for (Type t: types) {
+		for (int i = 0; i < types.size(); ++i) {
+			Type t = types.get(i);
+
+			System.out.println("  Checking " + t + ". List: (" + Utils.join(types, ", ") + ").");
+
+
 			if (t instanceof UnresolvedType) {
 				UnresolvedType u = (UnresolvedType) t;
 				if (!u.isResolved()) {
-					unresolved.add(u);
-				}
-				else if (!resolvedTypes.contains(u.getResolvedType())) {
-					solveTypes.add(u.getResolvedType());
+					//special case
+					if (u.getName().equals(PARENTTYPESYMBOL)) {
+						u.setResolvedType(type);
+					}
+
+					//System.out.println("      trying to resolve " + u);
+					if (resolve(u, scope)) {
+						addType(types, u.getResolvedType());
+					}
+					else {
+						System.out.println("      Couldn't resolve " + u);
+						unresolvableTypes.add(u);
+						continue;
+					}
 				}
 			}
 			else {
-				if (!resolvedTypes.contains(t)) {
-					solveTypes.add(t);
-				}
+				addType(types, t);
 			}
 		}
 		
-		//System.out.print("    unresolved Types:");
-		if (unresolved.isEmpty()) {
-			//System.out.println(" none.");
-		}
-		else {
-			//System.out.println("\n      - " + Utils.join(unresolved, ",\n      - "));
-		}
-
-		boolean worked = false;
-		for (UnresolvedType u: unresolved) {
-			//special case
-			if (u.getName().equals(PARENTTYPESYMBOL)) {
-				u.setResolvedType(type);
-			}
-
-			//System.out.println("      trying to resolve " + u);
-			if (resolve(u, type)) {
-				worked = true;
-				Type r = u.getResolvedType();
-				if (!resolvedTypes.contains(r)) {
-					solveTypes.add(r);
-				}
-			}
-			else {
-				//System.out.println("      Couldn't resolve " + u);
-				unresolvableTypes.add(u);
-				continue;
-			}
-		}
-
-		resolvedTypes.add(type);
-
-		return worked;
 	}
 
-	private boolean resolve(UnresolvedType u, Type scope) {
+	private boolean resolve(UnresolvedType u, Value scope) {
 		String uName = u.getName();
 
-		if (scope.isTypeDefined(uName)) {
-			Type resolved = scope.getDefinedType(uName);
+		if (scope.isMemberDefinedRecursive(uName)) {
+			Type resolved = scope.getDefinedMemberRecursive(uName).getType();
 
-			//System.out.println("      Resolved " + u  + " to " + resolved);
+			System.out.println("      Resolved " + u  + " to " + resolved);
 			u.setResolvedType(resolved);
 			return true;
 		}
 		return false;
 	}
+
+	private List<Type> collectTypes(Type scope) {
+		if (scope.getDefinedTypes() == null) {
+			System.out.println("!!!!!!null members!" + scope);
+		}
+		List<Type> types = new ArrayList<Type>();
+		//add return and parameter
+		types.addAll(scope.getParameterTypes());
+		types.add(scope.getReturnType());
+		return types;
+	}
+
+	private void addType(List<Type> types, Type type) {
+		if (!types.contains(type)) { types.add(type); }
+
+		for (Type child: collectTypes(type)) {
+			if (!types.contains(child)) { types.add(child); }
+		}
+	}
+
+	
 }

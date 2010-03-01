@@ -21,7 +21,6 @@ public class RootType extends AnonymousType {
 		              add(new NativeType("java.lang.String[]"));
 		          }}
 		    );
-
-		defineType(VoidType.NAME, new VoidType(this));
+		setReturnType(this);
 	}
 }

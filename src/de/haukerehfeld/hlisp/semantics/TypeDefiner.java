@@ -47,28 +47,11 @@ public class TypeDefiner implements HLispParserVisitor {
 		System.out.println("defining new member " + identifier + " = " + body);
 		scope.defineMember(identifier, body);
 
-		return body;
+		return null;
 	}
 
 	// private Value getMember(Value scope, String identifier) {
-	// 	Value member =  scope.runOnScope(new Value.ValueMethod<Value>() {
-	// 	        private boolean success = false;
-		        
-	// 	        @Override public Value run(Value scope) {
-	// 				if (scope.isMemberDefined(identifier)) {
-	// 					success = true;
-	// 					return scope.getDefinedMember(identifier);
-	// 				}
-	// 				if (scope.getType().isTypeDefined(identifier)) {
-	// 					Type t = scope.getType().getDefinedType(identifier);
-	// 					if (t.isStatic()) {
-	// 					}
-	// 					success = true;
-	// 				}
-	// 				return null;
-	// 			}
-	// 	        @Override public boolean success() { return success; }
-	// 	    });
+	// 	Value member =  scope.
 	// }
 
 	// private Value parseCallChain(AstList list, Value scope) {
@@ -100,7 +83,10 @@ public class TypeDefiner implements HLispParserVisitor {
 	public List<Value> visit(AstBody body, Value scope) throws SemanticException {
 		List<Value> values = new ArrayList<Value>();
 		for (AstNode n: body) {
-			values.add((Value) n.jjtAccept(this, scope));
+			Object result = n.jjtAccept(this, scope);
+			if (result instanceof Value) {
+				values.add((Value) result);
+			}
 		}
 		return values;
 	}
@@ -110,7 +96,6 @@ public class TypeDefiner implements HLispParserVisitor {
 		for (AstNode n: node) {
 			n.jjtAccept(this, scope);
 		}
-
 		return null;
 	}
 	
@@ -134,6 +119,7 @@ public class TypeDefiner implements HLispParserVisitor {
 		return new IntValue(scope, Integer.parseInt((String) node.jjtGetValue()));
 	}
 
+	/** List */
 	public Object visit(AstList node, Value scope) throws SemanticException {
 		//empty list
 		if (node.isEmpty()) {
@@ -144,11 +130,11 @@ public class TypeDefiner implements HLispParserVisitor {
 		for (AstNode n: node) {
 			l.add((Value) n.jjtAccept(this, scope));
 		}
-		l.finish();
+		//l.finish();
 		return l;
 	}
 	@Override public Object visit(AstNativeCodeBlock node, Value scope) throws SemanticException {
-		return new NativeValue(scope, new UnresolvedType("Void"),(String) node.jjtGetValue());
+		return new NativeValue(scope, VoidType.create(),(String) node.jjtGetValue());
 	}
 
 	@Override public Object visit(AstLambdaExpression b, Value scope) throws SemanticException {
@@ -193,8 +179,9 @@ public class TypeDefiner implements HLispParserVisitor {
 			eval = new LambdaFunction(type, scope, parameterNames);
 			type.setIsFunction(true);
 		}
-		children.next().jjtAccept(this, eval);
-		eval.finish();
+		List<Value> values = (List<Value>) children.next().jjtAccept(this, eval);
+		eval.setValues(values);
+		//eval.finish();
 		return eval;
 	}
 

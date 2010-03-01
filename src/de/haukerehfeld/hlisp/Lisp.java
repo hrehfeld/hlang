@@ -8,9 +8,14 @@ import de.haukerehfeld.hlisp.semantics.*;
 
 
 public class Lisp {
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		Lisp l = new Lisp();
-		l.run(args);
+		try {
+			l.run(args);
+		}
+		catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
 		
 	}
 
@@ -32,6 +37,8 @@ public class Lisp {
 			TypeDefiner definer = new TypeDefiner(root);
 			rootnode.jjtAccept(definer, root);
 		}
+
+		new ValuePrinter().print(root);
 
 		Resolver s = new Resolver();
 		s.solve(root);

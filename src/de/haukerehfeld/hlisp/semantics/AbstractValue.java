@@ -26,6 +26,25 @@ public abstract class AbstractValue implements Value {
 		}
 		return result;
 	}
+	@Override public boolean isMemberDefinedRecursive(final String name) {
+		return getDefinedMemberRecursive(name) != null;
+	}
+	@Override public Value getDefinedMemberRecursive(final String name) {
+		return runOnScope(new Value.ValueMethod<Value>() {
+		        private boolean success = false;
+		        
+		        @Override public Value run(Value scope) {
+					System.out.println("Searching " + scope + " for " + name);
+
+					if (scope.isMemberDefined(name)) {
+						success = true;
+						return scope.getDefinedMember(name);
+					}
+					return null;
+				}
+		        @Override public boolean success() { return success; }
+		    });		
+	}
 
 	/** members */
 	private final LinkedHashMap<String, Value> members = new LinkedHashMap<String, Value>();

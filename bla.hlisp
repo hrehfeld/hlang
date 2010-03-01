@@ -1,13 +1,14 @@
 (define List (-> this)
 (->
-    (define list _{ java.util.ArrayList }_ (_{ new java.util.ArrayList(); }_))
+    this
+
+    (define bla Int (foo + bar))
+    (define list _{ java.util.ArrayList }_ _{ new java.util.ArrayList(); }_)
 
     (define += (_{ java.lang.Object}_ -> List)
     (element ->
-        _{
-            list.add(element);
-            return this;
-        }_
+        _{ list.add(element); }_
+        this
     ))
 
     (define get (Int -> _{ java.lang.Object }_)

@@ -8,7 +8,7 @@ public class VoidType implements Type {
 	private final Type parent;
 	@Override public Type getParent() { return this.parent; }
 	
-	public VoidType(Type parent) {
+	private VoidType(Type parent) {
 		this.parent = parent;
 	}
 
@@ -34,4 +34,7 @@ public class VoidType implements Type {
 	 * Factory method to get a voidtype reference
 	 */
 	public static UnresolvedType create() { return new UnresolvedType(NAME); }
+
+	public static VoidType create(Root root) { return new VoidType(root.getType()); }
+	
 }
