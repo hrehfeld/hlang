@@ -41,5 +41,33 @@ public class EvaluateValue extends AbstractValue {
 		}
 
 	}
+
+	@Override public String toString() {
+		String result = super.toString() + " (";
+		for (Value v: values) {
+			boolean skip = false;
+			Value t = v;
+
+			while (true) {
+				if (t == this) {
+					//System.out.println("ERROR, evaluate references itself!");
+					result += "self, ";
+					skip = true;
+					break;
+				}
+
+				if (!(t instanceof UnresolvedIdentifierValue) || !((UnresolvedIdentifierValue) v).isResolved()) {
+					break;
+				}
+				t = ((UnresolvedIdentifierValue) v).getResolved();
+			}
+			
+			if (skip) { continue; }
+
+			result += v + ", ";
+		}
+		
+		return result + ")";
+	}
 	
 }

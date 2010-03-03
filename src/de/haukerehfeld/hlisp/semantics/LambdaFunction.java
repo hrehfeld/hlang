@@ -27,4 +27,8 @@ public class LambdaFunction extends EvaluateValue implements Function {
 		Value lastValue = values.get(last);
 		setValue(lastValue);
 	}
+
+	@Override public String toString() {
+		return super.toString() + " (" + getType() + ")";
+	}
 }

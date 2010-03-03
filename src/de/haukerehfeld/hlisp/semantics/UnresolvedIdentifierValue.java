@@ -29,7 +29,8 @@ public class UnresolvedIdentifierValue implements Value {
 
 
 	@Override public <T> T runOnScope(ValueMethod<T> m) {
-		return getResolved().runOnScope(m);
+		resolvedOrException();
+		return scope.runOnScope(m);
 	}
 
 	@Override public Type getType() {  return getResolved().getType(); }
@@ -40,5 +41,5 @@ public class UnresolvedIdentifierValue implements Value {
 	@Override public Value getDefinedMember(String v) { return getResolved().getDefinedMember(v); }
 	@Override public Value getDefinedMemberRecursive(String v) { return getResolved().getDefinedMemberRecursive(v); }
 	
-	@Override public String toString() { return super.toString() + "('" + getIdentifier() + "')"; }
+	@Override public String toString() { return getClass().getSimpleName() + "('" + getIdentifier() + "', " + (isResolved() ? "resolved as " + getResolved() : "unresolved") + ")"; }
 }

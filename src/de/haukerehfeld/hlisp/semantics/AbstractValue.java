@@ -15,7 +15,7 @@ public abstract class AbstractValue implements Value {
 	private Value scope; 
 	@Override public Value getScope() { return scope; }
 	@Override public <T> T runOnScope(Value.ValueMethod<T> method) {
-		Value parent = scope;
+		Value parent = this;
 		T result = null;
 		while (parent != null && !method.success()) {
 			result = method.run(parent);
@@ -34,7 +34,7 @@ public abstract class AbstractValue implements Value {
 		        private boolean success = false;
 		        
 		        @Override public Value run(Value scope) {
-					System.out.println("Searching " + scope + " for " + name);
+					//System.out.println("Searching " + scope + " for " + name);
 
 					if (scope.isMemberDefined(name)) {
 						success = true;

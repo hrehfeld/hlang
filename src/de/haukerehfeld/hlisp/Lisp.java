@@ -46,7 +46,7 @@ public class Lisp {
 		//new BodyResolver().resolve(rootType);
 
 		String output = new JavaEmitter().emit(root);
-		System.out.println(output);
+		//System.out.println(output);
 
 		File file = new File("../tmp/de/haukerehfeld/hlisp/Root.java");
 		try{

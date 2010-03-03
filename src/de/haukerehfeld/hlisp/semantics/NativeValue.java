@@ -12,5 +12,5 @@ public class NativeValue extends AbstractValue {
 
 	public String getNativeCode() { return nativeCode; }
 
-	@Override public String toString() { return super.toString() + "('" + getNativeCode() + "')"; }
+	@Override public String toString() { return super.toString() + "('" + getNativeCode().substring(0, (int) Math.min(getNativeCode().length(), 20)).replace("\n", "") + "...')"; }
 }

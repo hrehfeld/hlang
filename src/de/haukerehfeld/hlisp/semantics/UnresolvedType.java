@@ -80,7 +80,7 @@ public class UnresolvedType implements Type {
 	}
 
 	@Override public String toString() {
-		return getClass().getSimpleName() + "(" + this.name + ")";
+		return getClass().getSimpleName() + "(" + this.name + ", " + (isResolved() ? "resolved": "unresolved") + ")";
 	}
 
 	@Override public boolean equals(Object o) {

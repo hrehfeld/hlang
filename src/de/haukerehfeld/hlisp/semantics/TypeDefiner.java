@@ -143,11 +143,14 @@ public class TypeDefiner implements HLispParserVisitor {
 		Type lambdaType = (Type) typeNode.jjtAccept(this, scope);
 		Type returnType;
 		List<Type> parameterTypes;
+		boolean function;
 		if (!(lambdaType instanceof UnresolvedType) && lambdaType.isFunction()) {
+			function = true;
 			returnType = lambdaType.getReturnType();
 			parameterTypes = lambdaType.getParameterTypes();
 		}
 		else {
+			function = false;
 			returnType = lambdaType;
 			parameterTypes = Collections.<Type>emptyList();
 		}
@@ -172,12 +175,12 @@ public class TypeDefiner implements HLispParserVisitor {
 
 		AnonymousType type = new AnonymousType(scope.getType(), returnType, false, parameterTypes);
 		EvaluateValue eval;
-		if (parameterTypes.isEmpty()) {
-			eval = new EvaluateValue(type, scope);
-		}
-		else {
+		if (function) {
 			eval = new LambdaFunction(type, scope, parameterNames);
 			type.setIsFunction(true);
+		}
+		else {
+			eval = new EvaluateValue(type, scope);
 		}
 		List<Value> values = (List<Value>) children.next().jjtAccept(this, eval);
 		eval.setValues(values);
@@ -205,7 +208,11 @@ public class TypeDefiner implements HLispParserVisitor {
 			throw new SemanticException(SemanticsUtils.errorLocation(node)
 			                            + "Variable value must be a single expression.");
 		}
-		return value.get(0);
+		Value r = value.get(0);
+		if (r instanceof EvaluateValue) {
+			((EvaluateValue)r).setType(type);
+		}
+		return r;
 	}
 
 	@Override public Object visit(AstFunctionSymbol node, Value scope) throws SemanticException {
