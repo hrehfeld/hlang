@@ -34,18 +34,14 @@ public class JavaEmitter {
 	private int indent = 0;
 	IndentStringBuilder r = new IndentStringBuilder();
 
-	public String emit(StringValue v) {
-		String s = v.getString();
-		r.append("String(\"" + s + "\")");
-		return s;
-	}
+	private List<Type> emittedTypes = new ArrayList<Type>();
 
-	public String emit(String name, Function f) {
-		emitClassStart(name, f);
+	public String emitFunction(Type f) {
+		emitClassStart(f);
 		indent++;
 
-		emitConstructor(name, f);
-		emitAction(name, f);
+		emitConstructor(f);
+		emitAction(f);
 		emitMembers(f);
 
 		indent--;
@@ -53,29 +49,35 @@ public class JavaEmitter {
 		return r.toString();
 	}
 
-	public String emit(String name, Value s) {
-		if (s instanceof Function) {
-			return emit(name, (Function) s);
+	public String emit(Type s) {
+		if (emittedTypes.contains(s)) {
+			System.out.println("Skipping emit of " + s + ", already emitted.");
+			return "";
 		}
-		r.append("private " + escapeIdentifier(s.getType())
-		         + " " + escapeIdentifier(name) + ";", true);
+		emittedTypes.add(s);
+		
+		if (s.isFunction()) {
+			return emitFunction(s);
+		}
+		r.append("private " + escapeIdentifier(s)
+		         + " " + escapeIdentifier(s) + ";", true);
 		return r.toString();
 	}
 
-	public String emit(Root root) {
+	public String emit(RootType root) {
 		String name = "Root";
 		try {
 			r.append("package de.haukerehfeld.hlisp;", true);
 
-			r.append("import de.haukerehfeld.hlisp.java.*;", true);		
-			r.append("import java.io.*;", true);		
-			r.append("", true);		
+			r.append("import de.haukerehfeld.hlisp.java.*;", true);
+			r.append("import java.io.*;", true);
+			r.append("", true);
 			
-			emitClassStart(name, root);
+			emitClassStart(root);
 			indent++;
 
-			emitConstructor(name, root);
-			emitAction(name, root);
+			emitConstructor(root);
+			emitAction(root);
 
 			List<String> rootDefs = null;
 			File f = new File("../native/java/Root.java");
@@ -103,21 +105,20 @@ public class JavaEmitter {
 	}
 
 
-	private void emitClassStart(String name, Value v) {
+	private void emitClassStart(Type v) {
 		r.append("/**", true);
-		r.append(" * Type " + name, true);
+		r.append(" * Type " + v.getName(), true);
 		r.append(" */", true);
 
 		r.append("public ");
 		// if (!(s instanceof RootType)) {
 		// 	r.append("static ");
 		// }
-		r.append("class " + escapeIdentifier(name));
+		r.append("class " + escapeIdentifier(v.getName()));
 		
-		Type s = v.getType();
-		if (!(v instanceof Root)) {
+		if (!(v instanceof RootType)) {
 			r.append(" implements Function<");
-			r.append(escapeIdentifier(s.getReturnType()));
+			r.append(escapeIdentifier(v.getReturnType()));
 			r.append(">");
 		}
 		r.append(" {", true);
@@ -128,20 +129,20 @@ public class JavaEmitter {
 		r.append("", true);
 	}
 
-	private void emitConstructor(String name, Function v) {
-		Type s = v.getType();
+	private void emitConstructor(Type s) {
 		if (!s.getParameterTypes().isEmpty()) {
-			List<String> paramNames = v.getParameterNames();
-			for (String p: getParameterStrings(v, " ")) { r.append("private " + p + ";", true); }
+			List<String> paramNames = s.getParameterNames();
+			for (String p: getParameterStrings(s, " ")) { r.append("private " + p + ";", true); }
 			r.append("", true);
 
-			r.append("public " + name + "(");
-			r.append(Utils.join(getParameterStrings(v, " "), ", "));
+			r.append("public " + s.getName() + "(");
+			r.append(Utils.join(getParameterStrings(s, " "), ", "));
 			r.append(")");
 			r.append(" {", true);
 			indent++;
-			for (String p: v.getParameterNames()) {
-				r.append("this." + escapeIdentifier(p) + " = " + escapeIdentifier(p) + ";", true);
+			for (String p: s.getParameterNames()) {
+				String e = escapeIdentifier(p);
+				r.append("this." + e + " = " + e + ";", true);
 			}
 			indent--;
 			r.append("}", true);
@@ -149,31 +150,29 @@ public class JavaEmitter {
 		}
 	}
 
-	private void emitMembers(Value v) {
-		for (Map.Entry<String,Value> member: v.getDefinedMembers().entrySet()) {
-			emit(member.getKey(), member.getValue());
+	private void emitMembers(Type v) {
+		for (Type member: v.getDefinedTypes()) {
+			emit(member);
 		}
 	}
 
-	private void emitAction(String name, Function f) {
-		
-		r.append("public " + escapeIdentifier(f.getType())
+	private void emit(Instruction i) {
+	}
+
+	private void emitAction(Type f) {
+		r.append("public " + escapeIdentifier(f)
 		         + " " + prefix + run + "() {", true);
 		indent++;
-		for (Value v: f.getValues()) {
-			r.append(v.toString(), true);
-		}
+		emit(f.getInstruction());
 		indent--;
 		r.append("}", true);
 		r.append("", true);
 	}
 
 	private String escapeIdentifier(Type id) {
-		return escapeIdentifier(id.toString());
+		return escapeIdentifier(id.getName());
 	}
-	private String escapeIdentifier(Value id) {
-		return escapeIdentifier(id.toString());		
-	}
+
 	private String escapeIdentifier(String id) {
 		int lastPos = 0;
 		String escaped = id;
@@ -227,11 +226,11 @@ public class JavaEmitter {
 		}
 	}
 
-	public List<String> getParameterStrings(Function v, String join) {
+	public List<String> getParameterStrings(Type v, String join) {
 		List<String> params = new ArrayList<String>();
 		int i = 0;
 		List<String> paramNames = v.getParameterNames();
-		for (Type t: v.getType().getParameterTypes()) {
+		for (Type t: v.getParameterTypes()) {
 			String p = paramNames.get(i);
 			params.add(escapeIdentifier(t) + join + escapeIdentifier(p));
 			++i;

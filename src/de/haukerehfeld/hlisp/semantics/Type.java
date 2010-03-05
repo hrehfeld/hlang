@@ -5,6 +5,9 @@ import java.util.*;
 import de.haukerehfeld.hlisp.JavaEmitter;
 
 public interface Type {
+	public static final String SELFTYPE = "this";
+	public static final String SELF = "this";
+	
 	public String getName();
 	public Type getParent();
 
@@ -14,6 +17,8 @@ public interface Type {
 	public boolean isStatic();
 
 	public boolean isPublic();
+
+	public boolean isResolved();
 
 	public <T> T runOnHierarchy(TypeMethod<T> m);
 	
@@ -25,13 +30,18 @@ public interface Type {
 
 	public Type getReturnType();
 
+
 	/** access types directly defined in this type */
-	public List<Type> getDefinedTypes();
+	public Collection<Type> getDefinedTypes();
 	public Type getDefinedType(String name);
 	public Type getDefinedTypeRecursive(String name);
 	public boolean isTypeDefined(String name);
 	public boolean isTypeDefinedRecursive(String name);
 	public void defineType(Type v);
+
+	public Instruction getInstruction();
+	public void setInstruction(Instruction i);
+	
 
 	public interface TypeMethod<T> {
 		public T run(Type v);

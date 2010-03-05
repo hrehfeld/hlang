@@ -27,7 +27,7 @@ public class Lisp {
 		}
 
 		List<AstRoot> rootnodes = parse(sourcefiles);
-		Root root = new Root();
+		RootType root = new RootType();
 		
 
 		for (AstRoot rootnode: rootnodes) {
@@ -38,17 +38,21 @@ public class Lisp {
 			rootnode.jjtAccept(definer, root);
 		}
 
-		new ValuePrinter().print(root);
+		new TypePrinter().print(root);
 
 		Resolver s = new Resolver();
 		s.solve(root);
+
+		System.out.println("--------------------------------------------------");
+		new TypePrinter().print(root);
+		
 
 		//new BodyResolver().resolve(rootType);
 
 		String output = new JavaEmitter().emit(root);
 		//System.out.println(output);
 
-		File file = new File("../tmp/de/haukerehfeld/hlisp/Root.java");
+		File file = new File("../gen/de/haukerehfeld/hlisp/Root.java");
 		try{
 			file.getParentFile().mkdirs();
 			BufferedWriter out = new BufferedWriter(new FileWriter(file));

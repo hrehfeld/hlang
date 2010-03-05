@@ -1,5 +1,8 @@
 package de.haukerehfeld.hlisp.parser;
 
+import de.haukerehfeld.hlisp.semantics.Type;
+import de.haukerehfeld.hlisp.semantics.SemanticException;
+
 import java.util.Iterator;
 
 public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
@@ -25,8 +28,8 @@ public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
 			public void remove() { throw new java.lang.UnsupportedOperationException(); }
 		}
 
-	@Override public abstract Object jjtAccept(HLispParserVisitor v, de.haukerehfeld.hlisp.semantics.Value data) throws
-	    de.haukerehfeld.hlisp.semantics.SemanticException;
+	@Override public abstract Object jjtAccept(HLispParserVisitor v, Type scope) throws
+	    SemanticException;
 
 
 	public boolean isEmpty() {
@@ -34,8 +37,10 @@ public abstract class AstNode extends SimpleNode implements Iterable<AstNode>  {
 	}
 
 	@Override public String toString() {
-		return getClass().getSimpleName();
+		return getClass().getSimpleName() + (jjtGetValue() != null ? " = '" + jjtGetValue() + "'" : "");
 	}
+
+	@Override public String jjtGetValue() { return (String) super.jjtGetValue(); }
 
 	public void setPosition(Token t) {
 		this.beginLine = t.beginLine;

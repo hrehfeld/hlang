@@ -34,6 +34,7 @@
   </target>
 
   <target name="run" description="run compiler" depends="compile">
+    <mkdir dir="gen"/> 
 	<java fork="true" classname="de.haukerehfeld.hlisp.Lisp" dir="bin">
 	  <!--<jvmarg value="-Djava.library.path=${quakeinjector.library.path}" />-->
 	  <jvmarg value="-Xshare:off" />
@@ -41,7 +42,7 @@
       <arg value="../bla.hlisp" />
 	  <!--<classpath refid="quakeinjector.class.path"/>-->
 	</java>   
-    <javac srcdir="tmp" destdir="bin" classpath="bin"/>
+    <javac srcdir="gen" destdir="bin" classpath="bin"/>
 	<java fork="true" classname="de.haukerehfeld.hlisp.Root" dir="bin">
 	  <!--<jvmarg value="-Djava.library.path=${quakeinjector.library.path}" />-->
 	  <jvmarg value="-Xshare:off" />
@@ -49,4 +50,20 @@
 	  <!--<classpath refid="quakeinjector.class.path"/>-->
 	</java>   
   </target>
+
+  <!-- javadoc -->
+  <target name="javadoc" 
+          description="Compile javadoc">
+    <mkdir dir="doc" />
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javadoc destdir="doc"
+			 doctitle="hlang"
+			 access="private"
+			 >
+	  <sourcepath>
+		<path path="src" />
+	  </sourcepath>
+	  <link href="http://java.sun.com/javase/6/docs/api/" />
+	</javadoc>
+  </target> 
 </project>

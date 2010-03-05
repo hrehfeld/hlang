@@ -23,7 +23,7 @@ options {
   NODE_PACKAGE = "de.haukerehfeld.hlisp.parser";
   VISITOR = true;
   VISITOR_EXCEPTION = "de.haukerehfeld.hlisp.semantics.SemanticException";
-  VISITOR_DATA_TYPE = "de.haukerehfeld.hlisp.semantics.Value";
+  VISITOR_DATA_TYPE = "de.haukerehfeld.hlisp.semantics.Type";
   VISITOR_RETURN_TYPE = "Object";
   TRACK_TOKENS = true;
 }
@@ -62,14 +62,23 @@ TOKEN:
 }
 
 TOKEN: {
-  <NATIVE_CODE_START: "_{" (" ")? >: NATIVE_CODE
+  <NATIVE_CODE_START: "-{" (" ")? >: NATIVE_CODE
+  | <NATIVE_TYPE_START: "_{" (" ")? >: NATIVE_TYPE
 }
 <NATIVE_CODE> TOKEN : {
-  <NATIVE_CODE_END: (" ")? "}_" >: DEFAULT
+  <NATIVE_CODE_END: (" ")? "}-" >: DEFAULT
 }
 <NATIVE_CODE> SPECIAL_TOKEN: {
-  <NATIVE_CODE_BLOCK: (~["}"] | "}" ~["_"])+ >
+  <NATIVE_CODE_BLOCK: (~["}"] | "}" ~["-"])+ >
 }
+
+<NATIVE_TYPE> TOKEN : {
+  <NATIVE_TYPE_END: (" ")? "}_" >: DEFAULT
+}
+<NATIVE_TYPE> SPECIAL_TOKEN: {
+  <NATIVE_TYPE_BLOCK: ([ "A" - "Z", "a" - "z", ".", "_"])+ >
+}
+
 
 TOKEN: {
   <COMMENT_START: "#" >: COMMENT
@@ -101,10 +110,14 @@ void Identifier() : { Token t; } {
 }
 
 
+void NativeType(): { Token type; } {
+  <NATIVE_TYPE_START> type=<NATIVE_TYPE_END> { jjtThis.jjtSetValue(type.specialToken.image); }
+}
+
 void NativeCodeBlock(): { Token t; } {
   // native code block is a SPECIAL_TOKEN, so we need to get it from NATIVE_CODE_END
-  <NATIVE_CODE_START> t=<NATIVE_CODE_END>
-    { jjtThis.jjtSetValue(t.specialToken.image); }
+  <NATIVE_CODE_START> t=<NATIVE_CODE_END> 
+    { jjtThis.jjtSetValue(t.specialToken.image); } Type()
 }
 
 void Define() : {} { 
@@ -122,7 +135,7 @@ void Variable(): {} {
   (TypeIdentifier() | QualifiedType()) VariableBody()
 }
 
-void TypeIdentifier() #SimpleType: {} { ( NativeCodeBlock() | Identifier()) }
+void TypeIdentifier() #SimpleType: {} { ( NativeType() | Identifier()) }
 void Type(): {} { 
     TypeIdentifier()
     | LOOKAHEAD(3) FunctionType()
