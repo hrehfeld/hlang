@@ -37,7 +37,12 @@ public class UnresolvedType implements Type {
 	public void setNames(List<String> names) { this.names = names; }
 
 
-	@Override public String getName() { return Utils.join(names, ", "); }
+	@Override public String getName() {
+		if (isResolved()) {
+			return type.getName();
+		}
+		return Utils.join(names, ", ");
+	}
 
 	private void resolvedOrException() {
 		if (!isResolved()) {

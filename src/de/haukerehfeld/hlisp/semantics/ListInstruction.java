@@ -24,7 +24,7 @@ public class ListInstruction implements Instruction  {
 	
 
 	@Override public String toString() {
-		return "list: (" + Utils.join(instructions, ", ") + ")";
+		return "List[" + Utils.join(instructions, ", ") + "]";
 	}
 
 

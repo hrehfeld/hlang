@@ -72,21 +72,23 @@ public class TypeDefiner implements HLispParserVisitor {
 		return new UnresolvedInstruction(node.jjtGetValue());
 	}
 
-	private FunctionCallInstruction nativeCall(String type, String value) {
-		Instruction[] v = { new NativeInstruction(new UnresolvedType(type), value) };
-		return new FunctionCallInstruction(type, v);
+	private FunctionCallInstruction constructor(final String type, final String value) {
+		List<Instruction> v = new ArrayList<Instruction>() {{
+				add(new NativeInstruction(new UnresolvedType(type), value));
+			}};
+		return new FunctionCallInstruction(new UnresolvedType(type), v);
 	}
 
 	public FunctionCallInstruction visit(AstString node, Type scope) throws SemanticException {
-		return nativeCall("String", "\"" + node.jjtGetValue() + "\"");
+		return constructor("String", "\"" + node.jjtGetValue() + "\"");
 	}
 
 	public FunctionCallInstruction visit(AstFloat node, Type scope) throws SemanticException {
-		return nativeCall("Float", Float.toString(Float.parseFloat((String) node.jjtGetValue())));
+		return constructor("Float", Float.toString(Float.parseFloat((String) node.jjtGetValue())));
 	}
 
-	public Object visit(AstInteger node, Type scope) throws SemanticException {
-		return nativeCall("Int", Integer.toString(Integer.parseInt((String) node.jjtGetValue())));
+	public FunctionCallInstruction visit(AstInteger node, Type scope) throws SemanticException {
+		return constructor("Int", Integer.toString(Integer.parseInt((String) node.jjtGetValue())));
 	}
 
 	private Instruction parseList(AstNode node, Type scope) throws SemanticException {
@@ -173,7 +175,8 @@ public class TypeDefiner implements HLispParserVisitor {
 		Type type = (Type) it.next().jjtAccept(this, scope);
 		Instruction r = (Instruction) it.next().jjtAccept(this, scope);
 
-		Type var = new AnonymousType(scope, type);
+		Type var = new AnonymousType(scope, type, false);
+		System.out.println("BLAAAAAAAA" + var.isFunction());
 		var.setInstruction(r);
 		return var;
 	}

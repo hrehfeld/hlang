@@ -36,7 +36,8 @@ public class AnonymousType implements Type {
 	                     Type returnType,
 	                     List<Type> parameterTypes,
 	                     List<String> parameterNames) {
-		this(parent, returnType, true, parameterTypes, parameterNames);
+		this(parent, returnType,
+		     true, parameterTypes, parameterNames);
 	}
 
 	public AnonymousType(Type parent,
@@ -46,10 +47,10 @@ public class AnonymousType implements Type {
 	                     List<String> parameterNames) {
 		this.parent = parent;
 		this.returnType = returnType;
-		this.isFunction = true;
+		this.isFunction = isFunction;
 		this.parameterTypes = parameterTypes;
 		this.parameterNames = parameterNames;
-		defineType(new SelfType(this));
+		this.types.put("this", new SelfType(this));
 	}
 
 
@@ -94,11 +95,31 @@ public class AnonymousType implements Type {
 
 	private final LinkedHashMap<String, Type> types = new LinkedHashMap<String, Type>();
 	@Override public Collection<Type> getDefinedTypes() { return types.values(); }
+	@Override public Type getDefinedType(String name) {
+		Type t = types.get(name);
+		if (t != null) {
+			return t;
+		}
+		int i = 0;
+		for (String param: parameterNames) {
+			if (param.equals(name)) {
+				return parameterTypes.get(i);
+			}
+		}
+		return null;
+	}
 	@Override public boolean isTypeDefined(String v) {
-		return types.get(v) != null;
+		if (types.get(v) != null) {
+			return true;
+		}
+		for (String param: parameterNames) {
+			if (param.equals(v)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	@Override public void defineType(Type t) { types.put(t.getName(), t); }
-	@Override public Type getDefinedType(String name) { return types.get(name); }
 	@Override public <T> T runOnHierarchy(Type.TypeMethod<T> method) {
 		Type parent = this;
 		T result = null;
@@ -131,11 +152,15 @@ public class AnonymousType implements Type {
 		    });
 	}
 
-	@Override public String getName() {
+	public String getSignature() {
 		StringBuilder name = new StringBuilder();
+		List<String> parameters = new ArrayList<String>();
+		for (Type t: getParameterTypes()) {
+			parameters.add(t.getName());
+		}
 		if (isFunction()) {
-			name.append(" (");
-			name.append(Utils.join(getParameterTypes(), " "));
+			name.append("(");
+			name.append(Utils.join(parameters, " "));
 			name.append(" ->");
 		}
 		name.append(" ");
@@ -143,7 +168,7 @@ public class AnonymousType implements Type {
 			name.append("self");
 		}
 		else {
-			name.append(getReturnType());
+			name.append(getReturnType().getName());
 		}
 		if (isFunction()) {
 			name.append(")");
@@ -151,9 +176,13 @@ public class AnonymousType implements Type {
 		return name.toString();
 	}
 
+	@Override public String getName() {
+		return getSignature();
+	}
+
 
 	@Override public String toString() {
-		return getName();
+		return "(" + getSignature() + ")";
 	}
 
 	@Override public boolean equals(Object o) {
@@ -208,5 +237,15 @@ public class AnonymousType implements Type {
 	// 	result = HashUtil.hash(result, isStatic);
 	// 	hashing = false;
 	// 	return result;
-	// }	
+	// }
+
+	public static AnonymousType referenceType(Type scope, Type t) {
+		AnonymousType r = new AnonymousType(t.getParent(),
+		                           t.getReturnType(),
+		                           t.isFunction(),
+		                           t.getParameterTypes(),
+		                           t.getParameterNames());
+		r.setInstruction(new FunctionCallInstruction(t, scope));
+		return r;
+	}
 }

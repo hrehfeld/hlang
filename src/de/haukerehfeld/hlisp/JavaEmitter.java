@@ -7,7 +7,6 @@ import java.io.*;
 import de.haukerehfeld.hlisp.semantics.*;
 
 public class JavaEmitter {
-	private final static String INDENT = "    ";
 
 	private final static String prefix = "_hlisp";
 	private final static String escapePrefix = "_escape";
@@ -23,6 +22,8 @@ public class JavaEmitter {
 			put("=", "equal");
 			put("*", "star");
 			put("/", "slash");
+			//put("(", "paranthesisopen");
+			//put(")", "paranthesisclose");
 		}};
 	private final static List<String> reserved = new ArrayList<String>() {{
 			add("while");
@@ -38,13 +39,13 @@ public class JavaEmitter {
 
 	public String emitFunction(Type f) {
 		emitClassStart(f);
-		indent++;
+		r.indentMore();
 
 		emitConstructor(f);
 		emitAction(f);
 		emitMembers(f);
 
-		indent--;
+		r.indentLess();
 		emitClassEnd();
 		return r.toString();
 	}
@@ -54,11 +55,16 @@ public class JavaEmitter {
 			System.out.println("Skipping emit of " + s + ", already emitted.");
 			return "";
 		}
+		if (s instanceof SelfType) {
+			System.out.println("Skipping " + s + ".");
+			return "";
+		}
 		emittedTypes.add(s);
 		
 		if (s.isFunction()) {
 			return emitFunction(s);
 		}
+		
 		r.append("private " + escapeIdentifier(s)
 		         + " " + escapeIdentifier(s) + ";", true);
 		return r.toString();
@@ -74,7 +80,7 @@ public class JavaEmitter {
 			r.append("", true);
 			
 			emitClassStart(root);
-			indent++;
+			r.indentMore();
 
 			emitConstructor(root);
 			emitAction(root);
@@ -94,7 +100,7 @@ public class JavaEmitter {
 			}
 			emitMembers(root);
 
-			indent--;
+			r.indentLess();
 			emitClassEnd();
 			return r.toString();
 		}
@@ -135,16 +141,16 @@ public class JavaEmitter {
 			for (String p: getParameterStrings(s, " ")) { r.append("private " + p + ";", true); }
 			r.append("", true);
 
-			r.append("public " + s.getName() + "(");
+			r.append("public " + escapeIdentifier(s.getName()) + "(");
 			r.append(Utils.join(getParameterStrings(s, " "), ", "));
 			r.append(")");
 			r.append(" {", true);
-			indent++;
+			r.indentMore();
 			for (String p: s.getParameterNames()) {
 				String e = escapeIdentifier(p);
 				r.append("this." + e + " = " + e + ";", true);
 			}
-			indent--;
+			r.indentLess();
 			r.append("}", true);
 			r.append("", true);
 		}
@@ -162,9 +168,9 @@ public class JavaEmitter {
 	private void emitAction(Type f) {
 		r.append("public " + escapeIdentifier(f)
 		         + " " + prefix + run + "() {", true);
-		indent++;
+		r.indentMore();
 		emit(f.getInstruction());
-		indent--;
+		r.indentLess();
 		r.append("}", true);
 		r.append("", true);
 	}
@@ -197,33 +203,9 @@ public class JavaEmitter {
 		return escaped;
 	}
 
-	private class IndentStringBuilder {
-		private final StringBuilder b = new StringBuilder();
-		private StringBuilder line = new StringBuilder();
-
-		public void append(String s) {
-			append(s, false);
-		}
-		
-		public void append(String s, boolean newline) {
-			line.append(s);
-
-			if (newline) {
-				StringBuilder ind = new StringBuilder();
-				for (int i = 0; i < indent; ++i) {
-					ind.append(INDENT);
-				}
-				b.append(ind.toString());
-				b.append(line.toString());
-				line = new StringBuilder();
-				b.append("\n");
-			}
-		}
-
-		@Override public String toString() {
-			b.append(line.toString());
-			return b.toString();
-		}
+	private String getName(Type t) {
+		String name = escapeIdentifier(t.getName());
+		return name;
 	}
 
 	public List<String> getParameterStrings(Type v, String join) {
@@ -232,7 +214,11 @@ public class JavaEmitter {
 		List<String> paramNames = v.getParameterNames();
 		for (Type t: v.getParameterTypes()) {
 			String p = paramNames.get(i);
-			params.add(escapeIdentifier(t) + join + escapeIdentifier(p));
+			String name = getName(t);
+			if (t.isFunction()) {
+				name = "Function<" + name + ">";
+			}
+			params.add(name + join + escapeIdentifier(p));
 			++i;
 		}
 		return params;

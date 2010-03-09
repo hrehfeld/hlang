@@ -2,15 +2,13 @@
 (->
     this
 
-    (define foo Int 0)
-    (define bar Int 3)
+    (define ArrayList _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- this)
 
-    (define bla Int (foo + bar))
-    (define list _{ java.util.ArrayList }_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
+    (define list ArrayList -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
 
-    (define += (_{ java.lang.Object}_ -> List)
+    (define += (_ -> List)
     (element ->
-        -{ list.add(element); }- void
+        (-{ list.add(element); }- void)
         this
     ))
 
@@ -33,16 +31,16 @@
 
 (define Int (_{int}_ -> this) 
 (value ->
-    (define + (Int -> Int) (other -> -{ Int(value + other.value); }- Int))
-    (define * (Int -> Int) (other -> -{ Int(value * other.value); }- Int))
+    (define + (Int -> Int) (other -> Int -{ value + other.value }- _{int}_))
+    (define * (Int -> Int) (other -> Int -{ value * other.value }- _{int}_))
     (define ++ (->) (-> ( -{value++;}- void)))
-    (define < (Int -> Boolean) (other -> -{ Boolean(value < other);}- Boolean))
+    (define < (Int -> Boolean) (other -> Boolean -{value < other}- _{boolean}_))
     (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
     (define toString (-> String)
     (->
         (String -{ java.lang.String.valueOf(value) }- _{java.lang.String}_)
     ))
-    
+    this
 ))
 
 (define Boolean (_{boolean}_ -> this) 
@@ -70,6 +68,10 @@
     (->
         (define count Int (5))
 
+        (define foo Int 0)
+        (define bar Int 3)
+        (define bla Int (foo + bar))
+
         (define run (->)  
         (->
             (("Hello World!" + (count toString)) print)
@@ -80,7 +82,7 @@
 
     (define main (Int ->) 
     (param ->
-        (define i Int (0))
+        (define i Int 0)
         (define eval Int (5 + (i * 4)))
         (define error (-> Int) (-> 0))
         (define k List (()) )

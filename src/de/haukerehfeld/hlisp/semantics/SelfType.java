@@ -44,6 +44,6 @@ public class SelfType implements Type {
 
 
 	@Override public String toString() {
-		return this.parent.toString();
+		return "(SelfType[" + this.parent.getName() + "])";
 	}
 }

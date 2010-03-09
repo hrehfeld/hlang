@@ -2,25 +2,15 @@ package de.haukerehfeld.hlisp.semantics;
 
 import java.util.*;
 
-public class VoidType implements Type {
-	public static final String NAME = "void";
-
-	private VoidType(Type parent) {
+public class DontCareType implements Type {
+	public DontCareType(Type parent) {
 		this.parent = parent;
 	}
-
-	/**
-	 * Factory method to get a voidtype reference
-	 */
-	public static UnresolvedType create() { return new UnresolvedType(NAME); }
-
-	public static VoidType create(RootType root) { return new VoidType(root); }
-
-	public Instruction getInstruction() { return new NativeInstruction(this, "null"); }
+	public Instruction getInstruction() { return new VoidInstruction(); }
 
 	public boolean isFunction() { return false; }
 	@Override public boolean isStatic() { return true; }
-	@Override public boolean isResolved() { return true; }
+	@Override public boolean isResolved() { return false; }
 	
 	@Override public boolean isPublic() { return true; }
 	
@@ -45,12 +35,18 @@ public class VoidType implements Type {
 	@Override public void setInstruction(Instruction i) {}
 
 	@Override public String getName() {
-		return NAME;
+		return Type.DONTCARE;
 	}
 
+	@Override public boolean equals(Object o) {
+		if (o instanceof Type) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override public String toString() {
-		return "(" + getName() + ")";
+		return getName();
 	}
 	
 	

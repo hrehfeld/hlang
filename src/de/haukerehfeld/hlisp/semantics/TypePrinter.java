@@ -11,18 +11,23 @@ public class TypePrinter {
 		print((Type) root);
 	}
 
-	private void print(Type scope) {
+	public void print(Type scope) {
 		String ind = "";
 		for (int i = 0; i < indent; ++i) {
-			ind += "    ";
+			ind += "  ";
 		}
 		System.out.println(ind + scope);
-
+		
+		if (scope instanceof SelfType) {
+			return;
+		}
+		
 		indent++;
 		for (Type t: scope.getDefinedTypes()) {
 			if (t.equals(scope)) {
 				continue;
 			}
+
 			print(t);
 		}
 		indent--;

@@ -7,5 +7,5 @@ public class VoidInstruction extends NativeInstruction {
 		super(VoidType.create(), "null");
 	}
 
-	@Override public String toString() { return "void"; }
+	@Override public String toString() { return "VoidInstruction"; }
 }

@@ -1,51 +1,1761 @@
 Buildfile: build.xml
 
-clean:
-
 compile:
-     [copy] Copying 31 files to V:\Programming\lisp\tmp
-     [copy] Copying 1 file to V:\Programming\lisp\tmp
-   [jjtree] Java Compiler Compiler Version 5.0 (Tree Builder)
-   [jjtree] (type "jjtree" with no arguments for help)
-   [jjtree] Reading from file V:\Programming\lisp\src\HLisp.jjt . . .
-   [jjtree] File "Node.java" does not exist.  Will create one.
-   [jjtree] File "SimpleNode.java" does not exist.  Will create one.
-   [jjtree] File "AstRoot.java" does not exist.  Will create one.
-   [jjtree] File "AstList.java" does not exist.  Will create one.
-   [jjtree] File "AstIdentifier.java" does not exist.  Will create one.
-   [jjtree] File "AstNativeCodeBlock.java" does not exist.  Will create one.
-   [jjtree] File "AstDefine.java" does not exist.  Will create one.
-   [jjtree] File "AstLambdaExpression.java" does not exist.  Will create one.
-   [jjtree] File "AstVariable.java" does not exist.  Will create one.
-   [jjtree] File "AstSimpleType.java" does not exist.  Will create one.
-   [jjtree] File "AstType.java" does not exist.  Will create one.
-   [jjtree] File "AstQualifiedType.java" does not exist.  Will create one.
-   [jjtree] File "AstFunctionType.java" does not exist.  Will create one.
-   [jjtree] File "AstBody.java" does not exist.  Will create one.
-   [jjtree] File "AstFunctionParameters.java" does not exist.  Will create one.
-   [jjtree] File "AstFloat.java" does not exist.  Will create one.
-   [jjtree] File "AstString.java" does not exist.  Will create one.
-   [jjtree] File "AstInteger.java" does not exist.  Will create one.
-   [jjtree] File "AstFunctionSymbol.java" does not exist.  Will create one.
-   [jjtree] File "HLispParserTreeConstants.java" does not exist.  Will create one.
-   [jjtree] File "HLispParserVisitor.java" does not exist.  Will create one.
-   [jjtree] File "JJTHLispParserState.java" does not exist.  Will create one.
-   [jjtree] Annotated grammar generated successfully in V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\parser\HLisp.jj
    [javacc] Java Compiler Compiler Version 5.0 (Parser Generator)
    [javacc] (type "javacc" with no arguments for help)
    [javacc] Reading from file V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\parser\HLisp.jj . . .
    [javacc] Note: UNICODE_INPUT option is specified. Please make sure you create the parser/lexer using a Reader with the correct character encoding.
-   [javacc] File "TokenMgrError.java" does not exist.  Will create one.
-   [javacc] File "ParseException.java" does not exist.  Will create one.
-   [javacc] File "Token.java" does not exist.  Will create one.
-   [javacc] File "SimpleCharStream.java" does not exist.  Will create one.
+   [javacc] File "TokenMgrError.java" is being rebuilt.
+   [javacc] File "ParseException.java" is being rebuilt.
+   [javacc] File "Token.java" is being rebuilt.
+   [javacc] File "SimpleCharStream.java" is being rebuilt.
    [javacc] Parser generated with 0 errors and 1 warnings.
-    [javac] Compiling 60 source files to V:\Programming\lisp\bin
-    [javac] V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\semantics\ListInstructionResolver.java:149: incompatible types
-    [javac] found   : de.haukerehfeld.hlisp.semantics.Instruction
-    [javac] required: de.haukerehfeld.hlisp.semantics.Type
-    [javac] 						last = instructions.get(0);
-    [javac] 						                       ^
-    [javac] Note: V:\Programming\lisp\tmp\de\haukerehfeld\hlisp\semantics\TypeDefiner.java uses unchecked or unsafe operations.
-    [javac] Note: Recompile with -Xlint:unchecked for details.
-    [javac] 1 error
+    [javac] Compiling 7 source files to V:\Programming\lisp\bin
+
+run:
+     [java] AstRoot
+     [java]  AstDefine
+     [java]   AstIdentifier = 'List'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstFunctionSymbol
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstIdentifier = 'this'
+     [java]    AstFunctionParameters
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstIdentifier = 'this'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'ArrayList'
+     [java]      AstVariable
+     [java]       AstSimpleType
+     [java]        AstNativeType = 'java.util.ArrayList'
+     [java]       AstBody
+     [java]        AstNativeCodeBlock = 'new java.util.ArrayList(); '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'this'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'list'
+     [java]      AstVariable
+     [java]       AstSimpleType
+     [java]        AstIdentifier = 'ArrayList'
+     [java]       AstBody
+     [java]        AstNativeCodeBlock = 'new java.util.ArrayList(); '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'java.util.ArrayList'
+     [java]     AstDefine
+     [java]      AstIdentifier = '+='
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = '_'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'List'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'element'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstNativeCodeBlock = 'list.add(element); '
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstIdentifier = 'void'
+     [java]        AstIdentifier = 'this'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'get'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstNativeType = 'java.lang.Object'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'i'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstNativeCodeBlock = 'list.get(i.toInt()._hlisp_run()); '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'java.lang.Object'
+     [java]  AstDefine
+     [java]   AstIdentifier = 'while'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstType
+     [java]      AstFunctionType
+     [java]       AstFunctionSymbol
+     [java]       AstType
+     [java]        AstSimpleType
+     [java]         AstIdentifier = 'Boolean'
+     [java]     AstType
+     [java]      AstFunctionType
+     [java]       AstFunctionSymbol
+     [java]     AstFunctionSymbol
+     [java]    AstFunctionParameters
+     [java]     AstIdentifier = 'condition'
+     [java]     AstIdentifier = 'body'
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstNativeCodeBlock = '
+     [java]         while (condition._hlisp_run()) {
+     [java]             body._hlisp_run();
+     [java]         }
+     [java]     '
+     [java]      AstType
+     [java]       AstSimpleType
+     [java]        AstIdentifier = 'void'
+     [java]  AstDefine
+     [java]   AstIdentifier = 'Int'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstNativeType = 'int'
+     [java]     AstFunctionSymbol
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstIdentifier = 'this'
+     [java]    AstFunctionParameters
+     [java]     AstIdentifier = 'value'
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstDefine
+     [java]      AstIdentifier = '+'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'other'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstIdentifier = 'Int'
+     [java]        AstNativeCodeBlock = 'value + other.value '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'int'
+     [java]     AstDefine
+     [java]      AstIdentifier = '*'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'other'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstIdentifier = 'Int'
+     [java]        AstNativeCodeBlock = 'value * other.value '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'int'
+     [java]     AstDefine
+     [java]      AstIdentifier = '++'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstNativeCodeBlock = 'value++;'
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstIdentifier = 'void'
+     [java]     AstDefine
+     [java]      AstIdentifier = '<'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Boolean'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'other'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstIdentifier = 'Boolean'
+     [java]        AstNativeCodeBlock = 'value < other'
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'boolean'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'toInt'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstNativeType = 'java.lang.Integer'
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstNativeCodeBlock = 'value; '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'java.lang.Integer'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'toString'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'String'
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstIdentifier = 'String'
+     [java]         AstNativeCodeBlock = 'java.lang.String.valueOf(value) '
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstNativeType = 'java.lang.String'
+     [java]     AstIdentifier = 'this'
+     [java]  AstDefine
+     [java]   AstIdentifier = 'Boolean'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstNativeType = 'boolean'
+     [java]     AstFunctionSymbol
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstIdentifier = 'this'
+     [java]    AstFunctionParameters
+     [java]     AstIdentifier = 'value'
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstDefine
+     [java]      AstIdentifier = '!'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstIdentifier = 'Boolean'
+     [java]        AstNativeCodeBlock = '!value '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstNativeType = 'boolean'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'toString'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'String'
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstIdentifier = 'String'
+     [java]         AstNativeCodeBlock = 'java.lang.Boolean.toString(value) '
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstNativeType = 'java.lang.String'
+     [java]  AstDefine
+     [java]   AstIdentifier = 'String'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstNativeType = 'java.lang.String'
+     [java]     AstFunctionSymbol
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstIdentifier = 'this'
+     [java]    AstFunctionParameters
+     [java]     AstIdentifier = 'value'
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstIdentifier = 'this'
+     [java]     AstDefine
+     [java]      AstIdentifier = '+'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'String'
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'String'
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'other'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstIdentifier = 'String'
+     [java]         AstNativeCodeBlock = 'value + other.value '
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstNativeType = 'java.lang.String'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'print'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstNativeCodeBlock = 'System.out.print(value); '
+     [java]         AstType
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'void'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'println'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstList
+     [java]         AstString = '"this"'
+     [java]         AstIdentifier = '+'
+     [java]         AstString = '"\n"'
+     [java]        AstIdentifier = 'print'
+     [java]  AstDefine
+     [java]   AstIdentifier = 'MyNamespace'
+     [java]   AstLambdaExpression
+     [java]    AstFunctionType
+     [java]     AstFunctionSymbol
+     [java]     AstType
+     [java]      AstSimpleType
+     [java]       AstIdentifier = 'this'
+     [java]    AstFunctionParameters
+     [java]     AstFunctionSymbol
+     [java]    AstBody
+     [java]     AstDefine
+     [java]      AstIdentifier = 'HelloWorldClass'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstFunctionSymbol
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'this'
+     [java]       AstFunctionParameters
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstDefine
+     [java]         AstIdentifier = 'count'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstInteger = '5'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'foo'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstInteger = '0'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'bar'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstInteger = '3'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'bla'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstIdentifier = 'foo'
+     [java]            AstIdentifier = '+'
+     [java]            AstIdentifier = 'bar'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'run'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstFunctionSymbol
+     [java]          AstFunctionParameters
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstList
+     [java]             AstString = '"Hello World!"'
+     [java]             AstIdentifier = '+'
+     [java]             AstList
+     [java]              AstIdentifier = 'count'
+     [java]              AstIdentifier = 'toString'
+     [java]            AstIdentifier = 'print'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'function'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Int'
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Int'
+     [java]           AstFunctionSymbol
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Int'
+     [java]          AstFunctionParameters
+     [java]           AstIdentifier = 'a'
+     [java]           AstIdentifier = 'b'
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstIdentifier = 'a'
+     [java]            AstIdentifier = '+'
+     [java]            AstIdentifier = 'b'
+     [java]     AstDefine
+     [java]      AstIdentifier = 'main'
+     [java]      AstLambdaExpression
+     [java]       AstFunctionType
+     [java]        AstType
+     [java]         AstSimpleType
+     [java]          AstIdentifier = 'Int'
+     [java]        AstFunctionSymbol
+     [java]       AstFunctionParameters
+     [java]        AstIdentifier = 'param'
+     [java]        AstFunctionSymbol
+     [java]       AstBody
+     [java]        AstDefine
+     [java]         AstIdentifier = 'i'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstInteger = '0'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'eval'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'Int'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstInteger = '5'
+     [java]            AstIdentifier = '+'
+     [java]            AstList
+     [java]             AstIdentifier = 'i'
+     [java]             AstIdentifier = '*'
+     [java]             AstInteger = '4'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'error'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstFunctionSymbol
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Int'
+     [java]          AstFunctionParameters
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstInteger = '0'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'k'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'List'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstList
+     [java]        AstDefine
+     [java]         AstIdentifier = 'list'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'List'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstIdentifier = 'List'
+     [java]            AstIdentifier = '+='
+     [java]            AstString = '"some"'
+     [java]            AstIdentifier = '+='
+     [java]            AstString = '"elements"'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'evalFun'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstFunctionSymbol
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Int'
+     [java]          AstFunctionParameters
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstInteger = '5'
+     [java]           AstIdentifier = '+'
+     [java]           AstList
+     [java]            AstIdentifier = 'i'
+     [java]            AstIdentifier = '*'
+     [java]            AstInteger = '4'
+     [java]        AstDefine
+     [java]         AstIdentifier = 'helloClass'
+     [java]         AstVariable
+     [java]          AstSimpleType
+     [java]           AstIdentifier = 'HelloWorldClass'
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstList
+     [java]        AstList
+     [java]         AstIdentifier = 'while'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstFunctionSymbol
+     [java]           AstType
+     [java]            AstSimpleType
+     [java]             AstIdentifier = 'Boolean'
+     [java]          AstFunctionParameters
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstIdentifier = 'i'
+     [java]           AstIdentifier = '<'
+     [java]           AstIdentifier = 'param'
+     [java]         AstLambdaExpression
+     [java]          AstFunctionType
+     [java]           AstFunctionSymbol
+     [java]          AstFunctionParameters
+     [java]           AstFunctionSymbol
+     [java]          AstBody
+     [java]           AstList
+     [java]            AstString = '"iteration"'
+     [java]            AstIdentifier = 'println'
+     [java]           AstList
+     [java]            AstIdentifier = 'i'
+     [java]            AstIdentifier = '++'
+     [java]        AstLambdaExpression
+     [java]         AstFunctionType
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstIdentifier = 'Int'
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstIdentifier = 'Int'
+     [java]          AstFunctionSymbol
+     [java]          AstType
+     [java]           AstSimpleType
+     [java]            AstIdentifier = 'Int'
+     [java]         AstFunctionParameters
+     [java]          AstIdentifier = 'a'
+     [java]          AstIdentifier = 'b'
+     [java]          AstFunctionSymbol
+     [java]         AstBody
+     [java]          AstIdentifier = 'a'
+     [java]          AstIdentifier = '+'
+     [java]          AstIdentifier = 'b'
+     [java]  AstList
+     [java]   AstIdentifier = 'MyNamespace'
+     [java]   AstIdentifier = 'main'
+     [java]   AstInteger = '5'
+     [java] Defining Types...
+     [java] BLAAAAAAAAfalse
+     [java] defining (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-) in (( -> this))
+     [java] BLAAAAAAAAfalse
+     [java] defining (list [ ArrayList] := -{ new java.util.ArrayList();  }-) in (( -> this))
+     [java] defining (+= [(_ -> List)] := List[-{ list.add(element);  }-, UnresolvedInstruction('this', unresolved)]) in (( -> this))
+     [java] defining (get [(Int -> java.lang.Object)] := -{ list.get(i.toInt()._hlisp_run(... }-) in (( -> this))
+     [java] defining (List [( -> this)] := UnresolvedInstruction('this', unresolved)) in (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java] defining (while [(( -> Boolean) ( -> void) -> void)] := -{ 
+     [java]         while (condition._hl... }-) in (Root [ void] := -{ Root.List argList = List();S... }-)defining (+ [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value + other.value  }-]) in ((int -> this))
+     [java] defining (* [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value * other.value  }-]) in ((int -> this))
+     [java] defining (++ [( -> void)] := -{ value++; }-) in ((int -> this))
+     [java] defining (< [(Int -> Boolean)] := List[UnresolvedInstruction('Boolean', unresolved), -{ value < other }-]) in ((int -> this))
+     [java] defining (toInt [( -> java.lang.Integer)] := -{ value;  }-) in ((int -> this))
+     [java] defining (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.String.valueOf(value... }-]) in ((int -> this))
+     [java] defining (Int [(int -> this)] := UnresolvedInstruction('this', unresolved)) in (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java] defining (! [( -> Int)] := List[UnresolvedInstruction('Boolean', unresolved), -{ !value  }-]) in ((boolean -> this))
+     [java] defining (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.Boolean.toString(val... }-]) in ((boolean -> this))
+     [java] defining (Boolean [(boolean -> this)] := VoidInstruction) in (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java] defining (+ [(String -> String)] := List[UnresolvedInstruction('String', unresolved), -{ value + other.value  }-]) in ((java.lang.String -> this))
+     [java] defining (print [( -> void)] := -{ System.out.print(value);  }-) in ((java.lang.String -> this))
+     [java] defining (println [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]], UnresolvedInstruction('print', unresolved)]) in ((java.lang.String -> this))
+     [java] defining (String [(java.lang.String -> this)] := UnresolvedInstruction('this', unresolved)) in (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java] BLAAAAAAAAfalse
+     [java] defining (count [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 5 }-)]) in (( -> this))
+     [java] BLAAAAAAAAfalse
+     [java] defining (foo [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) in (( -> this))
+     [java] BLAAAAAAAAfalse
+     [java] defining (bar [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 3 }-)]) in (( -> this))
+     [java] BLAAAAAAAAfalse
+     [java] defining (bla [ Int] := List[UnresolvedInstruction('foo', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('bar', unresolved)]) in (( -> this))
+     [java] defining (run [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)]) in (( -> this))
+     [java] defining (function [(Int Int -> Int)] := List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)]) in (( -> this))
+     [java] defining (HelloWorldClass [( -> this)] := VoidInstruction) in (( -> this))
+     [java] BLAAAAAAAAfalse
+     [java] defining (i [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) in ((Int -> void))
+     [java] BLAAAAAAAAfalse
+     [java] defining (eval [ Int] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]) in ((Int -> void))
+     [java] defining (error [( -> Int)] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) in ((Int -> void))
+     [java] BLAAAAAAAAfalse
+     [java] defining (k [ List] := VoidInstruction) in ((Int -> void))
+     [java] BLAAAAAAAAfalse
+     [java] defining (list [ List] := List[UnresolvedInstruction('List', unresolved), UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""some"" }-)], UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""elements"" }-)]]) in ((Int -> void))
+     [java] defining (evalFun [( -> Int)] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]) in ((Int -> void))
+     [java] BLAAAAAAAAfalse
+     [java] defining (helloClass [ HelloWorldClass] := VoidInstruction) in ((Int -> void))
+     [java] defining (main [(Int -> void)] := UnresolvedInstruction('while', unresolved)) in (( -> this))
+     [java] defining (MyNamespace [( -> this)] := VoidInstruction) in (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java] (Root [ void] := -{ Root.List argList = List();S... }-)
+     [java]   (SelfType[Root])
+     [java]   (void)
+     [java]   (List [( -> this)] := UnresolvedInstruction('this', unresolved))
+     [java]     (SelfType[List])
+     [java]     (SelfType[( -> this)])
+     [java]     (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-)
+     [java]       (SelfType[ArrayList])
+     [java]       (SelfType[ java.util.ArrayList])
+     [java]     (list [ ArrayList] := -{ new java.util.ArrayList();  }-)
+     [java]       (SelfType[list])
+     [java]       (SelfType[ ArrayList])
+     [java]     (+= [(_ -> List)] := List[-{ list.add(element);  }-, UnresolvedInstruction('this', unresolved)])
+     [java]       (SelfType[+=])
+     [java]       (SelfType[(_ -> List)])
+     [java]     (get [(Int -> java.lang.Object)] := -{ list.get(i.toInt()._hlisp_run(... }-)
+     [java]       (SelfType[get])
+     [java]       (SelfType[(Int -> java.lang.Object)])
+     [java]   (while [(( -> Boolean) ( -> void) -> void)] := -{ 
+     [java]         while (condition._hl... }-)    (SelfType[while])
+     [java]     (SelfType[(( -> Boolean) ( -> void) -> void)])
+     [java]   (Int [(int -> this)] := UnresolvedInstruction('this', unresolved))
+     [java]     (SelfType[Int])
+     [java]     (SelfType[(int -> this)])
+     [java]     (+ [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value + other.value  }-])
+     [java]       (SelfType[+])
+     [java]       (SelfType[(Int -> Int)])
+     [java]     (* [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value * other.value  }-])
+     [java]       (SelfType[*])
+     [java]       (SelfType[(Int -> Int)])
+     [java]     (++ [( -> void)] := -{ value++; }-)
+     [java]       (SelfType[++])
+     [java]       (SelfType[( -> void)])
+     [java]     (< [(Int -> Boolean)] := List[UnresolvedInstruction('Boolean', unresolved), -{ value < other }-])
+     [java]       (SelfType[<])
+     [java]       (SelfType[(Int -> Boolean)])
+     [java]     (toInt [( -> java.lang.Integer)] := -{ value;  }-)
+     [java]       (SelfType[toInt])
+     [java]       (SelfType[( -> java.lang.Integer)])
+     [java]     (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.String.valueOf(value... }-])
+     [java]       (SelfType[toString])
+     [java]       (SelfType[( -> String)])
+     [java]   (Boolean [(boolean -> this)] := VoidInstruction)
+     [java]     (SelfType[Boolean])
+     [java]     (SelfType[(boolean -> this)])
+     [java]     (! [( -> Int)] := List[UnresolvedInstruction('Boolean', unresolved), -{ !value  }-])
+     [java]       (SelfType[!])
+     [java]       (SelfType[( -> Int)])
+     [java]     (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.Boolean.toString(val... }-])
+     [java]       (SelfType[toString])
+     [java]       (SelfType[( -> String)])
+     [java]   (String [(java.lang.String -> this)] := UnresolvedInstruction('this', unresolved))
+     [java]     (SelfType[String])
+     [java]     (SelfType[(java.lang.String -> this)])
+     [java]     (+ [(String -> String)] := List[UnresolvedInstruction('String', unresolved), -{ value + other.value  }-])
+     [java]       (SelfType[+])
+     [java]       (SelfType[(String -> String)])
+     [java]     (print [( -> void)] := -{ System.out.print(value);  }-)
+     [java]       (SelfType[print])
+     [java]       (SelfType[( -> void)])
+     [java]     (println [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]], UnresolvedInstruction('print', unresolved)])
+     [java]       (SelfType[println])
+     [java]       (SelfType[( -> void)])
+     [java]   (MyNamespace [( -> this)] := VoidInstruction)
+     [java]     (SelfType[MyNamespace])
+     [java]     (SelfType[( -> this)])
+     [java]     (HelloWorldClass [( -> this)] := VoidInstruction)
+     [java]       (SelfType[HelloWorldClass])
+     [java]       (SelfType[( -> this)])
+     [java]       (count [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 5 }-)])
+     [java]         (SelfType[count])
+     [java]         (SelfType[ Int])
+     [java]       (foo [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])
+     [java]         (SelfType[foo])
+     [java]         (SelfType[ Int])
+     [java]       (bar [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 3 }-)])
+     [java]         (SelfType[bar])
+     [java]         (SelfType[ Int])
+     [java]       (bla [ Int] := List[UnresolvedInstruction('foo', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('bar', unresolved)])
+     [java]         (SelfType[bla])
+     [java]         (SelfType[ Int])
+     [java]       (run [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)])
+     [java]         (SelfType[run])
+     [java]         (SelfType[( -> void)])
+     [java]       (function [(Int Int -> Int)] := List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)])
+     [java]         (SelfType[function])
+     [java]         (SelfType[(Int Int -> Int)])
+     [java]     (main [(Int -> void)] := UnresolvedInstruction('while', unresolved))
+     [java]       (SelfType[main])
+     [java]       (SelfType[(Int -> void)])
+     [java]       (i [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])
+     [java]         (SelfType[i])
+     [java]         (SelfType[ Int])
+     [java]       (eval [ Int] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])
+     [java]         (SelfType[eval])
+     [java]         (SelfType[ Int])
+     [java]       (error [( -> Int)] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])
+     [java]         (SelfType[error])
+     [java]         (SelfType[( -> Int)])
+     [java]       (k [ List] := VoidInstruction)
+     [java]         (SelfType[k])
+     [java]         (SelfType[ List])
+     [java]       (list [ List] := List[UnresolvedInstruction('List', unresolved), UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""some"" }-)], UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""elements"" }-)]])
+     [java]         (SelfType[list])
+     [java]         (SelfType[ List])
+     [java]       (evalFun [( -> Int)] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])
+     [java]         (SelfType[evalFun])
+     [java]         (SelfType[( -> Int)])
+     [java]       (helloClass [ HelloWorldClass] := VoidInstruction)
+     [java]         (SelfType[helloClass])
+     [java]         (SelfType[ HelloWorldClass])
+     [java] Unresolved types: 
+     [java]     
+     [java] Unresolved values: 
+     [java]     
+     [java] ---------- starting resolve iteration ----------
+     [java] Checking Type (Root [ void] := -{ Root.List argList = List();S... }-)... already resolved.
+     [java]   Checking Type _{java.lang.String[]}_...   already resolved.
+     [java]     Checking Type (SelfType[java.lang.String[]])...     already resolved.
+     [java]   Checking Type UnresolvedType(void, unresolved)...   resolved to (void).
+     [java]   Checking Type (SelfType[Root])...   already resolved.
+     [java]     Checking Type (void)...     already resolved.
+     [java]       Checking Type (void)...       already resolved.
+     [java]     Checking Type (List [( -> this)] := UnresolvedInstruction('this', unresolved))...     already resolved.
+     [java]       Checking Type UnresolvedType(this, unresolved)...       resolved to (List [( -> this)] := UnresolvedInstruction('this', unresolved)).
+     [java]         Checking Type (SelfType[List])...         already resolved.
+     [java]           Checking Type (SelfType[( -> List)])...           already resolved.
+     [java]             Checking Type (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-)...             already resolved.
+     [java]               Checking Type _{java.util.ArrayList}_...               already resolved.
+     [java]                 Checking Type (SelfType[java.util.ArrayList])...                 already resolved.
+     [java]               Checking Type (SelfType[ArrayList])...               already resolved.
+     [java]                 Checking Type (SelfType[ java.util.ArrayList])...                 already resolved.
+     [java]             Checking Type (list [ ArrayList] := -{ new java.util.ArrayList();  }-)...             already resolved.
+     [java]               Checking Type UnresolvedType(ArrayList, unresolved)...               resolved to (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-).
+     [java]               Checking Type (SelfType[list])...               already resolved.
+     [java]                 Checking Type (SelfType[ ArrayList])...                 already resolved.
+     [java]             Checking Type (+= [(_ -> List)] := List[-{ list.add(element);  }-, UnresolvedInstruction('this', unresolved)])...             already resolved.
+     [java]               Checking Type UnresolvedType(_, unresolved)...               resolved to _.
+     [java]               Checking Type UnresolvedType(List, unresolved)...               resolved to (List [( -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]               Checking Type (SelfType[+=])...               already resolved.
+     [java]                 Checking Type (SelfType[(_ -> List)])...                 already resolved.
+     [java]             Checking Type (get [(Int -> java.lang.Object)] := -{ list.get(i.toInt()._hlisp_run(... }-)...             already resolved.
+     [java]               Checking Type UnresolvedType(Int, unresolved)...               resolved to (Int [(int -> this)] := UnresolvedInstruction('this', unresolved)).
+     [java]               Checking Type _{java.lang.Object}_...               already resolved.
+     [java]                 Checking Type (SelfType[java.lang.Object])...                 already resolved.
+     [java]               Checking Type (SelfType[get])...               already resolved.
+     [java]                 Checking Type (Int [(int -> this)] := UnresolvedInstruction('this', unresolved))...                 already resolved.
+     [java]                   Checking Type _{int}_...                   already resolved.
+     [java]                     Checking Type (SelfType[int])...                     already resolved.
+     [java]                   Checking Type UnresolvedType(this, unresolved)...                   resolved to (Int [(int -> this)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[Int])...                     already resolved.
+     [java]                       Checking Type (SelfType[(int -> Int)])...                       already resolved.
+     [java]                         Checking Type (+ [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value + other.value  }-])...                         already resolved.
+     [java]                           Checking Type UnresolvedType(Int, unresolved)...                           resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type UnresolvedType(Int, unresolved)...                           resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type (SelfType[+])...                           already resolved.
+     [java]                             Checking Type (SelfType[(Int -> Int)])...                             already resolved.
+     [java]                         Checking Type (* [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value * other.value  }-])...                         already resolved.
+     [java]                           Checking Type UnresolvedType(Int, unresolved)...                           resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type UnresolvedType(Int, unresolved)...                           resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type (SelfType[*])...                           already resolved.
+     [java]                             Checking Type (SelfType[(Int -> Int)])...                             already resolved.
+     [java]                         Checking Type (++ [( -> void)] := -{ value++; }-)...                         already resolved.
+     [java]                           Checking Type UnresolvedType(void, unresolved)...                           resolved to (void).
+     [java]                           Checking Type (SelfType[++])...                           already resolved.
+     [java]                             Checking Type (SelfType[( -> void)])...                             already resolved.
+     [java]                         Checking Type (< [(Int -> Boolean)] := List[UnresolvedInstruction('Boolean', unresolved), -{ value < other }-])...                         already resolved.
+     [java]                           Checking Type UnresolvedType(Int, unresolved)...                           resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type UnresolvedType(Boolean, unresolved)...                           resolved to (Boolean [(boolean -> this)] := VoidInstruction).
+     [java]                           Checking Type (SelfType[<])...                           already resolved.
+     [java]                             Checking Type (Boolean [(boolean -> this)] := VoidInstruction)...                             already resolved.
+     [java]                               Checking Type _{boolean}_...                               already resolved.
+     [java]                                 Checking Type (SelfType[boolean])...                                 already resolved.
+     [java]                               Checking Type UnresolvedType(this, unresolved)...                               resolved to (Boolean [(boolean -> this)] := VoidInstruction).
+     [java]                                 Checking Type (SelfType[Boolean])...                                 already resolved.
+     [java]                                   Checking Type (SelfType[(boolean -> Boolean)])...                                   already resolved.
+     [java]                                     Checking Type (! [( -> Int)] := List[UnresolvedInstruction('Boolean', unresolved), -{ !value  }-])...                                     already resolved.
+     [java]                                       Checking Type UnresolvedType(Int, unresolved)...                                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                                       Checking Type (SelfType[!])...                                       already resolved.
+     [java]                                         Checking Type (SelfType[( -> Int)])...                                         already resolved.
+     [java]                                     Checking Type (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.Boolean.toString(val... }-])...                                     already resolved.
+     [java]                                       Checking Type UnresolvedType(String, unresolved)...                                       resolved to (String [(java.lang.String -> this)] := UnresolvedInstruction('this', unresolved)).
+     [java]                                       Checking Type (SelfType[toString])...                                       already resolved.
+     [java]                                         Checking Type (String [(java.lang.String -> this)] := UnresolvedInstruction('this', unresolved))...                                         already resolved.
+     [java]                                           Checking Type _{java.lang.String}_...                                           already resolved.
+     [java]                                             Checking Type (SelfType[java.lang.String])...                                             already resolved.
+     [java]                                           Checking Type UnresolvedType(this, unresolved)...                                           resolved to (String [(java.lang.String -> this)] := UnresolvedInstruction('this', unresolved)).
+     [java]                                             Checking Type (SelfType[String])...                                             already resolved.
+     [java]                                               Checking Type (SelfType[(java.lang.String -> String)])...                                               already resolved.
+     [java]                                                 Checking Type (+ [(String -> String)] := List[UnresolvedInstruction('String', unresolved), -{ value + other.value  }-])...                                                 already resolved.
+     [java]                                                   Checking Type UnresolvedType(String, unresolved)...                                                   resolved to (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                                                   Checking Type UnresolvedType(String, unresolved)...                                                   resolved to (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                                                   Checking Type (SelfType[+])...                                                   already resolved.
+     [java]                                                     Checking Type (SelfType[(String -> String)])...                                                     already resolved.
+     [java]                                                 Checking Type (print [( -> void)] := -{ System.out.print(value);  }-)...                                                 already resolved.
+     [java]                                                   Checking Type UnresolvedType(void, unresolved)...                                                   resolved to (void).
+     [java]                                                   Checking Type (SelfType[print])...                                                   already resolved.
+     [java]                                                     Checking Type (SelfType[( -> void)])...                                                     already resolved.
+     [java]                                                 Checking Type (println [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]], UnresolvedInstruction('print', unresolved)])...                                                 already resolved.
+     [java]                                                   Checking Type UnresolvedType(void, unresolved)...                                                   resolved to (void).
+     [java]                                                   Checking Type (SelfType[println])...                                                   already resolved.
+     [java]                                                     Checking Type (SelfType[( -> void)])...                                                     already resolved.
+     [java]                                         Checking Type (SelfType[( -> String)])...                                         already resolved.
+     [java]                             Checking Type (SelfType[(Int -> Boolean)])...                             already resolved.
+     [java]                         Checking Type (toInt [( -> java.lang.Integer)] := -{ value;  }-)...                         already resolved.
+     [java]                           Checking Type _{java.lang.Integer}_...                           already resolved.
+     [java]                             Checking Type (SelfType[java.lang.Integer])...                             already resolved.
+     [java]                           Checking Type (SelfType[toInt])...                           already resolved.
+     [java]                             Checking Type (SelfType[( -> java.lang.Integer)])...                             already resolved.
+     [java]                         Checking Type (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.String.valueOf(value... }-])...                         already resolved.
+     [java]                           Checking Type UnresolvedType(String, unresolved)...                           resolved to (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                           Checking Type (SelfType[toString])...                           already resolved.
+     [java]                             Checking Type (SelfType[( -> String)])...                             already resolved.
+     [java]                 Checking Type (SelfType[(Int -> java.lang.Object)])...                 already resolved.
+     [java]     Checking Type (while [(( -> Boolean) ( -> void) -> void)] := -{ 
+     [java]         while (condition._hl... }-)...     already resolved.      Checking Type (( -> Boolean))...       already resolved.
+     [java]         Checking Type UnresolvedType(Boolean, unresolved)...         resolved to (Boolean [(boolean -> self)] := VoidInstruction).
+     [java]         Checking Type (SelfType[( -> Boolean)])...         already resolved.
+     [java]       Checking Type (( -> void))...       already resolved.
+     [java]         Checking Type UnresolvedType(void, unresolved)...         resolved to (void).
+     [java]         Checking Type (SelfType[( -> void)])...         already resolved.
+     [java]       Checking Type UnresolvedType(void, unresolved)...       resolved to (void).
+     [java]       Checking Type (SelfType[while])...       already resolved.
+     [java]         Checking Type (SelfType[(( -> Boolean) ( -> void) -> void)])...         already resolved.
+     [java]     Checking Type (MyNamespace [( -> this)] := VoidInstruction)...     already resolved.
+     [java]       Checking Type UnresolvedType(this, unresolved)...       resolved to (MyNamespace [( -> this)] := VoidInstruction).
+     [java]         Checking Type (SelfType[MyNamespace])...         already resolved.
+     [java]           Checking Type (SelfType[( -> MyNamespace)])...           already resolved.
+     [java]             Checking Type (HelloWorldClass [( -> this)] := VoidInstruction)...             already resolved.
+     [java]               Checking Type UnresolvedType(this, unresolved)...               resolved to (HelloWorldClass [( -> this)] := VoidInstruction).
+     [java]                 Checking Type (SelfType[HelloWorldClass])...                 already resolved.
+     [java]                   Checking Type (SelfType[( -> HelloWorldClass)])...                   already resolved.
+     [java]                     Checking Type (count [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 5 }-)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type (SelfType[count])...                       already resolved.
+     [java]                         Checking Type (SelfType[ Int])...                         already resolved.
+     [java]                     Checking Type (foo [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type (SelfType[foo])...                       already resolved.
+     [java]                         Checking Type (SelfType[ Int])...                         already resolved.
+     [java]                     Checking Type (bar [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 3 }-)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type (SelfType[bar])...                       already resolved.
+     [java]                         Checking Type (SelfType[ Int])...                         already resolved.
+     [java]                     Checking Type (bla [ Int] := List[UnresolvedInstruction('foo', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('bar', unresolved)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type (SelfType[bla])...                       already resolved.
+     [java]                         Checking Type (SelfType[ Int])...                         already resolved.
+     [java]                     Checking Type (run [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(void, unresolved)...                       resolved to (void).
+     [java]                       Checking Type (SelfType[run])...                       already resolved.
+     [java]                         Checking Type (SelfType[( -> void)])...                         already resolved.
+     [java]                     Checking Type (function [(Int Int -> Int)] := List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)])...                     already resolved.
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type UnresolvedType(Int, unresolved)...                       resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                       Checking Type (SelfType[function])...                       already resolved.
+     [java]                         Checking Type (SelfType[(Int Int -> Int)])...                         already resolved.
+     [java]             Checking Type (main [(Int -> void)] := UnresolvedInstruction('while', unresolved))...             already resolved.
+     [java]               Checking Type UnresolvedType(Int, unresolved)...               resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]               Checking Type UnresolvedType(void, unresolved)...               resolved to (void).
+     [java]               Checking Type (SelfType[main])...               already resolved.
+     [java]                 Checking Type (SelfType[(Int -> void)])...                 already resolved.
+     [java]                   Checking Type (i [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])...                   already resolved.
+     [java]                     Checking Type UnresolvedType(Int, unresolved)...                     resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[i])...                     already resolved.
+     [java]                       Checking Type (SelfType[ Int])...                       already resolved.
+     [java]                   Checking Type (eval [ Int] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])...                   already resolved.
+     [java]                     Checking Type UnresolvedType(Int, unresolved)...                     resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[eval])...                     already resolved.
+     [java]                       Checking Type (SelfType[ Int])...                       already resolved.
+     [java]                   Checking Type (error [( -> Int)] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)])...                   already resolved.
+     [java]                     Checking Type UnresolvedType(Int, unresolved)...                     resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[error])...                     already resolved.
+     [java]                       Checking Type (SelfType[( -> Int)])...                       already resolved.
+     [java]                   Checking Type (k [ List] := VoidInstruction)...                   already resolved.
+     [java]                     Checking Type UnresolvedType(List, unresolved)...                     resolved to (List [( -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[k])...                     already resolved.
+     [java]                       Checking Type (SelfType[ List])...                       already resolved.
+     [java]                   Checking Type (list [ List] := List[UnresolvedInstruction('List', unresolved), UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""some"" }-)], UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""elements"" }-)]])...                   already resolved.
+     [java]                     Checking Type UnresolvedType(List, unresolved)...                     resolved to (List [( -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[list])...                     already resolved.
+     [java]                       Checking Type (SelfType[ List])...                       already resolved.
+     [java]                   Checking Type (evalFun [( -> Int)] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])...                   already resolved.
+     [java]                     Checking Type UnresolvedType(Int, unresolved)...                     resolved to (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)).
+     [java]                     Checking Type (SelfType[evalFun])...                     already resolved.
+     [java]                       Checking Type (SelfType[( -> Int)])...                       already resolved.
+     [java]                   Checking Type (helloClass [ HelloWorldClass] := VoidInstruction)...                   already resolved.
+     [java]                     Checking Type UnresolvedType(HelloWorldClass, unresolved)...                     resolved to (HelloWorldClass [( -> self)] := VoidInstruction).
+     [java]                     Checking Type (SelfType[helloClass])...                     already resolved.
+     [java]                       Checking Type (SelfType[ HelloWorldClass])...                       already resolved.
+     [java] Unresolved types: 
+     [java]     
+     [java] Unresolved values: 
+     [java]     
+     [java] Instruction in (Root [ void] := -{ Root.List argList = List();S... }-) needs solving.
+     [java]   Instruction in _{java.lang.String[]}_ needs solving.
+     [java]     Instruction in (SelfType[java.lang.String[]]) needs solving.
+     [java]   Instruction in (void) needs solving.
+     [java]     Instruction in (void) needs solving.
+     [java]   Instruction in (SelfType[Root]) needs solving.
+     [java]     Instruction in (List [( -> self)] := UnresolvedInstruction('this', unresolved)) needs solving.
+     [java]       Instruction in (SelfType[List]) needs solving.
+     [java]         Instruction in (SelfType[( -> List)]) needs solving.
+     [java]             Checking Type (( -> List))...             already resolved.
+     [java]           Instruction in (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-) needs solving.
+     [java]               Checking Type UnresolvedType(this, unresolved)...               resolved to (ArrayList [ java.util.ArrayList] := -{ new java.util.ArrayList();  }-).
+     [java]             Instruction in _{java.util.ArrayList}_ needs solving.
+     [java]               Instruction in (SelfType[java.util.ArrayList]) needs solving.
+     [java]             Instruction in (SelfType[ArrayList]) needs solving.
+     [java]               Instruction in (SelfType[ java.util.ArrayList]) needs solving.
+     [java]                   Checking Type ( java.util.ArrayList)...                   already resolved.
+     [java]           Instruction in (list [ ArrayList] := -{ new java.util.ArrayList();  }-) needs solving.
+     [java]             Instruction in (SelfType[list]) needs solving.
+     [java]               Instruction in (SelfType[ ArrayList]) needs solving.
+     [java]                   Checking Type ( ArrayList)...                   already resolved.
+     [java]           Instruction in (+= [(_ -> List)] := List[-{ list.add(element);  }-, UnresolvedInstruction('this', unresolved)]) needs solving.
+     [java]             /----Solving List[-{ list.add(element);  }-, UnresolvedInstruction('this', unresolved)]
+     [java]                   Checking Type UnresolvedType(void, unresolved)...                   resolved to (void).
+     [java]               0. child -{ list.add(element);  }-
+     [java]                 Next is not a function.
+     [java]               1. child UnresolvedInstruction('this', unresolved)
+     [java]                 no check, 1 < 0
+     [java]                 -{ list.add(element);  }- in single statement list
+     [java]                 this found in current scope, setting to (SelfType[+=])
+     [java]                 lastFunctionCall = call[null (SelfType[+=])()]
+     [java]             adding call[null (SelfType[+=])()] to result.
+     [java]             ----/Result: List[-{ list.add(element);  }-, call[null (SelfType[+=])()]]
+     [java]               Instruction in (SelfType[+=]) needs solving.
+     [java]                 Instruction in (SelfType[(_ -> List)]) needs solving.
+     [java]                     Checking Type ((_ -> List))...                     already resolved.
+     [java]             Instruction in (get [(Int -> java.lang.Object)] := -{ list.get(i.toInt()._hlisp_run(... }-) needs solving.
+     [java]               Instruction in (Int [(int -> self)] := UnresolvedInstruction('this', unresolved)) needs solving.
+     [java]                 Instruction in _{int}_ needs solving.
+     [java]                   Instruction in (SelfType[int]) needs solving.
+     [java]                 Instruction in (SelfType[Int]) needs solving.
+     [java]                   Instruction in (SelfType[(int -> Int)]) needs solving.
+     [java]                       Checking Type ((int -> Int))...                       already resolved.
+     [java]                     Instruction in (+ [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value + other.value  }-]) needs solving.
+     [java]                       /----Solving List[UnresolvedInstruction('Int', unresolved), -{ value + other.value  }-]
+     [java]                         0. child UnresolvedInstruction('Int', unresolved)
+     [java]                           Int found in current scope, setting to (Int [(int -> self)] := -{ this }-)
+     [java]                           lastFunctionCall = call[null (Int [(int -> self)] := -{ this }-)()]
+     [java]                           Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                           with parameters _{int}_.
+     [java]                         1. child -{ value + other.value  }-
+     [java]                           check, 0 < 1
+     [java]                           -{ value + other.value  }- is parameter.
+     [java]                           Function call to (Int [(int -> self)] := -{ this }-) complete.
+     [java]                           Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                           with parameters _{int}_.
+     [java]                           lastFunctionCall = call[null (Int [(int -> self)] := -{ this }-)(-{ value + other.value  }-)]
+     [java]                       adding call[null (Int [(int -> self)] := -{ this }-)(-{ value + other.value  }-)] to result.
+     [java]                       ----/Result: call[null (Int [(int -> self)] := -{ this }-)(-{ value + other.value  }-)]
+     [java]                         Instruction in (SelfType[+]) needs solving.
+     [java]                           Instruction in (SelfType[(Int -> Int)]) needs solving.
+     [java]                               Checking Type ((Int -> Int))...                               already resolved.
+     [java]                       Instruction in (* [(Int -> Int)] := List[UnresolvedInstruction('Int', unresolved), -{ value * other.value  }-]) needs solving.
+     [java]                         /----Solving List[UnresolvedInstruction('Int', unresolved), -{ value * other.value  }-]
+     [java]                           0. child UnresolvedInstruction('Int', unresolved)
+     [java]                             Int found in current scope, setting to (Int [(int -> self)] := -{ this }-)
+     [java]                             lastFunctionCall = call[null (Int [(int -> self)] := -{ this }-)()]
+     [java]                             Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                             with parameters _{int}_.
+     [java]                           1. child -{ value * other.value  }-
+     [java]                             check, 0 < 1
+     [java]                             -{ value * other.value  }- is parameter.
+     [java]                             Function call to (Int [(int -> self)] := -{ this }-) complete.
+     [java]                             Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                             with parameters _{int}_.
+     [java]                             lastFunctionCall = call[null (Int [(int -> self)] := -{ this }-)(-{ value * other.value  }-)]
+     [java]                         adding call[null (Int [(int -> self)] := -{ this }-)(-{ value * other.value  }-)] to result.
+     [java]                         ----/Result: call[null (Int [(int -> self)] := -{ this }-)(-{ value * other.value  }-)]
+     [java]                           Instruction in (SelfType[*]) needs solving.
+     [java]                             Instruction in (SelfType[(Int -> Int)]) needs solving.
+     [java]                                 Checking Type ((Int -> Int))...                                 already resolved.
+     [java]                         Instruction in (++ [( -> void)] := -{ value++; }-) needs solving.
+     [java]                             Checking Type UnresolvedType(void, unresolved)...                             resolved to (void).
+     [java]                           Instruction in (SelfType[++]) needs solving.
+     [java]                             Instruction in (SelfType[( -> void)]) needs solving.
+     [java]                                 Checking Type (( -> void))...                                 already resolved.
+     [java]                         Instruction in (< [(Int -> Boolean)] := List[UnresolvedInstruction('Boolean', unresolved), -{ value < other }-]) needs solving.
+     [java]                           /----Solving List[UnresolvedInstruction('Boolean', unresolved), -{ value < other }-]
+     [java]                             0. child UnresolvedInstruction('Boolean', unresolved)
+     [java]                               Boolean found in current scope, setting to (Boolean [(boolean -> self)] := VoidInstruction)
+     [java]                               lastFunctionCall = call[null (Boolean [(boolean -> self)] := VoidInstruction)()]
+     [java]                               Next is a function (Boolean [(boolean -> self)] := VoidInstruction)
+     [java]                               with parameters _{boolean}_.
+     [java]                             1. child -{ value < other }-
+     [java]                               check, 0 < 1
+     [java]                               -{ value < other }- is parameter.
+     [java]                               Function call to (Boolean [(boolean -> self)] := VoidInstruction) complete.
+     [java]                               Next is a function (Boolean [(boolean -> self)] := VoidInstruction)
+     [java]                               with parameters _{boolean}_.
+     [java]                               lastFunctionCall = call[null (Boolean [(boolean -> self)] := VoidInstruction)(-{ value < other }-)]
+     [java]                           adding call[null (Boolean [(boolean -> self)] := VoidInstruction)(-{ value < other }-)] to result.
+     [java]                           ----/Result: call[null (Boolean [(boolean -> self)] := VoidInstruction)(-{ value < other }-)]
+     [java]                             Instruction in (Boolean [(boolean -> self)] := VoidInstruction) needs solving.
+     [java]                                 Checking Type UnresolvedType(void, unresolved)...                                 resolved to (void).
+     [java]                               Instruction in _{boolean}_ needs solving.
+     [java]                                 Instruction in (SelfType[boolean]) needs solving.
+     [java]                               Instruction in (SelfType[Boolean]) needs solving.
+     [java]                                 Instruction in (SelfType[(boolean -> Boolean)]) needs solving.
+     [java]                                     Checking Type ((boolean -> Boolean))...                                     already resolved.
+     [java]                                   Instruction in (! [( -> Int)] := List[UnresolvedInstruction('Boolean', unresolved), -{ !value  }-]) needs solving.
+     [java]                                     /----Solving List[UnresolvedInstruction('Boolean', unresolved), -{ !value  }-]
+     [java]                                       0. child UnresolvedInstruction('Boolean', unresolved)
+     [java]                                         Boolean found in current scope, setting to (Boolean [(boolean -> self)] := -{ this }-)
+     [java]                                         lastFunctionCall = call[null (Boolean [(boolean -> self)] := -{ this }-)()]
+     [java]                                         Next is a function (Boolean [(boolean -> self)] := -{ this }-)
+     [java]                                         with parameters _{boolean}_.
+     [java]                                       1. child -{ !value  }-
+     [java]                                         check, 0 < 1
+     [java]                                         -{ !value  }- is parameter.
+     [java]                                         Function call to (Boolean [(boolean -> self)] := -{ this }-) complete.
+     [java]                                         Next is a function (Boolean [(boolean -> self)] := -{ this }-)
+     [java]                                         with parameters _{boolean}_.
+     [java]                                         lastFunctionCall = call[null (Boolean [(boolean -> self)] := -{ this }-)(-{ !value  }-)]
+     [java]                                     adding call[null (Boolean [(boolean -> self)] := -{ this }-)(-{ !value  }-)] to result.
+     [java]                                     ----/Result: call[null (Boolean [(boolean -> self)] := -{ this }-)(-{ !value  }-)]
+     [java]                                       Instruction in (SelfType[!]) needs solving.
+     [java]                                         Instruction in (SelfType[( -> Int)]) needs solving.
+     [java]                                             Checking Type (( -> Int))...                                             already resolved.
+     [java]                                     Instruction in (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.Boolean.toString(val... }-]) needs solving.
+     [java]                                       /----Solving List[UnresolvedInstruction('String', unresolved), -{ java.lang.Boolean.toString(val... }-]
+     [java]                                         0. child UnresolvedInstruction('String', unresolved)
+     [java]                                           String found in current scope, setting to (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))
+     [java]                                           lastFunctionCall = call[null (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))()]
+     [java]                                           Next is a function (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))
+     [java]                                           with parameters _{java.lang.String}_.
+     [java]                                         1. child -{ java.lang.Boolean.toString(val... }-
+     [java]                                           check, 0 < 1
+     [java]                                           -{ java.lang.Boolean.toString(val... }- is parameter.
+     [java]                                           Function call to (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved)) complete.
+     [java]                                           Next is a function (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))
+     [java]                                           with parameters _{java.lang.String}_.
+     [java]                                           lastFunctionCall = call[null (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))(-{ java.lang.Boolean.toString(val... }-)]
+     [java]                                       adding call[null (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))(-{ java.lang.Boolean.toString(val... }-)] to result.
+     [java]                                       ----/Result: call[null (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved))(-{ java.lang.Boolean.toString(val... }-)]
+     [java]                                         Instruction in (String [(java.lang.String -> self)] := UnresolvedInstruction('this', unresolved)) needs solving.
+     [java]                                           Instruction in _{java.lang.String}_ needs solving.
+     [java]                                             Instruction in (SelfType[java.lang.String]) needs solving.
+     [java]                                           Instruction in (SelfType[String]) needs solving.
+     [java]                                             Instruction in (SelfType[(java.lang.String -> String)]) needs solving.
+     [java]                                                 Checking Type ((java.lang.String -> String))...                                                 already resolved.
+     [java]                                               Instruction in (+ [(String -> String)] := List[UnresolvedInstruction('String', unresolved), -{ value + other.value  }-]) needs solving.
+     [java]                                                 /----Solving List[UnresolvedInstruction('String', unresolved), -{ value + other.value  }-]
+     [java]                                                   0. child UnresolvedInstruction('String', unresolved)
+     [java]                                                     String found in current scope, setting to (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                     lastFunctionCall = call[null (String [(java.lang.String -> self)] := -{ this }-)()]
+     [java]                                                     Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                     with parameters _{java.lang.String}_.
+     [java]                                                   1. child -{ value + other.value  }-
+     [java]                                                     check, 0 < 1
+     [java]                                                     -{ value + other.value  }- is parameter.
+     [java]                                                     Function call to (String [(java.lang.String -> self)] := -{ this }-) complete.
+     [java]                                                     Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                     with parameters _{java.lang.String}_.
+     [java]                                                     lastFunctionCall = call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ value + other.value  }-)]
+     [java]                                                 adding call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ value + other.value  }-)] to result.
+     [java]                                                 ----/Result: call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ value + other.value  }-)]
+     [java]                                                   Instruction in (SelfType[+]) needs solving.
+     [java]                                                     Instruction in (SelfType[(String -> String)]) needs solving.
+     [java]                                                         Checking Type ((String -> String))...                                                         already resolved.
+     [java]                                                 Instruction in (print [( -> void)] := -{ System.out.print(value);  }-) needs solving.
+     [java]                                                     Checking Type UnresolvedType(void, unresolved)...                                                     resolved to (void).
+     [java]                                                   Instruction in (SelfType[print]) needs solving.
+     [java]                                                     Instruction in (SelfType[( -> void)]) needs solving.
+     [java]                                                         Checking Type (( -> void))...                                                         already resolved.
+     [java]                                                 Instruction in (println [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]], UnresolvedInstruction('print', unresolved)]) needs solving.
+     [java]                                                   /----Solving List[List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]], UnresolvedInstruction('print', unresolved)]
+     [java]                                                       /----Solving List[call[null UnresolvedType(String, unresolved)(-{ ""this"" }-)], UnresolvedInstruction('+', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""\n"" }-)]]
+     [java]                                                             Checking Type UnresolvedType(String, unresolved)...                                                             resolved to (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                         0. child call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""this"" }-)]
+     [java]                                                           Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                           with parameters _{java.lang.String}_.
+     [java]                                                         1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                           check, 0 < 1
+     [java]                                                           (String [(java.lang.String -> self)] := -{ this }-) doesn't match as parameterType, _{java.lang.String}_ expected.
+     [java]                                                           Parametercheck failed, backtracking to 1...
+     [java]                                                         1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                           no check, 0 < 1
+     [java]                                                           Resolving +
+     [java]                                                             as (+ [(String -> String)] := -{ this }-)
+     [java]                                                             from (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                           lastFunctionCall = call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))()]
+     [java]                                                           Next is a function ((String -> String))
+     [java]                                                           with parameters (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                             Checking Type UnresolvedType(String, unresolved)...                                                             resolved to (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                         2. child call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)]
+     [java]                                                           check, 0 < 1
+     [java]                                                           call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)] is parameter.
+     [java]                                                           Function call to ((String -> String)) complete.
+     [java]                                                           Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                           with parameters _{java.lang.String}_.
+     [java]                                                           lastFunctionCall = call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)])]
+     [java]                                                       adding call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)])] to result.
+     [java]                                                       ----/Result: call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)])]
+     [java]                                                       0. child call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""\n"" }-)])]
+     [java]                                                         Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                         with parameters _{java.lang.String}_.
+     [java]                                                       1. child UnresolvedInstruction('print', unresolved)
+     [java]                                                         check, 0 < 1
+     [java]                                                         (void) doesn't match as parameterType, _{java.lang.String}_ expected.
+     [java]                                                         Parametercheck failed, backtracking to 1...
+     [java]                                                       1. child UnresolvedInstruction('print', unresolved)
+     [java]                                                         no check, 0 < 1
+     [java]                                                         Resolving print
+     [java]                                                           as (print [( -> void)] := -{ this }-)
+     [java]                                                           from (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[((String -> String)) (( -> void))()]
+     [java]                                                         Next is a function with no parameters.
+     [java]                                                         lastFunctionCall = call[(( -> void)) ( void)()]
+     [java]                                                     adding call[(( -> void)) ( void)()] to result.
+     [java]                                                     ----/Result: call[(( -> void)) ( void)()]
+     [java]                                                       Instruction in (SelfType[println]) needs solving.
+     [java]                                                         Instruction in (SelfType[( -> void)]) needs solving.
+     [java]                                                             Checking Type (( -> void))...                                                             already resolved.
+     [java]                                               Instruction in (SelfType[toString]) needs solving.
+     [java]                                                 Instruction in (SelfType[( -> String)]) needs solving.
+     [java]                                                     Checking Type (( -> String))...                                                     already resolved.
+     [java]                                       Instruction in (SelfType[<]) needs solving.
+     [java]                                         Instruction in (SelfType[(Int -> Boolean)]) needs solving.
+     [java]                                             Checking Type ((Int -> Boolean))...                                             already resolved.
+     [java]                                     Instruction in (toInt [( -> java.lang.Integer)] := -{ value;  }-) needs solving.
+     [java]                                       Instruction in _{java.lang.Integer}_ needs solving.
+     [java]                                         Instruction in (SelfType[java.lang.Integer]) needs solving.
+     [java]                                       Instruction in (SelfType[toInt]) needs solving.
+     [java]                                         Instruction in (SelfType[( -> java.lang.Integer)]) needs solving.
+     [java]                                             Checking Type (( -> java.lang.Integer))...                                             already resolved.
+     [java]                                     Instruction in (toString [( -> String)] := List[UnresolvedInstruction('String', unresolved), -{ java.lang.String.valueOf(value... }-]) needs solving.
+     [java]                                       /----Solving List[UnresolvedInstruction('String', unresolved), -{ java.lang.String.valueOf(value... }-]
+     [java]                                         0. child UnresolvedInstruction('String', unresolved)
+     [java]                                           String found in current scope, setting to (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                           lastFunctionCall = call[null (String [(java.lang.String -> self)] := -{ this }-)()]
+     [java]                                           Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                           with parameters _{java.lang.String}_.
+     [java]                                         1. child -{ java.lang.String.valueOf(value... }-
+     [java]                                           check, 0 < 1
+     [java]                                           -{ java.lang.String.valueOf(value... }- is parameter.
+     [java]                                           Function call to (String [(java.lang.String -> self)] := -{ this }-) complete.
+     [java]                                           Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                           with parameters _{java.lang.String}_.
+     [java]                                           lastFunctionCall = call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ java.lang.String.valueOf(value... }-)]
+     [java]                                       adding call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ java.lang.String.valueOf(value... }-)] to result.
+     [java]                                       ----/Result: call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ java.lang.String.valueOf(value... }-)]
+     [java]                                         Instruction in (SelfType[toString]) needs solving.
+     [java]                                           Instruction in (SelfType[( -> String)]) needs solving.
+     [java]                                               Checking Type (( -> String))...                                               already resolved.
+     [java]                                 Instruction in _{java.lang.Object}_ needs solving.
+     [java]                                   Instruction in (SelfType[java.lang.Object]) needs solving.
+     [java]                                 Instruction in (SelfType[get]) needs solving.
+     [java]                                   Instruction in (SelfType[(Int -> java.lang.Object)]) needs solving.
+     [java]                                       Checking Type ((Int -> java.lang.Object))...                                       already resolved.
+     [java]                         Instruction in (while [(( -> Boolean) ( -> void) -> void)] := -{ 
+     [java]         while (condition._hl... }-) needs solving.                            Checking Type UnresolvedType(void, unresolved)...                             resolved to (void).
+     [java]                           Instruction in (( -> Boolean)) needs solving.
+     [java]                             Instruction in (SelfType[( -> Boolean)]) needs solving.
+     [java]                           Instruction in (( -> void)) needs solving.
+     [java]                             Instruction in (SelfType[( -> void)]) needs solving.
+     [java]                           Instruction in (SelfType[while]) needs solving.
+     [java]                             Instruction in (SelfType[(( -> Boolean) ( -> void) -> void)]) needs solving.
+     [java]                                 Checking Type ((( -> Boolean) ( -> void) -> void))...                                 already resolved.
+     [java]                         Instruction in (MyNamespace [( -> self)] := VoidInstruction) needs solving.
+     [java]                             Checking Type UnresolvedType(void, unresolved)...                             resolved to (void).
+     [java]                           Instruction in (SelfType[MyNamespace]) needs solving.
+     [java]                             Instruction in (SelfType[( -> MyNamespace)]) needs solving.
+     [java]                                 Checking Type (( -> MyNamespace))...                                 already resolved.
+     [java]                               Instruction in (HelloWorldClass [( -> self)] := VoidInstruction) needs solving.
+     [java]                                   Checking Type UnresolvedType(void, unresolved)...                                   resolved to (void).
+     [java]                                 Instruction in (SelfType[HelloWorldClass]) needs solving.
+     [java]                                   Instruction in (SelfType[( -> HelloWorldClass)]) needs solving.
+     [java]                                       Checking Type (( -> HelloWorldClass))...                                       already resolved.
+     [java]                                     Instruction in (count [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 5 }-)]) needs solving.
+     [java]                                         Checking Type UnresolvedType(Int, unresolved)...                                         resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                       Instruction in (SelfType[count]) needs solving.
+     [java]                                         Instruction in (SelfType[ Int]) needs solving.
+     [java]                                             Checking Type ( Int)...                                             already resolved.
+     [java]                                     Instruction in (foo [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) needs solving.
+     [java]                                         Checking Type UnresolvedType(Int, unresolved)...                                         resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                       Instruction in (SelfType[foo]) needs solving.
+     [java]                                         Instruction in (SelfType[ Int]) needs solving.
+     [java]                                             Checking Type ( Int)...                                             already resolved.
+     [java]                                     Instruction in (bar [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 3 }-)]) needs solving.
+     [java]                                         Checking Type UnresolvedType(Int, unresolved)...                                         resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                       Instruction in (SelfType[bar]) needs solving.
+     [java]                                         Instruction in (SelfType[ Int]) needs solving.
+     [java]                                             Checking Type ( Int)...                                             already resolved.
+     [java]                                     Instruction in (bla [ Int] := List[UnresolvedInstruction('foo', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('bar', unresolved)]) needs solving.
+     [java]                                       /----Solving List[UnresolvedInstruction('foo', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('bar', unresolved)]
+     [java]                                         0. child UnresolvedInstruction('foo', unresolved)
+     [java]                                           foo found in current scope, setting to (foo [ Int] := -{ this }-)
+     [java]                                           lastFunctionCall = call[null (foo [ Int] := -{ this }-)()]
+     [java]                                           Next is not a function.
+     [java]                                         1. child UnresolvedInstruction('+', unresolved)
+     [java]                                           no check, 1 < 0
+     [java]                                           Resolving +
+     [java]                                             as (+ [(Int -> Int)] := -{ this }-)
+     [java]                                             from (Int [(int -> self)] := -{ this }-)
+     [java]                                           lastFunctionCall = call[(foo [ Int] := -{ this }-) ((Int -> Int))()]
+     [java]                                           Next is a function ((Int -> Int))
+     [java]                                           with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                         2. child UnresolvedInstruction('bar', unresolved)
+     [java]                                           check, 0 < 1
+     [java]                                           call[null (bar [ Int] := -{ this }-)()] is parameter.
+     [java]                                           Function call to ((Int -> Int)) complete.
+     [java]                                           Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                           with parameters _{int}_.
+     [java]                                           lastFunctionCall = call[(foo [ Int] := -{ this }-) ((Int -> Int))(call[null (bar [ Int] := -{ this }-)()])]
+     [java]                                       adding call[(foo [ Int] := -{ this }-) ((Int -> Int))(call[null (bar [ Int] := -{ this }-)()])] to result.
+     [java]                                       ----/Result: call[(foo [ Int] := -{ this }-) ((Int -> Int))(call[null (bar [ Int] := -{ this }-)()])]
+     [java]                                         Instruction in (SelfType[bla]) needs solving.
+     [java]                                           Instruction in (SelfType[ Int]) needs solving.
+     [java]                                               Checking Type ( Int)...                                               already resolved.
+     [java]                                       Instruction in (run [( -> void)] := List[List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)]) needs solving.
+     [java]                                         /----Solving List[List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)]
+     [java]                                             /----Solving List[call[null UnresolvedType(String, unresolved)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]]
+     [java]                                                   Checking Type UnresolvedType(String, unresolved)...                                                   resolved to (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                               0. child call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""Hello World!"" }-)]
+     [java]                                                 Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                 with parameters _{java.lang.String}_.
+     [java]                                               1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                 check, 0 < 1
+     [java]                                                 couldn't resolve UnresolvedInstruction('+', unresolved)
+     [java]                                                   in scope (run [( -> void)] := List[List[call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)])
+     [java]                                                 Parametercheck failed, backtracking to 1...
+     [java]                                               1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                 no check, 0 < 1
+     [java]                                                 Resolving +
+     [java]                                                   as (+ [(String -> String)] := -{ this }-)
+     [java]                                                   from (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                 lastFunctionCall = call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))()]
+     [java]                                                 Next is a function ((String -> String))
+     [java]                                                 with parameters (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                 /----Solving List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]
+     [java]                                                   0. child UnresolvedInstruction('count', unresolved)
+     [java]                                                     count found in current scope, setting to (count [ Int] := -{ this }-)
+     [java]                                                     lastFunctionCall = call[null (count [ Int] := -{ this }-)()]
+     [java]                                                     Next is not a function.
+     [java]                                                   1. child UnresolvedInstruction('toString', unresolved)
+     [java]                                                     no check, 1 < 0
+     [java]                                                     Resolving toString
+     [java]                                                       as (toString [( -> String)] := -{ this }-)
+     [java]                                                       from (Int [(int -> self)] := -{ this }-)
+     [java]                                                     lastFunctionCall = call[(count [ Int] := -{ this }-) (( -> String))()]
+     [java]                                                     Next is a function with no parameters.
+     [java]                                                     lastFunctionCall = call[(( -> String)) ((java.lang.String -> String))()]
+     [java]                                                 adding call[(( -> String)) ((java.lang.String -> String))()] to result.
+     [java]                                                 ----/Result: call[(( -> String)) ((java.lang.String -> String))()]
+     [java]                                                 2. child call[(( -> String)) ((java.lang.String -> String))()]
+     [java]                                                   check, 0 < 1
+     [java]                                                   call[(( -> String)) ((java.lang.String -> String))()] is parameter.
+     [java]                                                   Function call to ((String -> String)) complete.
+     [java]                                                   Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                   with parameters _{java.lang.String}_.
+     [java]                                                   lastFunctionCall = call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[(( -> String)) ((java.lang.String -> String))()])]
+     [java]                                               adding call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[(( -> String)) ((java.lang.String -> String))()])] to result.
+     [java]                                               ----/Result: call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[(( -> String)) ((java.lang.String -> String))()])]
+     [java]                                               0. child call[(String [(java.lang.String -> self)] := -{ this }-) ((String -> String))(call[(( -> String)) ((java.lang.String -> String))()])]
+     [java]                                                 Next is a function (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                 with parameters _{java.lang.String}_.
+     [java]                                               1. child UnresolvedInstruction('print', unresolved)
+     [java]                                                 check, 0 < 1
+     [java]                                                 couldn't resolve UnresolvedInstruction('print', unresolved)
+     [java]                                                   in scope (run [( -> void)] := List[List[call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""Hello World!"" }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('count', unresolved), UnresolvedInstruction('toString', unresolved)]], UnresolvedInstruction('print', unresolved)])
+     [java]                                                 Parametercheck failed, backtracking to 1...
+     [java]                                               1. child UnresolvedInstruction('print', unresolved)
+     [java]                                                 no check, 0 < 1
+     [java]                                                 Resolving print
+     [java]                                                   as (print [( -> void)] := -{ this }-)
+     [java]                                                   from (String [(java.lang.String -> self)] := -{ this }-)
+     [java]                                                 lastFunctionCall = call[((String -> String)) (( -> void))()]
+     [java]                                                 Next is a function with no parameters.
+     [java]                                                 lastFunctionCall = call[(( -> void)) ( void)()]
+     [java]                                             adding call[(( -> void)) ( void)()] to result.
+     [java]                                             ----/Result: call[(( -> void)) ( void)()]
+     [java]                                               Instruction in (SelfType[run]) needs solving.
+     [java]                                                 Instruction in (SelfType[( -> void)]) needs solving.
+     [java]                                                     Checking Type (( -> void))...                                                     already resolved.
+     [java]                                             Instruction in (function [(Int Int -> Int)] := List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)]) needs solving.
+     [java]                                               /----Solving List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)]
+     [java]                                                 0. child UnresolvedInstruction('a', unresolved)
+     [java]                                                   a found in current scope, setting to (Int [(int -> self)] := -{ this }-)
+     [java]                                                   lastFunctionCall = call[null (Int [(int -> self)] := -{ this }-)()]
+     [java]                                                   Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                   with parameters _{int}_.
+     [java]                                                 1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                   check, 0 < 1
+     [java]                                                   couldn't resolve UnresolvedInstruction('+', unresolved)
+     [java]                                                     in scope (function [(Int Int -> Int)] := List[UnresolvedInstruction('a', unresolved), UnresolvedInstruction('+', unresolved), UnresolvedInstruction('b', unresolved)])
+     [java]                                                   Parametercheck failed, backtracking to 1...
+     [java]                                                 1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                   no check, 0 < 1
+     [java]                                                   Resolving +
+     [java]                                                     as (+ [(Int -> Int)] := -{ this }-)
+     [java]                                                     from (Int [(int -> self)] := -{ this }-)
+     [java]                                                   lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))()]
+     [java]                                                   Next is a function ((Int -> Int))
+     [java]                                                   with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                                 2. child UnresolvedInstruction('b', unresolved)
+     [java]                                                   check, 0 < 1
+     [java]                                                   call[null (Int [(int -> self)] := -{ this }-)()] is parameter.
+     [java]                                                   Function call to ((Int -> Int)) complete.
+     [java]                                                   Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                   with parameters _{int}_.
+     [java]                                                   lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)()])]
+     [java]                                               adding call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)()])] to result.
+     [java]                                               ----/Result: call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)()])]
+     [java]                                                 Instruction in (SelfType[function]) needs solving.
+     [java]                                                   Instruction in (SelfType[(Int Int -> Int)]) needs solving.
+     [java]                                                       Checking Type ((Int Int -> Int))...                                                       already resolved.
+     [java]                                         Instruction in (main [(Int -> void)] := UnresolvedInstruction('while', unresolved)) needs solving.
+     [java]                                           Instruction in (SelfType[main]) needs solving.
+     [java]                                             Instruction in (SelfType[(Int -> void)]) needs solving.
+     [java]                                                 Checking Type ((Int -> void))...                                                 already resolved.
+     [java]                                               Instruction in (i [ Int] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) needs solving.
+     [java]                                                   Checking Type UnresolvedType(Int, unresolved)...                                                   resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                 Instruction in (SelfType[i]) needs solving.
+     [java]                                                   Instruction in (SelfType[ Int]) needs solving.
+     [java]                                                       Checking Type ( Int)...                                                       already resolved.
+     [java]                                               Instruction in (eval [ Int] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]) needs solving.
+     [java]                                                 /----Solving List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]
+     [java]                                                       Checking Type UnresolvedType(Int, unresolved)...                                                       resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                   0. child call[null (Int [(int -> self)] := -{ this }-)(-{ 5 }-)]
+     [java]                                                     Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                     with parameters _{int}_.
+     [java]                                                   1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                     check, 0 < 1
+     [java]                                                     couldn't resolve UnresolvedInstruction('+', unresolved)
+     [java]                                                       in scope (eval [ Int] := List[call[null (Int [(int -> self)] := -{ this }-)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])
+     [java]                                                     Parametercheck failed, backtracking to 1...
+     [java]                                                   1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                     no check, 0 < 1
+     [java]                                                     Resolving +
+     [java]                                                       as (+ [(Int -> Int)] := -{ this }-)
+     [java]                                                       from (Int [(int -> self)] := -{ this }-)
+     [java]                                                     lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))()]
+     [java]                                                     Next is a function ((Int -> Int))
+     [java]                                                     with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                                     /----Solving List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]
+     [java]                                                       0. child UnresolvedInstruction('i', unresolved)
+     [java]                                                         i found in current scope, setting to (i [ Int] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[null (i [ Int] := -{ this }-)()]
+     [java]                                                         Next is not a function.
+     [java]                                                       1. child UnresolvedInstruction('*', unresolved)
+     [java]                                                         no check, 1 < 0
+     [java]                                                         Resolving *
+     [java]                                                           as (* [(Int -> Int)] := -{ this }-)
+     [java]                                                           from (Int [(int -> self)] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[(i [ Int] := -{ this }-) ((Int -> Int))()]
+     [java]                                                         Next is a function ((Int -> Int))
+     [java]                                                         with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                                           Checking Type UnresolvedType(Int, unresolved)...                                                           resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                       2. child call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)]
+     [java]                                                         check, 0 < 1
+     [java]                                                         call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)] is parameter.
+     [java]                                                         Function call to ((Int -> Int)) complete.
+     [java]                                                         Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                         with parameters _{int}_.
+     [java]                                                         lastFunctionCall = call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                     adding call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])] to result.
+     [java]                                                     ----/Result: call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                     2. child call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                       check, 0 < 1
+     [java]                                                       call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])] is parameter.
+     [java]                                                       Function call to ((Int -> Int)) complete.
+     [java]                                                       Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                       with parameters _{int}_.
+     [java]                                                       lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])]
+     [java]                                                   adding call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])] to result.
+     [java]                                                   ----/Result: call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])]
+     [java]                                                     Instruction in (SelfType[eval]) needs solving.
+     [java]                                                       Instruction in (SelfType[ Int]) needs solving.
+     [java]                                                           Checking Type ( Int)...                                                           already resolved.
+     [java]                                                   Instruction in (error [( -> Int)] := call[null UnresolvedType(Int, unresolved)(-{ 0 }-)]) needs solving.
+     [java]                                                       Checking Type UnresolvedType(Int, unresolved)...                                                       resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                     Instruction in (SelfType[error]) needs solving.
+     [java]                                                       Instruction in (SelfType[( -> Int)]) needs solving.
+     [java]                                                           Checking Type (( -> Int))...                                                           already resolved.
+     [java]                                                   Instruction in (k [ List] := VoidInstruction) needs solving.
+     [java]                                                       Checking Type UnresolvedType(void, unresolved)...                                                       resolved to (void).
+     [java]                                                     Instruction in (SelfType[k]) needs solving.
+     [java]                                                       Instruction in (SelfType[ List]) needs solving.
+     [java]                                                           Checking Type ( List)...                                                           already resolved.
+     [java]                                                   Instruction in (list [ List] := List[UnresolvedInstruction('List', unresolved), UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""some"" }-)], UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""elements"" }-)]]) needs solving.
+     [java]                                                     /----Solving List[UnresolvedInstruction('List', unresolved), UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""some"" }-)], UnresolvedInstruction('+=', unresolved), call[null UnresolvedType(String, unresolved)(-{ ""elements"" }-)]]
+     [java]                                                       0. child UnresolvedInstruction('List', unresolved)
+     [java]                                                         List found in current scope, setting to (List [( -> self)] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[null (List [( -> self)] := -{ this }-)()]
+     [java]                                                         Next is a function with no parameters.
+     [java]                                                         lastFunctionCall = call[(List [( -> self)] := -{ this }-) (( -> List))()]
+     [java]                                                       1. child UnresolvedInstruction('+=', unresolved)
+     [java]                                                         no check, 1 < 0
+     [java]                                                         Resolving +=
+     [java]                                                           as (+= [(_ -> List)] := -{ this }-)
+     [java]                                                           from (List [( -> self)] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[(( -> List)) ((_ -> List))()]
+     [java]                                                         Next is a function ((_ -> List))
+     [java]                                                         with parameters _.
+     [java]                                                           Checking Type UnresolvedType(String, unresolved)...                                                           resolved to (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                       2. child call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""some"" }-)]
+     [java]                                                         check, 0 < 1
+     [java]                                                         call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""some"" }-)] is parameter.
+     [java]                                                         Function call to ((_ -> List)) complete.
+     [java]                                                         Next is a function with no parameters.
+     [java]                                                         lastFunctionCall = call[((_ -> List)) (( -> List))()]
+     [java]                                                         lastFunctionCall = call[((_ -> List)) (( -> List))()]
+     [java]                                                       3. child UnresolvedInstruction('+=', unresolved)
+     [java]                                                         no check, 1 < 0
+     [java]                                                         Resolving +=
+     [java]                                                           as (+= [(_ -> List)] := -{ this }-)
+     [java]                                                           from (List [( -> self)] := -{ this }-)
+     [java]                                                         lastFunctionCall = call[(( -> List)) ((_ -> List))()]
+     [java]                                                         Next is a function ((_ -> List))
+     [java]                                                         with parameters _.
+     [java]                                                           Checking Type UnresolvedType(String, unresolved)...                                                           resolved to (String [(java.lang.String -> self)] := -{ this }-).
+     [java]                                                       4. child call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""elements"" }-)]
+     [java]                                                         check, 0 < 1
+     [java]                                                         call[null (String [(java.lang.String -> self)] := -{ this }-)(-{ ""elements"" }-)] is parameter.
+     [java]                                                         Function call to ((_ -> List)) complete.
+     [java]                                                         Next is a function with no parameters.
+     [java]                                                         lastFunctionCall = call[((_ -> List)) (( -> List))()]
+     [java]                                                         lastFunctionCall = call[((_ -> List)) (( -> List))()]
+     [java]                                                     adding call[((_ -> List)) (( -> List))()] to result.
+     [java]                                                     ----/Result: call[((_ -> List)) (( -> List))()]
+     [java]                                                       Instruction in (SelfType[list]) needs solving.
+     [java]                                                         Instruction in (SelfType[ List]) needs solving.
+     [java]                                                             Checking Type ( List)...                                                             already resolved.
+     [java]                                                     Instruction in (evalFun [( -> Int)] := List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]) needs solving.
+     [java]                                                       /----Solving List[call[null UnresolvedType(Int, unresolved)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]]
+     [java]                                                             Checking Type UnresolvedType(Int, unresolved)...                                                             resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                         0. child call[null (Int [(int -> self)] := -{ this }-)(-{ 5 }-)]
+     [java]                                                           Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                           with parameters _{int}_.
+     [java]                                                         1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                           check, 0 < 1
+     [java]                                                           couldn't resolve UnresolvedInstruction('+', unresolved)
+     [java]                                                             in scope (evalFun [( -> Int)] := List[call[null (Int [(int -> self)] := -{ this }-)(-{ 5 }-)], UnresolvedInstruction('+', unresolved), List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]])
+     [java]                                                           Parametercheck failed, backtracking to 1...
+     [java]                                                         1. child UnresolvedInstruction('+', unresolved)
+     [java]                                                           no check, 0 < 1
+     [java]                                                           Resolving +
+     [java]                                                             as (+ [(Int -> Int)] := -{ this }-)
+     [java]                                                             from (Int [(int -> self)] := -{ this }-)
+     [java]                                                           lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))()]
+     [java]                                                           Next is a function ((Int -> Int))
+     [java]                                                           with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                                           /----Solving List[UnresolvedInstruction('i', unresolved), UnresolvedInstruction('*', unresolved), call[null UnresolvedType(Int, unresolved)(-{ 4 }-)]]
+     [java]                                                             0. child UnresolvedInstruction('i', unresolved)
+     [java]                                                               i found in current scope, setting to (i [ Int] := -{ this }-)
+     [java]                                                               lastFunctionCall = call[null (i [ Int] := -{ this }-)()]
+     [java]                                                               Next is not a function.
+     [java]                                                             1. child UnresolvedInstruction('*', unresolved)
+     [java]                                                               no check, 1 < 0
+     [java]                                                               Resolving *
+     [java]                                                                 as (* [(Int -> Int)] := -{ this }-)
+     [java]                                                                 from (Int [(int -> self)] := -{ this }-)
+     [java]                                                               lastFunctionCall = call[(i [ Int] := -{ this }-) ((Int -> Int))()]
+     [java]                                                               Next is a function ((Int -> Int))
+     [java]                                                               with parameters (Int [(int -> self)] := -{ this }-).
+     [java]                                                                 Checking Type UnresolvedType(Int, unresolved)...                                                                 resolved to (Int [(int -> self)] := -{ this }-).
+     [java]                                                             2. child call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)]
+     [java]                                                               check, 0 < 1
+     [java]                                                               call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)] is parameter.
+     [java]                                                               Function call to ((Int -> Int)) complete.
+     [java]                                                               Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                               with parameters _{int}_.
+     [java]                                                               lastFunctionCall = call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                           adding call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])] to result.
+     [java]                                                           ----/Result: call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                           2. child call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])]
+     [java]                                                             check, 0 < 1
+     [java]                                                             call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])] is parameter.
+     [java]                                                             Function call to ((Int -> Int)) complete.
+     [java]                                                             Next is a function (Int [(int -> self)] := -{ this }-)
+     [java]                                                             with parameters _{int}_.
+     [java]                                                             lastFunctionCall = call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])]
+     [java]                                                         adding call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])] to result.
+     [java]                                                         ----/Result: call[(Int [(int -> self)] := -{ this }-) ((Int -> Int))(call[(i [ Int] := -{ this }-) ((Int -> Int))(call[null (Int [(int -> self)] := -{ this }-)(-{ 4 }-)])])]
+     [java]                                                           Instruction in (SelfType[evalFun]) needs solving.
+     [java]                                                             Instruction in (SelfType[( -> Int)]) needs solving.
+     [java]                                                                 Checking Type (( -> Int))...                                                                 already resolved.
+     [java]                                                         Instruction in (helloClass [ HelloWorldClass] := VoidInstruction) needs solving.
+     [java]                                                             Checking Type UnresolvedType(void, unresolved)...                                                             resolved to (void).
+     [java]                                                           Instruction in (SelfType[helloClass]) needs solving.
+     [java]                                                             Instruction in (SelfType[ HelloWorldClass]) needs solving.
+     [java]                                                                 Checking Type ( HelloWorldClass)...                                                                 already resolved.
+     [java] Everything resolved...
+     [java] --------------------------------------------------
+     [java] (Root [ void] := -{ this }-)
+     [java]   (SelfType[Root])
+     [java]   (void)
+     [java]   (List [( -> self)] := -{ this }-)
+     [java]     (SelfType[List])
+     [java]     (SelfType[( -> List)])
+     [java]     (ArrayList [ java.util.ArrayList] := -{ this }-)
+     [java]       (SelfType[ArrayList])
+     [java]       (SelfType[ java.util.ArrayList])
+     [java]     (list [ ArrayList] := -{ this }-)
+     [java]       (SelfType[list])
+     [java]       (SelfType[ ArrayList])
+     [java]     (+= [(_ -> List)] := -{ this }-)
+     [java]       (SelfType[+=])
+     [java]       (SelfType[(_ -> List)])
+     [java]     (get [(Int -> java.lang.Object)] := -{ this }-)
+     [java]       (SelfType[get])
+     [java]       (SelfType[(Int -> java.lang.Object)])
+     [java]   (while [(( -> Boolean) ( -> void) -> void)] := -{ this }-)
+     [java]     (SelfType[while])
+     [java]     (SelfType[(( -> Boolean) ( -> void) -> void)])
+     [java]   (Int [(int -> self)] := -{ this }-)
+     [java]     (SelfType[Int])
+     [java]     (SelfType[(int -> Int)])
+     [java]     (+ [(Int -> Int)] := -{ this }-)
+     [java]       (SelfType[+])
+     [java]       (SelfType[(Int -> Int)])
+     [java]     (* [(Int -> Int)] := -{ this }-)
+     [java]       (SelfType[*])
+     [java]       (SelfType[(Int -> Int)])
+     [java]     (++ [( -> void)] := -{ this }-)
+     [java]       (SelfType[++])
+     [java]       (SelfType[( -> void)])
+     [java]     (< [(Int -> Boolean)] := -{ this }-)
+     [java]       (SelfType[<])
+     [java]       (SelfType[(Int -> Boolean)])
+     [java]     (toInt [( -> java.lang.Integer)] := -{ this }-)
+     [java]       (SelfType[toInt])
+     [java]       (SelfType[( -> java.lang.Integer)])
+     [java]     (toString [( -> String)] := -{ this }-)
+     [java]       (SelfType[toString])
+     [java]       (SelfType[( -> String)])
+     [java]   (Boolean [(boolean -> self)] := -{ this }-)
+     [java]     (SelfType[Boolean])
+     [java]     (SelfType[(boolean -> Boolean)])
+     [java]     (! [( -> Int)] := -{ this }-)
+     [java]       (SelfType[!])
+     [java]       (SelfType[( -> Int)])
+     [java]     (toString [( -> String)] := -{ this }-)
+     [java]       (SelfType[toString])
+     [java]       (SelfType[( -> String)])
+     [java]   (String [(java.lang.String -> self)] := -{ this }-)
+     [java]     (SelfType[String])
+     [java]     (SelfType[(java.lang.String -> String)])
+     [java]     (+ [(String -> String)] := -{ this }-)
+     [java]       (SelfType[+])
+     [java]       (SelfType[(String -> String)])
+     [java]     (print [( -> void)] := -{ this }-)
+     [java]       (SelfType[print])
+     [java]       (SelfType[( -> void)])
+     [java]     (println [( -> void)] := -{ this }-)
+     [java]       (SelfType[println])
+     [java]       (SelfType[( -> void)])
+     [java]   (MyNamespace [( -> self)] := -{ this }-)
+     [java]     (SelfType[MyNamespace])
+     [java]     (SelfType[( -> MyNamespace)])
+     [java]     (HelloWorldClass [( -> self)] := -{ this }-)
+     [java]       (SelfType[HelloWorldClass])
+     [java]       (SelfType[( -> HelloWorldClass)])
+     [java]       (count [ Int] := -{ this }-)
+     [java]         (SelfType[count])
+     [java]         (SelfType[ Int])
+     [java]       (foo [ Int] := -{ this }-)
+     [java]         (SelfType[foo])
+     [java]         (SelfType[ Int])
+     [java]       (bar [ Int] := -{ this }-)
+     [java]         (SelfType[bar])
+     [java]         (SelfType[ Int])
+     [java]       (bla [ Int] := -{ this }-)
+     [java]         (SelfType[bla])
+     [java]         (SelfType[ Int])
+     [java]       (run [( -> void)] := -{ this }-)
+     [java]         (SelfType[run])
+     [java]         (SelfType[( -> void)])
+     [java]       (function [(Int Int -> Int)] := -{ this }-)
+     [java]         (SelfType[function])
+     [java]         (SelfType[(Int Int -> Int)])
+     [java]     (main [(Int -> void)] := -{ this }-)
+     [java]       (SelfType[main])
+     [java]       (SelfType[(Int -> void)])
+     [java]       (i [ Int] := -{ this }-)
+     [java]         (SelfType[i])
+     [java]         (SelfType[ Int])
+     [java]       (eval [ Int] := -{ this }-)
+     [java]         (SelfType[eval])
+     [java]         (SelfType[ Int])
+     [java]       (error [( -> Int)] := -{ this }-)
+     [java]         (SelfType[error])
+     [java]         (SelfType[( -> Int)])
+     [java]       (k [ List] := -{ this }-)
+     [java]         (SelfType[k])
+     [java]         (SelfType[ List])
+     [java]       (list [ List] := -{ this }-)
+     [java]         (SelfType[list])
+     [java]         (SelfType[ List])
+     [java]       (evalFun [( -> Int)] := -{ this }-)
+     [java]         (SelfType[evalFun])
+     [java]         (SelfType[( -> Int)])
+     [java]       (helloClass [ HelloWorldClass] := -{ this }-)
+     [java]         (SelfType[helloClass])
+     [java]         (SelfType[ HelloWorldClass])
+     [java] Skipping (SelfType[Root]).
+     [java] Skipping (SelfType[List]).
+     [java] Skipping (SelfType[( -> List)]).
+     [java] Skipping (SelfType[+=]).
+     [java] Skipping (SelfType[(_ -> List)]).
+     [java] Skipping (SelfType[get]).
+     [java] Skipping (SelfType[(Int -> java.lang.Object)]).
+     [java] Skipping (SelfType[while]).
+     [java] Skipping (SelfType[(( -> Boolean) ( -> void) -> void)]).
+     [java] Skipping (SelfType[Int]).
+     [java] Skipping (SelfType[(int -> Int)]).
+     [java] Skipping (SelfType[+]).
+     [java] Skipping (SelfType[(Int -> Int)]).
+     [java] Skipping (SelfType[*]).
+     [java] Skipping (SelfType[(Int -> Int)]).
+     [java] Skipping (SelfType[++]).
+     [java] Skipping (SelfType[( -> void)]).
+     [java] Skipping (SelfType[<]).
+     [java] Skipping (SelfType[(Int -> Boolean)]).
+     [java] Skipping (SelfType[toInt]).
+     [java] Skipping (SelfType[( -> java.lang.Integer)]).
+     [java] Skipping (SelfType[toString]).
+     [java] Skipping (SelfType[( -> String)]).
+     [java] Skipping (SelfType[Boolean]).
+     [java] Skipping (SelfType[(boolean -> Boolean)]).
+     [java] Skipping (SelfType[!]).
+     [java] Skipping (SelfType[( -> Int)]).
+     [java] Skipping (SelfType[toString]).
+     [java] Skipping (SelfType[( -> String)]).
+     [java] Skipping (SelfType[String]).
+     [java] Skipping (SelfType[(java.lang.String -> String)]).
+     [java] Skipping (SelfType[+]).
+     [java] Skipping (SelfType[(String -> String)]).
+     [java] Skipping (SelfType[print]).
+     [java] Skipping (SelfType[( -> void)]).
+     [java] Skipping (SelfType[println]).
+     [java] Skipping (SelfType[( -> void)]).
+     [java] Skipping (SelfType[MyNamespace]).
+     [java] Skipping (SelfType[( -> MyNamespace)]).
+     [java] Skipping (SelfType[HelloWorldClass]).
+     [java] Skipping (SelfType[( -> HelloWorldClass)]).
+     [java] Skipping (SelfType[run]).
+     [java] Skipping (SelfType[( -> void)]).
+     [java] Skipping (SelfType[function]).
+     [java] Skipping (SelfType[(Int Int -> Int)]).
+     [java] Skipping (SelfType[main]).
+     [java] Skipping (SelfType[(Int -> void)]).
+     [java] Skipping (SelfType[error]).
+     [java] Skipping (SelfType[( -> Int)]).
+     [java] Skipping (SelfType[evalFun]).
+     [java] Skipping (SelfType[( -> Int)]).
+     [java] Written V:\Programming\lisp\bin\..\gen\de\haukerehfeld\hlisp\Root.java
+    [javac] Compiling 1 source file to V:\Programming\lisp\bin
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:67: > expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan Boolean)> condition;
+    [javac]                                    ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:67: ';' expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan Boolean)> condition;
+    [javac]                                     ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:67: <identifier> expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan Boolean)> condition;
+    [javac]                                                              ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:67: illegal start of type
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan Boolean)> condition;
+    [javac]                                                               ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:68: > expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan void)> body;
+    [javac]                                    ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:68: ';' expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan void)> body;
+    [javac]                                     ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:68: <identifier> expected
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan void)> body;
+    [javac]                                                           ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:68: illegal start of type
+    [javac]     private Function<_hlisp_escape_( minusgreaterthan void)> body;
+    [javac]                                                            ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: > expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                         ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: ')' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                          ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: ';' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                           ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: illegal start of type
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                   ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: <identifier> expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                    ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: ';' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                     ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: illegal start of type
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                               ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: ';' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                         ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: > expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                                        ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: '(' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                                                           ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: <identifier> expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                                                               ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: illegal start of type
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                                                                ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:70: ';' expected
+    [javac]     public _hlisp_reserved_while(Function<_hlisp_escape_( minusgreaterthan Boolean)> condition, Function<_hlisp_escape_( minusgreaterthan void)> body) {
+    [javac]                                                                                                                                                      ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:183: <identifier> expected
+    [javac]     public class ! implements Function<Int> {
+    [javac]                 ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:183: illegal start of type
+    [javac]     public class ! implements Function<Int> {
+    [javac]                    ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:183: ';' expected
+    [javac]     public class ! implements Function<Int> {
+    [javac]                                       ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:183: illegal start of type
+    [javac]     public class ! implements Function<Int> {
+    [javac]                                             ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:184: '(' expected
+    [javac]       public ! _hlisp_run() {
+    [javac]       ^
+    [javac] V:\Programming\lisp\gen\de\haukerehfeld\hlisp\Root.java:184: illegal start of type
+    [javac]       public ! _hlisp_run() {
+    [javac]              ^
+    [javac] 27 errors

@@ -2,6 +2,7 @@ package de.haukerehfeld.hlisp.semantics;
 
 import de.haukerehfeld.hlisp.parser.*;
 import de.haukerehfeld.hlisp.Utils;
+import de.haukerehfeld.hlisp.IndentStringBuilder;
 import java.util.*;
 
 /**
@@ -15,15 +16,7 @@ public class Resolver {
 
 	private boolean runAgain = false;
 
-	private int indent = 0;
-
-	private String indent() {
-		String ind = "";
-		for (int i = 0; i < indent; ++i) {
-			ind += "  ";
-		}
-		return ind;
-	}
+	private IndentStringBuilder r = new IndentStringBuilder();
 
 	public void solve(RootType root) throws UnresolvedTypeException, SemanticException {
 		do {
@@ -43,6 +36,7 @@ public class Resolver {
 			throw new UnresolvedTypeException(unresolvableTypes.get(0));
 		}
 
+		r = new IndentStringBuilder();
 		solveInstructions(root);
 		
 		System.out.println("Everything resolved...");
@@ -65,15 +59,18 @@ public class Resolver {
 		}
 		checkedTypes.add(t);
 
-		System.out.print(indent() + "Checking Type " + t + "... ");
-
+		r.print("Checking Type " + t + "... ");
 		if (!t.isResolved()) {
-			System.out.print("\n" + indent() + "    ");
 			UnresolvedType u = (UnresolvedType) t;
 			//special case
 			if (u.getName().equals(Type.SELF)) {
-				System.out.println("resolved to " + scope + ".");
+				r.print("resolved to " + scope + ".", true);
 				u.setResolved(scope);
+			}
+			else if (u.getName().equals(Type.DONTCARE)) {
+				Type n = new DontCareType(scope);
+				r.print("resolved to " + n + ".", true);
+				u.setResolved(n);
 			}
 			else {
 				if (scope.isTypeDefinedRecursive(u.getNames().get(0))) {
@@ -82,70 +79,78 @@ public class Resolver {
 					for (int i = 1; i < u.getNames().size(); ++i) {
 						Type next = resolved.getDefinedTypeRecursive(u.getNames().get(i));
 						if (next == null) {
-							System.out.print(" failed");
+							r.print("resolve failed", true);
 							unresolvableTypes.add(u);
 							return;
 						}
 						resolved = next;
 					}
 					
-					System.out.print(" resolved  to " + resolved);
+					r.print("resolved to " + resolved + ".", true);
 					u.setResolved(resolved);
 				}
 				else {
-					System.out.println(" failed");
+					r.print(" failed.", true);
 					unresolvableTypes.add(u);
 				}
-				System.out.println(".");
 				return;
 			}
 		}
 		else {
-			System.out.println("already resolved.");
+			r.print("already resolved.", true);
 		}
 
 		for (Type child: collectTypes(t)) {
-			indent++;
+			r.indentMore();
 			solve(child, t);
-			indent--;
+			r.indentLess();
 		}
 		
 	}
 
 	void solveInstructions(Type t) throws SemanticException {
 		if (checkedInstructionTypes.contains(t)) {
-			System.out.println(indent() + "instruction in " + t + " already checked.");
 			return;
 		}
-		System.out.println(indent() + "solving instruction in " + t + ".");
+		r.print("Instruction in " + t + " needs solving.", true);
 		checkedInstructionTypes.add(t);
-		solve(t.getInstruction(), t);
+		t.setInstruction(solve(t.getInstruction(), t));
 
+		r.indentMore();
 		for (Type child: collectTypes(t)) {
-			System.out.println(indent() + "solving instruction in child " + child + ".");
-			indent++;
 			solveInstructions(child);
-			indent--;
 		}
+		r.indentLess();
 	}
 
 	Instruction solve(Instruction instr, Type scope) throws SemanticException {
+		r.indentMore();
 		if (instr instanceof ListInstruction) {
 			return solve((ListInstruction)instr, scope);
 		}
 		else if (instr instanceof FunctionCallInstruction) {
-			Type fun = ((FunctionCallInstruction) instr).getFunction();
-
+			FunctionCallInstruction f = (FunctionCallInstruction) instr;
+			Type fun = f.getFunction();
+			
+			r.indentMore();
 			solve(fun, scope);
+			if (!f.isStatic()) {
+				Type funScope = f.getScope();
+				solve(funScope, scope);
+			}
+			r.indentLess();
 		}
 		else if (instr instanceof NativeInstruction) {
+			r.indentMore();
 			solve(instr.getReturnType(), scope);
+			r.indentLess();
 		}
+		r.indentLess();
 		return instr;
 	}
 
 	private Instruction solve(ListInstruction list, Type scope) throws SemanticException {
-		Instruction instr = new ListInstructionResolver().solve(list, scope, this);
+		Instruction instr = new ListInstructionResolver(r).solve(list, scope, this);
 		unresolvableValues.addAll(unresolvableValues);
 		return instr;
 	}

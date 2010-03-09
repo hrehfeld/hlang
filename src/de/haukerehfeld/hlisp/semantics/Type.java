@@ -7,6 +7,8 @@ import de.haukerehfeld.hlisp.JavaEmitter;
 public interface Type {
 	public static final String SELFTYPE = "this";
 	public static final String SELF = "this";
+
+	public static final String DONTCARE = "_";
 	
 	public String getName();
 	public Type getParent();
