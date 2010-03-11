@@ -34,6 +34,7 @@ public class DontCareType implements Type {
 
 	@Override public void setInstruction(Instruction i) {}
 
+	@Override public boolean hasName() { return false; }	
 	@Override public String getName() {
 		return Type.DONTCARE;
 	}

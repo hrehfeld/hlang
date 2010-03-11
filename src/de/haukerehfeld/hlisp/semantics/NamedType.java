@@ -32,6 +32,7 @@ public class NamedType extends AnonymousType {
 		setName(name);
 	}
 
+	@Override public boolean hasName() { return true; }
 	private void setName(String name) { this.name = name; }
 	public String getName() { return name; }
 

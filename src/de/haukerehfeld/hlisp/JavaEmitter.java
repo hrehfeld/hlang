@@ -13,6 +13,8 @@ public class JavaEmitter {
 	private final static String reservedPrefix = "_reserved";
 	private final static String nativePrefix = "_native";
 	private final static String run = "_run";
+	private final static String ANONYMOUSTYPEPREFIX = "type";
+	private final static String VOIDTYPE = "VoidType";
 	
 	private final static HashMap<String, String> illegal = new HashMap<String, String>() {{
 			put("+", "plus");
@@ -22,6 +24,7 @@ public class JavaEmitter {
 			put("=", "equal");
 			put("*", "star");
 			put("/", "slash");
+			put("!", "exclamationmark");
 			//put("(", "paranthesisopen");
 			//put(")", "paranthesisclose");
 		}};
@@ -36,6 +39,7 @@ public class JavaEmitter {
 	IndentStringBuilder r = new IndentStringBuilder();
 
 	private List<Type> emittedTypes = new ArrayList<Type>();
+	private Set<Type> anonymousTypes = new LinkedHashSet<Type>();
 
 	public String emitFunction(Type f) {
 		emitClassStart(f);
@@ -64,9 +68,12 @@ public class JavaEmitter {
 		if (s.isFunction()) {
 			return emitFunction(s);
 		}
-		
-		r.append("private " + escapeIdentifier(s)
-		         + " " + escapeIdentifier(s) + ";", true);
+
+		r.append("/* variable " + s.getName() + " */", true);
+		r.append("private " + escapeIdentifier(getName(s.getReturnType()))
+		         + " " + escapeIdentifier(s) + " = null;");
+		emit(s.getInstruction());
+		r.append("", true);
 		return r.toString();
 	}
 
@@ -99,6 +106,8 @@ public class JavaEmitter {
 				r.append(line, true);
 			}
 			emitMembers(root);
+
+			emitAnonymousTypes();
 
 			r.indentLess();
 			emitClassEnd();
@@ -141,7 +150,7 @@ public class JavaEmitter {
 			for (String p: getParameterStrings(s, " ")) { r.append("private " + p + ";", true); }
 			r.append("", true);
 
-			r.append("public " + escapeIdentifier(s.getName()) + "(");
+			r.append("public " + getName(s) + "(");
 			r.append(Utils.join(getParameterStrings(s, " "), ", "));
 			r.append(")");
 			r.append(" {", true);
@@ -163,13 +172,15 @@ public class JavaEmitter {
 	}
 
 	private void emit(Instruction i) {
+		r.append("/* " + i + " */", true);
 	}
 
 	private void emitAction(Type f) {
-		r.append("public " + escapeIdentifier(f)
+		r.append("public " + getName(f.getReturnType())
 		         + " " + prefix + run + "() {", true);
 		r.indentMore();
 		emit(f.getInstruction());
+		r.append("return null;");
 		r.indentLess();
 		r.append("}", true);
 		r.append("", true);
@@ -203,9 +214,60 @@ public class JavaEmitter {
 		return escaped;
 	}
 
+	private void emitAnonymousTypes() {
+		for (Type t: anonymousTypes) {
+			
+		}
+	}
+
+	private String getAnonymousType(Type t) {
+		StringBuilder name = new StringBuilder();
+		name.append("/* " + t + " */");
+		if (t.isFunction()) {
+			name.append("Function<");
+		}
+		// name.append(prefix + "_" + ANONYMOUSTYPEPREFIX + "_");
+		// if (t.isFunction()) {
+		// 	name.append("function_");
+		// 	if (t.getParameterTypes().isEmpty()) {
+		// 		name.append(VOIDTYPE + "_");
+		// 	}
+		// 	else {
+		// 		for (Type p: t.getParameterTypes()) {
+		// 			name.append(getName(p) + "_");
+		// 		}
+		// 	}
+
+		// 	name.append("to_");
+		// }
+		if (t.getReturnType().equals(t) && !t.getReturnType().hasName()) {
+			name.append("self");
+		}
+		else {
+			name.append(getName(t.getReturnType()));
+		}
+		name.append(">");
+		return name.toString();
+	}
+
 	private String getName(Type t) {
-		String name = escapeIdentifier(t.getName());
-		return name;
+		if (t instanceof UnresolvedType) {
+			t = ((UnresolvedType) t).getResolved();
+		}
+		if (t instanceof DontCareType) {
+			return "java.lang.Object";
+		}
+		else if (t instanceof NativeType) {
+			return ((NativeType) t).getName();
+		}
+		else if (!t.hasName()) {
+			anonymousTypes.add(t);
+			return getAnonymousType(t);
+		}
+		if (!t.isFunction()) {
+			
+		}
+		return escapeIdentifier(t.getName());
 	}
 
 	public List<String> getParameterStrings(Type v, String join) {
@@ -215,9 +277,6 @@ public class JavaEmitter {
 		for (Type t: v.getParameterTypes()) {
 			String p = paramNames.get(i);
 			String name = getName(t);
-			if (t.isFunction()) {
-				name = "Function<" + name + ">";
-			}
 			params.add(name + join + escapeIdentifier(p));
 			++i;
 		}

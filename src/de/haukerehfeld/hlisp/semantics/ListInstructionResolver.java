@@ -67,7 +67,7 @@ public class ListInstructionResolver {
 		else {
 			if (next.isFunction()) {
 				r.print("Next is a function with no parameters.", true);
-				makeFunctionCall(next, next.getReturnType());
+				makeFunctionCall(lastFunction, next);
 				r.print("lastFunctionCall = " + lastFunctionCall, true);
 			}
 			else {
@@ -88,8 +88,7 @@ public class ListInstructionResolver {
 		
 		lastFunctionCall
 		    = new FunctionCallInstruction(lastFunction,
-		                                  ((FunctionCallInstruction) lastFunctionCall)
-		                                      .getFunction());
+		                                  scope);
 		
 	}
 

@@ -38,6 +38,8 @@ public class SelfType implements Type {
 
 	@Override public void setInstruction(Instruction i) { this.parent.setInstruction(i); }
 
+
+	@Override public boolean hasName() { return this.parent.hasName(); }
 	@Override public String getName() {
 		return this.parent.getName() + " " + Type.SELF;
 	}

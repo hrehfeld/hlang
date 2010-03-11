@@ -9,6 +9,7 @@ public class VoidType implements Type {
 		this.parent = parent;
 	}
 
+
 	/**
 	 * Factory method to get a voidtype reference
 	 */
@@ -18,7 +19,7 @@ public class VoidType implements Type {
 
 	public Instruction getInstruction() { return new NativeInstruction(this, "null"); }
 
-	public boolean isFunction() { return false; }
+	public boolean isFunction() { return true; }
 	@Override public boolean isStatic() { return true; }
 	@Override public boolean isResolved() { return true; }
 	
@@ -44,6 +45,7 @@ public class VoidType implements Type {
 
 	@Override public void setInstruction(Instruction i) {}
 
+	@Override public boolean hasName() { return true; }
 	@Override public String getName() {
 		return NAME;
 	}

@@ -53,10 +53,11 @@ public class AnonymousType implements Type {
 		this.types.put("this", new SelfType(this));
 	}
 
+	@Override public boolean hasName() { return false; }
 
 	private Instruction instruction;
-	public Instruction getInstruction() { return instruction; }
-	public void setInstruction(Instruction instruction) { this.instruction = instruction; }
+	@Override public Instruction getInstruction() { return instruction; }
+	@Override public void setInstruction(Instruction instruction) { this.instruction = instruction; }
 
 
 	private boolean isFunction;

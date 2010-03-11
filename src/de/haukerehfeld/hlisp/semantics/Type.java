@@ -11,6 +11,8 @@ public interface Type {
 	public static final String DONTCARE = "_";
 	
 	public String getName();
+	public boolean hasName();
+	
 	public Type getParent();
 
 	public boolean isFunction();

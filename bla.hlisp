@@ -4,7 +4,7 @@
 
     (define ArrayList _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- this)
 
-    (define list ArrayList -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
+    (define list _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
 
     (define += (_ -> List)
     (element ->
