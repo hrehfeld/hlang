@@ -21,8 +21,7 @@
 
 (define while ((-> Boolean) (->) ->) 
 (condition body ->
-    -{
-        while (condition._hlisp_run()) {
+    -{  while (condition._hlisp_run()) {
             body._hlisp_run();
         }
     }- void
@@ -37,6 +36,7 @@
     (define < (Int -> Boolean) (other -> Boolean -{value < other}- _{boolean}_))
     (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
     (define toString (-> String)
+
     (->
         (String -{ java.lang.String.valueOf(value) }- _{java.lang.String}_)
     ))
@@ -45,11 +45,12 @@
 
 (define Boolean (_{boolean}_ -> this) 
 (value ->
-    (define ! (-> Int) (-> Boolean -{ !value }- _{boolean}_))
+    (define ! (-> Boolean) (-> Boolean -{ !value }- _{boolean}_))
     (define toString (-> String) 
     (->
         (String -{ java.lang.Boolean.toString(value) }- _{java.lang.String}_)
     ))
+    this
 ))
 
 
@@ -61,7 +62,7 @@
     (define println (->) (-> ("this" + "\n") print))
 ))
 
-(define MyNamespace (-> this) 
+(define MyNamespace (->) 
 (->
 
     (define HelloWorldClass (-> this) 
@@ -78,6 +79,8 @@
         ))
 
         (define function (Int Int -> Int) (a b -> (a + b)) )
+
+        this
     ))
 
     (define main (Int ->) 
@@ -85,12 +88,12 @@
         (define i Int 0)
         (define eval Int (5 + (i * 4)))
         (define error (-> Int) (-> 0))
-        (define k List (()) )
+        (define k List (List) )
 
         (define list List ( List += "some" += "elements") )
         (define evalFun (-> Int) (-> 5 + (i * 4)))
         
-        (define helloClass HelloWorldClass ( () ))
+        (define helloClass HelloWorldClass HelloWorldClass)
 
         (while ((-> Boolean) (-> i < param)) 
         ((->) 
@@ -101,6 +104,7 @@
 
         ((Int Int -> Int) (a b -> a + b))
     ))
+
 ))
 
 (MyNamespace main 5)

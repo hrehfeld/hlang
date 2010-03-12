@@ -111,7 +111,8 @@ public class Resolver {
 	}
 
 	void solveInstructions(Type t) throws SemanticException {
-		if (checkedInstructionTypes.contains(t) || t instanceof SelfType) {
+		//don't check again, selftypes, or anonymous types
+		if (checkedInstructionTypes.contains(t) || t instanceof SelfType || !t.hasName()) {
 			return;
 		}
 		r.print("Instruction " + t.getInstruction() + " in " + t + " needs solving.", true);

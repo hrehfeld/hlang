@@ -55,7 +55,7 @@ public class AnonymousType implements Type {
 
 	@Override public boolean hasName() { return false; }
 
-	private Instruction instruction;
+	private Instruction instruction = new VoidInstruction();
 	@Override public Instruction getInstruction() { return instruction; }
 	@Override public void setInstruction(Instruction instruction) { this.instruction = instruction; }
 
