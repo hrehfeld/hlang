@@ -52,7 +52,7 @@ TOKEN:
 
   | < INTEGER: ( <DECIMAL> )+ >
 
-  | <STRING: "\"" (~["\""])* "\"" >
+  | <STRING: "\"" (~["\""] | "\\" "\"" )* "\"" >
 
 
   | < FLOAT: <FLOATED> | ("-")? (<DECIMAL>)+ (<FLOATED>)? >

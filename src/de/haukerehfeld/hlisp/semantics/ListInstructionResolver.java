@@ -84,20 +84,18 @@ public class ListInstructionResolver {
 	}
 
 	public interface Solver {
-		public boolean solve(Instruction instr, Type scope) throws
+		public boolean solve(Instruction instr, Type scope, Type lastFunction) throws
 			SemanticException;
 	}
 
 	public class ParameterSolver implements Solver {
 		private int parameterI;
-		private Type lastFunction;
 
-		public ParameterSolver(int parameterPosition, Type lastFunction) {
+		public ParameterSolver(int parameterPosition) {
 			this.parameterI = parameterPosition;
-			this.lastFunction = lastFunction;
 		}
 
-		public boolean solve(Instruction instr, Type scope) throws
+		public boolean solve(Instruction instr, Type scope, Type lastFunction) throws
 			SemanticException {
 			Type returnType = null;
 			boolean resolved = true;
@@ -175,12 +173,13 @@ public class ListInstructionResolver {
 	}
 
 	private class LookupSolver implements Solver {
-		public boolean solve(Instruction instr, Type scope) throws
+		public boolean solve(Instruction instr, Type scope, Type lastFunction) throws
 			SemanticException {
 			Type next;
 			if (isUnresolved(instr)) {
 				String id = getId(instr);
 
+				r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 				if (lastIdentifierCall != null
 				    && lastIdentifierCall.getReturnType().isTypeDefined(id)) {
 					/** @todo 2010-03-08 16:22 hrehfeld    also check in last itself? */
@@ -192,7 +191,7 @@ public class ListInstructionResolver {
 					r.indentLess();
 
 					next = lastIdentifierCall.getReturnType().getDefinedTypeRecursive(id);
-					lastIdentifierCall = new FunctionCallInstruction(next, scope);
+					lastIdentifierCall = new FunctionCallInstruction(next, lastFunction);
 
 					singleStatements = false;
 
@@ -218,8 +217,10 @@ public class ListInstructionResolver {
 					}
 					else if (nextIterationOnFailInsertCall) {
 						nextIterationOnFailInsertCall = false;
+						r.print("Using functioncall");
 						lastIdentifierCall = onFailCall;
 						next = onFailCall.getFunction();
+						r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 					}
 					else {
 						throw new SemanticException("Unexpected identifier " + id);
@@ -228,6 +229,10 @@ public class ListInstructionResolver {
 			}
 			else {
 				if (singleStatements) {
+					if (!first) {
+						result.add(lastIdentifierCall);
+						r.print(lastIdentifierCall + " in single statement list", true);
+					}
 					//wrong?
 					lastIdentifierCall = instr;
 					next = makeAnonymousType(instr, scope);
@@ -239,6 +244,7 @@ public class ListInstructionResolver {
 			}
 
 			if (first || !singleStatements) {
+				r.print("checking for function...", true);
 				parametersExpected(next, scope);
 			}
 			return true;
@@ -264,24 +270,26 @@ public class ListInstructionResolver {
 			
 			r.indentMore();
 
-			if (!nextIterationNoParameterCheck) {
-				r.print("Parameter check", true);
-				Type lastIdentifier;
-				if (lastIdentifierCall instanceof FunctionCallInstruction) {
-					lastIdentifier = ((FunctionCallInstruction) lastIdentifierCall).getFunction();
-				}
-				else {
-					lastIdentifier = lastIdentifierCall.getReturnType();
-				}
+			Type lastIdentifier = null;
+			if (lastIdentifierCall instanceof FunctionCallInstruction) {
+				lastIdentifier = ((FunctionCallInstruction) lastIdentifierCall).getFunction();
+			}
+			else if (lastIdentifierCall != null) {
+				lastIdentifier = lastIdentifierCall.getReturnType();
+			}
+			r.print("lastIdentifier " + lastIdentifier, true);
 
-				solver = new ParameterSolver(parameterI, lastIdentifier);
+			if ((i == 1 || !singleStatements) && !nextIterationNoParameterCheck) {
+				r.print("Parameter check", true);
+				solver = new ParameterSolver(parameterI);
 			}
 			else {
+				r.print("Lookup check", true);
 				nextIterationNoParameterCheck = false;
 				solver = new LookupSolver();
 			}
 
-			boolean success = solver.solve(instr, scope);
+			boolean success = solver.solve(instr, scope, lastIdentifier);
 			r.indentLess();
 			if (!success) { continue; }
 

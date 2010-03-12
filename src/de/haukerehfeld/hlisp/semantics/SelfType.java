@@ -41,7 +41,7 @@ public class SelfType implements Type {
 
 	@Override public boolean hasName() { return this.parent.hasName(); }
 	@Override public String getName() {
-		return this.parent.getName() + " " + Type.SELF;
+		return this.parent.getName();
 	}
 
 

@@ -14,7 +14,7 @@ public class FunctionCallInstruction implements Instruction {
 	public void setFunction(Type function) { this.function = function; }
 
 	private List<Instruction> parameters;
-	private List<Instruction> getParameters() { return parameters; }
+	public List<Instruction> getParameters() { return parameters; }
 	public void addParameter(Instruction parameter) { parameters.add(parameter); }
 
 	public FunctionCallInstruction(Type function) {

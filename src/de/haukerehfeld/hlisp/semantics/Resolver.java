@@ -149,7 +149,7 @@ public class Resolver {
 			Type t = scope.getDefinedTypeRecursive(id);
 
 			//first resolve return type
-			solve(t.getReturnType(), scope);
+			solve(t, scope);
 
 			return new FunctionCallInstruction(t, scope);
 		}

@@ -88,7 +88,7 @@ public class TypeDefiner implements HLispParserVisitor {
 	}
 
 	public FunctionCallInstruction visit(AstString node, Type scope) throws SemanticException {
-		return constructor("String", "\"" + node.jjtGetValue() + "\"");
+		return constructor("String", node.jjtGetValue());
 	}
 
 	public FunctionCallInstruction visit(AstFloat node, Type scope) throws SemanticException {

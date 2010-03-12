@@ -7,13 +7,11 @@ public class RootType extends NamedType {
 	private final static String[] PARAMETERS = { "args" };
 
 	private final static String RUNBODY
-	= "Root.List argList = List();\n"
+	= "List argList = new List();\n"
 	    + "\n"
-	    + "System.out.println(\"ROOT\");"
 	    + "for (java.lang.String arg: args) {\n"
-	    + "    argList._hlisp_escape_plusequal(String(arg))._hlisp_run();\n"
-	    + "}\n"
-	    + "return null;";
+	    + "    argList._hlisp_escape_plusequal(new String(arg))._hlisp_run();\n"
+	    + "}";
 	
 	public RootType() {
 		super("Root",
@@ -24,9 +22,12 @@ public class RootType extends NamedType {
 		        }});
 		setParameterNames(Arrays.asList(PARAMETERS));
 
-		Type void_ = VoidType.create(this);
+		final Type void_ = VoidType.create(this);
 		defineType(void_);
 
-		setInstruction(new NativeInstruction(void_, RUNBODY));
+		setInstruction(new ListInstruction(new ArrayList<Instruction>() {{
+		                add(new NativeInstruction(void_, RUNBODY));
+		                add(new VoidInstruction());
+		            }}));
 	}
 }

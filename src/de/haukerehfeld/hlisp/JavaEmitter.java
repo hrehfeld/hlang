@@ -32,6 +32,7 @@ public class JavaEmitter {
 			add("while");
 			add("Void");
 			add("void");
+			add("toString");
 
 		}};
 
@@ -69,10 +70,10 @@ public class JavaEmitter {
 			return emitFunction(s);
 		}
 
-		r.append("/* variable " + s.getName() + " */", true);
+		r.append("/* variable " + s.getName() + " */");
 		r.append("private " + escapeIdentifier(getName(s.getReturnType()))
-		         + " " + escapeIdentifier(s) + " = null;");
-		emit(s.getInstruction());
+		         + " " + escapeIdentifier(s) + " = ");
+		emit(s.getInstruction(), false, true);
 		r.append("", true);
 		return r.toString();
 	}
@@ -120,10 +121,31 @@ public class JavaEmitter {
 	}
 
 
+	private void emitCreateFunction(Type s) {
+		String name = escapeIdentifier(s.getName());
+		r.append("public " + name + " " + name);
+		r.append("(");
+
+		r.append(Utils.join(getParameterStrings(s, " "), ", "));
+		r.append(") {", true);
+
+		r.indentMore();
+		r.append("return new " + name + "(");
+		r.append(Utils.join(s.getParameterNames(), ", "));
+		    r.append(");", true);
+		r.indentLess();
+		r.append("}", true);
+	}
+
+
 	private void emitClassStart(Type v) {
 		r.append("/**", true);
 		r.append(" * Type " + v.getName(), true);
 		r.append(" */", true);
+
+		if (!(v instanceof RootType)) {
+			emitCreateFunction(v);
+		}
 
 		r.append("public ");
 		// if (!(s instanceof RootType)) {
@@ -171,12 +193,101 @@ public class JavaEmitter {
 		}
 	}
 
-	private void emit(Instruction i) {
-		r.append("/* " + i + " */", true);
-		if (i instanceof NativeInstruction) {
-			NativeInstruction n = (NativeInstruction) i;
-			r.append(n.getName(), true);
-			
+	private void emit(Instruction instr) {
+		emit(instr, true, true);
+	}
+	private void emit(Instruction instr, boolean lastStatement, boolean completeStatement) {
+		emit(instr, lastStatement, completeStatement, new ArrayList<Instruction>());
+	}
+	
+	private void emit(Instruction instr, boolean lastStatement, boolean completeStatement,
+	    List<Instruction> checkedInstructions) {
+		r.append("/* " + instr + " */");
+		if (instr instanceof ListInstruction) {
+			ListInstruction l = (ListInstruction) instr;
+			for (int i = 0; i < l.getInstructions().size(); ++i) {
+				Instruction child = l.getInstructions().get(i);
+				boolean last = lastStatement && i >= l.getInstructions().size() - 1;
+				emit(child, last, completeStatement, checkedInstructions);
+			}
+		}
+		else {
+			if (instr instanceof VoidInstruction) {
+				if (lastStatement) {
+					r.append("return ");
+				}
+				r.append("null", true);
+				if (completeStatement) {
+					r.append(";", true);
+				}
+			}
+			else if (instr instanceof NativeInstruction) {
+				NativeInstruction n = (NativeInstruction) instr;
+				String[] lines = n.getNativeCode().split("\n");
+
+				for (String l: lines) {
+					r.append(l, true);
+				}
+				
+			}
+			else if (instr instanceof FunctionCallInstruction) {
+				FunctionCallInstruction n = (FunctionCallInstruction) instr;
+
+				//emit(n.getScope().getInstruction(), lastStatement);
+				//r.append(".");
+
+				Type fun = n.getFunction();
+				if (fun instanceof UnresolvedType) {
+					fun = ((UnresolvedType) fun).getResolved();
+				}
+				if (fun instanceof VoidType) {
+					emit(new VoidInstruction(), lastStatement, completeStatement, checkedInstructions);
+					return;
+				}
+
+				if (lastStatement) {
+					r.append("return ");
+				}
+				
+				if (fun instanceof SelfType) {
+					r.append(escapeIdentifier(fun.getName()));
+					r.append(".this");
+				}
+				else {
+					Type scope = n.getScope();
+					r.append("/*" + scope + "*/");
+
+					if (scope != null &&
+					    !n.getFunction().equals(scope)
+					    && !scope.equals(n.getFunction())) {
+						if (scope.isFunction()) {
+							r.append("/* emitting scope: */");
+							Instruction child = scope.getInstruction();
+							if (!checkedInstructions.contains(child)) {
+								checkedInstructions.add(child);
+								emit(child, false, false, checkedInstructions);
+							}
+						}
+						else {
+							r.append(escapeIdentifier(scope.getName()));
+						}
+					}
+					if (fun.isFunction()) {
+						r.append(escapeIdentifier(fun.getName()));					
+						r.append("(");
+						for (Instruction param: n.getParameters()) {
+							emit(param, false, false);
+						}
+						r.append(")._hlisp_run()");
+					}
+					else {
+						r.append(escapeIdentifier(fun.getName()));
+					}
+				}
+				if (completeStatement) {
+					r.append(";", true);
+				}
+			}
 		}
 	}
 
@@ -185,7 +296,6 @@ public class JavaEmitter {
 		         + " " + prefix + run + "() {", true);
 		r.indentMore();
 		emit(f.getInstruction());
-		r.append("return null;");
 		r.indentLess();
 		r.append("}", true);
 		r.append("", true);

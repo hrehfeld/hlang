@@ -4,7 +4,7 @@ import java.util.*;
 
 public class VoidInstruction extends NativeInstruction {
 	public VoidInstruction() {
-		super(VoidType.create(), "null");
+		super(VoidType.create(), "null;");
 	}
 
 	@Override public String toString() { return "VoidInstruction"; }
