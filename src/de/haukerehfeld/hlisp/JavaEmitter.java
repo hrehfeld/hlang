@@ -173,6 +173,11 @@ public class JavaEmitter {
 
 	private void emit(Instruction i) {
 		r.append("/* " + i + " */", true);
+		if (i instanceof NativeInstruction) {
+			NativeInstruction n = (NativeInstruction) i;
+			r.append(n.getName(), true);
+			
+		}
 	}
 
 	private void emitAction(Type f) {
