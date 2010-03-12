@@ -11,24 +11,48 @@ public class TypePrinter {
 		print((Type) root);
 	}
 
-	public void print(Type scope) {
+	private String indent() {
 		String ind = "";
 		for (int i = 0; i < indent; ++i) {
 			ind += "  ";
 		}
-		System.out.println(ind + scope);
+		return ind;
+	}
+
+	public void print(Type scope) {
+		System.out.print(indent() + scope);
+		System.out.print(" (" + Utils.join(scope.getParameterTypes(), " ")
+		                 + (scope.isFunction() ? " -> " : "")
+		                 + scope.getReturnType());
+		System.out.println(") " + scope.getInstruction());
+		
 		
 		if (scope instanceof SelfType) {
 			return;
 		}
 		
 		indent++;
-		for (Type t: scope.getDefinedTypes()) {
-			if (t.equals(scope)) {
-				continue;
-			}
+		if (scope instanceof AnonymousType) {
+			for (Map.Entry<String,Type> e: ((AnonymousType) scope).getDefinedTypesInternal().entrySet()) {
+				Type t = e.getValue();
+				String name = e.getKey();
+				if (t.equals(scope)) {
+					continue;
+				}
 
-			print(t);
+				//System.out.println(indent() + name);
+				print(t);
+			}
+		}
+		else {
+			for (Type t: scope.getDefinedTypes()) {
+				if (t.equals(scope)) {
+					continue;
+				}
+
+				print(t);
+			}
+			
 		}
 		indent--;
 	}

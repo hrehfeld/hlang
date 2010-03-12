@@ -22,6 +22,10 @@ public class NativeInstruction implements Instruction {
 		if (s.length() > maxlength) {
 			s = s.substring(0, maxlength) + "...";
 		}
-		return "-{ " + s.replace("\n", "") + " }-";
+		String r = "-{ " + s.replace("\n", "") + " }-";
+		if (returnType.hasName()) {
+			r = r + " " + returnType.getName();
+		}
+		return r;
 	}
 }

@@ -38,6 +38,7 @@ public class FunctionCallInstruction implements Instruction {
 	@Override public Type getReturnType() { return function.getReturnType(); }
 
 	@Override public String toString() {
-		return "call[" + scope + " " + function + "(" + Utils.join(parameters, ", ") + ")]"; }
+		return "call[" + scope + " " + function + "(" + Utils.join(parameters, ", ") + ")]";
+	}
 	
 }

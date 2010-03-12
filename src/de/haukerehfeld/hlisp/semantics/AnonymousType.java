@@ -94,8 +94,10 @@ public class AnonymousType implements Type {
 	@Override public Type getReturnType() { return returnType; }
 	public void setReturnType(Type returnType) { this.returnType = returnType; }
 
+	/** child types */
 	private final LinkedHashMap<String, Type> types = new LinkedHashMap<String, Type>();
 	@Override public Collection<Type> getDefinedTypes() { return types.values(); }
+	public HashMap<String, Type> getDefinedTypesInternal() { return types; }
 	@Override public Type getDefinedType(String name) {
 		Type t = types.get(name);
 		if (t != null) {

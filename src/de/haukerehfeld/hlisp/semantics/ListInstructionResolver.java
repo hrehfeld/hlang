@@ -92,6 +92,15 @@ public class ListInstructionResolver {
 		
 	}
 
+	public interface Solver {
+	}
+
+	public class ParameterSolver implements Solver {
+	}
+
+	private void solveParameter() {
+	}
+
 	public Instruction solve(ListInstruction list, Type scope, Resolver resolver) throws
 		SemanticException {
 
@@ -215,7 +224,7 @@ public class ListInstructionResolver {
 								                            + id + " in scope " + scope);
 							}
 							lastFunction = scope.getDefinedTypeRecursive(id);
-							lastFunctionCall = new FunctionCallInstruction(lastFunction);
+							lastFunctionCall = new FunctionCallInstruction(lastFunction, scope);
 							r.print(id + " found in current scope, setting to " + lastFunction, true);
 							r.print("lastFunctionCall = " + lastFunctionCall, true);
 						}

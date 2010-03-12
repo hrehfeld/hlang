@@ -36,6 +36,8 @@ public class Resolver {
 			throw new UnresolvedTypeException(unresolvableTypes.get(0));
 		}
 
+		new TypePrinter().print(root);
+
 		r = new IndentStringBuilder();
 		solveInstructions(root);
 		
@@ -54,12 +56,12 @@ public class Resolver {
 	}
 
 	private void solve(Type t, Type scope) throws SemanticException {
-		if (checkedTypes.contains(t)) {
+		if (checkedTypes.contains(t) || t instanceof SelfType) {
 			return;
 		}
 		checkedTypes.add(t);
 
-		r.print("Checking Type " + t + "... ");
+		r.print("Checking Type " + t + " in " + scope + "... ");
 		if (!t.isResolved()) {
 			UnresolvedType u = (UnresolvedType) t;
 			//special case
@@ -109,12 +111,19 @@ public class Resolver {
 	}
 
 	void solveInstructions(Type t) throws SemanticException {
-		if (checkedInstructionTypes.contains(t)) {
+		if (checkedInstructionTypes.contains(t) || t instanceof SelfType) {
 			return;
 		}
-		r.print("Instruction in " + t + " needs solving.", true);
+		r.print("Instruction " + t.getInstruction() + " in " + t + " needs solving.", true);
 		checkedInstructionTypes.add(t);
-		t.setInstruction(solve(t.getInstruction(), t));
+		Instruction instr = solve(t.getInstruction(), t);
+		if (!(t instanceof NativeType) && !instr.getReturnType().equals(t.getReturnType())) {
+			throw new SemanticException("Type " + t + " with Returntype " + t.getReturnType()
+			                            + " has instruction with Returntype "
+			                            + instr.getReturnType() + ".");
+		}
+		r.print("Solved to " + instr, true);
+		t.setInstruction(instr);
 
 		r.indentMore();
 		for (Type child: collectTypes(t)) {
@@ -127,6 +136,21 @@ public class Resolver {
 		r.indentMore();
 		if (instr instanceof ListInstruction) {
 			return solve((ListInstruction)instr, scope);
+		}
+		else if (instr instanceof UnresolvedInstruction) {
+			String id = ((UnresolvedInstruction) instr).getIdentifier();
+			if (!scope.isTypeDefinedRecursive(id)) {
+				new TypePrinter().print(scope);
+				throw new SemanticException("Couldn't resolve identifier "
+				                            + id + " in scope " + scope);
+			}
+
+			Type t = scope.getDefinedTypeRecursive(id);
+
+			//first resolve return type
+			solve(t.getReturnType(), scope);
+
+			return new FunctionCallInstruction(t, scope);
 		}
 		else if (instr instanceof FunctionCallInstruction) {
 			FunctionCallInstruction f = (FunctionCallInstruction) instr;

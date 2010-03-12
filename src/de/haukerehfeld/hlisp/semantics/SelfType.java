@@ -26,7 +26,7 @@ public class SelfType implements Type {
 
 	public List<String> getParameterNames() { return this.parent.getParameterNames(); }
 
-	@Override public Type getReturnType() { return this.parent.getReturnType(); }
+	@Override public Type getReturnType() { return this.parent; }
 
 	@Override public Collection<Type> getDefinedTypes() { return this.parent.getDefinedTypes(); }
 	@Override public boolean isTypeDefined(String v) { return this.parent.isTypeDefined(v); }

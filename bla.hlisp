@@ -2,14 +2,14 @@
 (->
     this
 
-    (define ArrayList _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- this)
+    (define ArrayList _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
 
     (define list _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
 
     (define += (_ -> List)
     (element ->
         (-{ list.add(element); }- void)
-        this
+        (List this)
     ))
 
     (define get (Int -> _{ java.lang.Object }_)

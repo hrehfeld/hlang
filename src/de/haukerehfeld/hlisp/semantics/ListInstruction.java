@@ -6,7 +6,7 @@ import de.haukerehfeld.hlisp.Utils;
 
 public class ListInstruction implements Instruction  {
 	public ListInstruction() {
-		this(Collections.<Instruction>emptyList());
+		this(new ArrayList<Instruction>());
 	}
 
 	public ListInstruction(List<Instruction> instructions) {

@@ -37,8 +37,16 @@ public class TypeDefiner implements HLispParserVisitor {
 
 		Type body = (Type) b.jjtAccept(this, scope);
 
-		NamedType type = new NamedType(identifier, scope, body.getReturnType(), body.isFunction(), body.getParameterTypes(), body.getParameterNames());
+		NamedType type = new NamedType(identifier,
+		                               scope,
+		                               body.getReturnType(),
+		                               body.isFunction(),
+		                               body.getParameterTypes(), body.getParameterNames());
 		for (Type t: body.getDefinedTypes()) {
+			System.out.println("copying " + t + " into " + type);
+			if (t instanceof SelfType) {
+				continue;
+			}
 			type.defineType(t);
 		}
 		type.setInstruction(body.getInstruction());
