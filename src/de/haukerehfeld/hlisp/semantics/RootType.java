@@ -16,12 +16,11 @@ public class RootType extends NamedType {
 	public RootType() {
 		super("Root",
 		      null,
-		      VoidType.create());
-		setParameterTypes(new ArrayList<Type>() {{
-		            add(new NativeType(RootType.this, "java.lang.String[]"));
-		        }});
-		setParameterNames(Arrays.asList(PARAMETERS));
-
+		      VoidType.create(),
+		      new ArrayList<Signature>() {{
+		              add(new NativeSignature("java.lang.String[]"));
+		          }},
+		      Arrays.asList(PARAMETERS));
 		final Type void_ = VoidType.create(this);
 		defineType(void_);
 

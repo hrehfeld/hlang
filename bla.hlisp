@@ -58,14 +58,12 @@
 ))
 
 
-(define String (_{java.lang.String}_ -> this) (value_ ->
+(define String (_{java.lang.String}_ -> this) (value ->
     this        
-
-    (define value _{java.lang.String}_ value_)
 
     (define + (String -> String) (other -> (String -{ value + other.value }- _{java.lang.String}_)))
     (define print (->) (-> -{ System.out.print(value); }- void))
-    (define println (->) (-> (this + "\n") print))
+    (define println (->) (-> ((String this) + "\n") print))
 ))
 
 (define MyNamespace (->) 
@@ -89,7 +87,7 @@
         this
     ))
 
-    (define main (Int ->) 
+    (define main (Int -> (Int Int -> Int)) 
     (param ->
         (define i Int 0)
         (define eval Int (5 + (i * 4)))

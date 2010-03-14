@@ -20,7 +20,7 @@ public class ListInstruction implements Instruction  {
 	public List<Instruction> getInstructions() { return instructions; }
 	public void setInstructions(List<Instruction> instructions) { this.instructions = instructions; }
 
-	@Override public Type getReturnType() { return instructions.get(instructions.size() - 1).getReturnType(); }
+	@Override public Signature getReturnType() { return instructions.get(instructions.size() - 1).getReturnType(); }
 	
 
 	@Override public String toString() {

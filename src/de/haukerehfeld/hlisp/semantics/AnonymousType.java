@@ -10,45 +10,46 @@ public class AnonymousType implements Type {
 	private static boolean hashing = false;
 	private static boolean equalling = false;
 
-	public AnonymousType(Type parent, Type returnType) {
+	private Signature signature;
+
+	public AnonymousType(Type parent, Signature returnType) {
 		this(parent, returnType, false);
 	}
 
-	public AnonymousType(Type parent, Type returnType, boolean isFunction) {
-		this(parent, returnType, isFunction, Collections.<Type>emptyList());
+	public AnonymousType(Type parent, Signature returnType, boolean isFunction) {
+		this(parent, returnType, isFunction, Collections.<Signature>emptyList());
 	}
 	
 	public AnonymousType(Type parent,
-	                     Type returnType,
-	                     List<Type> parameterTypes) {
-		this(parent, returnType, parameterTypes, Collections.<String>emptyList());
-	}
-
-	public AnonymousType(Type parent,
-	                     Type returnType,
+	                     Signature returnType,
 	                     boolean isFunction,
-	                     List<Type> parameterTypes) {
+	                     List<Signature> parameterTypes) {
 		this(parent, returnType, isFunction, parameterTypes, Collections.<String>emptyList());
 	}
 
 	
 	public AnonymousType(Type parent,
-	                     Type returnType,
-	                     List<Type> parameterTypes,
+	                     Signature returnType,
+	                     List<Signature> parameterTypes,
 	                     List<String> parameterNames) {
 		this(parent, returnType,
 		     true, parameterTypes, parameterNames);
 	}
 
 	public AnonymousType(Type parent,
-	                     Type returnType,
+	                     Signature returnType,
 	                     boolean isFunction,
-	                     List<Type> parameterTypes,
+	                     List<Signature> parameterTypes,
 	                     List<String> parameterNames) {
+		this(parent,
+		     new AnonymousSignature(returnType, isFunction, parameterTypes),
+		     parameterNames);
+	}
+	
+	public AnonymousType(Type parent, Signature signature, List<String> parameterNames) {
 		this.parent = parent;
-		this.returnType = returnType;
-		this.isFunction = isFunction;
-		this.parameterTypes = parameterTypes;
+		this.signature = signature;
+
 		this.parameterNames = parameterNames;
 		this.types.put("this", new SelfType(this));
 	}
@@ -59,17 +60,16 @@ public class AnonymousType implements Type {
 	@Override public Instruction getInstruction() { return instruction; }
 	@Override public void setInstruction(Instruction instruction) { this.instruction = instruction; }
 
+	@Override public boolean isResolved() { return signature.isResolved(); }
+	
 
-	private boolean isFunction;
-	public boolean isFunction() { return isFunction; }
-	public void setIsFunction(boolean isFunction) { this.isFunction = isFunction; }
+	@Override public boolean isFunction() { return signature.isFunction(); }
+	//@Override public void setIsFunction(boolean isFunction) { signature.setIsFunction(isFunction); }
 
 	private boolean isStatic = false;
 	public void setStatic(boolean isStatic) { this.isStatic = isStatic; }
 	@Override public boolean isStatic() { return isStatic; }
 
-	@Override public boolean isResolved() { return true; }
-	
 
 	private boolean isPublic = false;
 	public void setPublic(boolean isPublic) { this.isPublic = isPublic; }
@@ -80,49 +80,49 @@ public class AnonymousType implements Type {
 	@Override public Type getParent() { return parent; }
 
 	/** params */
-	private List<Type> parameterTypes;
-	@Override public List<Type> getParameterTypes() { return parameterTypes; }
-	public void setParameterTypes(List<Type> parameterTypes) { this.parameterTypes = parameterTypes; }
+	@Override public List<Signature> getParameterTypes() { return signature.getParameterTypes(); }
+	@Override public void setParameterTypes(List<Signature> parameterTypes) {
+		signature.setParameterTypes(parameterTypes);
+	}
 
 	private List<String> parameterNames;
-	public List<String> getParameterNames() { return parameterNames; }
+	@Override public List<String> getParameterNames() { return parameterNames; }
 	public void setParameterNames(List<String> parameterNames) { this.parameterNames = parameterNames; }
 	
 
 	/** return type */
-	private Type returnType;
-	@Override public Type getReturnType() { return returnType; }
-	public void setReturnType(Type returnType) { this.returnType = returnType; }
+	@Override public Signature getReturnType() { return signature.getReturnType(); }
+	@Override public void setReturnType(Signature returnType) {
+		signature.setReturnType(returnType);
+	}
 
 	/** child types */
 	private final LinkedHashMap<String, Type> types = new LinkedHashMap<String, Type>();
+
 	@Override public Collection<Type> getDefinedTypes() { return types.values(); }
+
 	public HashMap<String, Type> getDefinedTypesInternal() { return types; }
+
 	@Override public Type getDefinedType(String name) {
 		Type t = types.get(name);
 		if (t != null) {
 			return t;
 		}
-		int i = 0;
-		for (String param: parameterNames) {
-			if (param.equals(name)) {
-				return parameterTypes.get(i);
-			}
+		int i = getParameterNames().indexOf(name);
+		if (i >= 0) {
+			System.out.println("parameter " + name + "  from " + this);
+			new TypePrinter().print(this);
+			return new NamedType(name, this, signature.getParameterTypes().get(i), false);
 		}
 		return null;
 	}
+	
 	@Override public boolean isTypeDefined(String v) {
-		if (types.get(v) != null) {
-			return true;
-		}
-		for (String param: parameterNames) {
-			if (param.equals(v)) {
-				return true;
-			}
-		}
-		return false;
+		return getDefinedType(v) != null;
 	}
+
 	@Override public void defineType(Type t) { types.put(t.getName(), t); }
+	
 	@Override public <T> T runOnHierarchy(Type.TypeMethod<T> method) {
 		Type parent = this;
 		T result = null;
@@ -135,9 +135,11 @@ public class AnonymousType implements Type {
 		}
 		return result;
 	}
+	
 	@Override public boolean isTypeDefinedRecursive(final String name) {
 		return getDefinedTypeRecursive(name) != null;
 	}
+
 	@Override public Type getDefinedTypeRecursive(final String name) {
 		return runOnHierarchy(new TypeMethod<Type>() {
 		        private boolean success = false;
@@ -155,61 +157,50 @@ public class AnonymousType implements Type {
 		    });
 	}
 
-	public String getSignature() {
-		StringBuilder name = new StringBuilder();
-		List<String> parameters = new ArrayList<String>();
-		for (Type t: getParameterTypes()) {
-			parameters.add(t.getName());
-		}
-		if (isFunction()) {
-			name.append("(");
-			name.append(Utils.join(parameters, " "));
-			name.append(" ->");
-		}
-		name.append(" ");
-		if (getReturnType().equals(this)) {
-			name.append("self");
-		}
-		else {
-			name.append(getReturnType().getName());
-		}
-		if (isFunction()) {
-			name.append(")");
-		}
-		return name.toString();
-	}
+	@Override public boolean isCompatible(Signature s) { return signature.isCompatible(s); }
 
 	@Override public String getName() {
-		return getSignature();
+		return signature.getName();
 	}
 
 
 	@Override public String toString() {
-		return "(" + getSignature() + ")";
-	}
-
-	@Override public boolean equals(Object o) {
-		if (o instanceof UnresolvedType) {
-			return o.equals(this);
-		}
-		return super.equals(o);
+		return signature.toString();
 	}
 
 	// @Override public boolean equals(Object o) {
+	// 	if (o instanceof UnresolvedType) {
+	// 		return o.equals(this);
+	// 	}
+	// 	if (!(o instanceof AnonymousType)) { return false; }
+	// 	if (hasName()) { return super.equals(o); }
+
 	// 	if ( this == o ) return true;
 
-	// 	if ( !(o instanceof AnonymousType) ) return false;
 	// 	boolean entryEqualling = equalling;
 	// 	AnonymousType that = (AnonymousType) o;
 	// 	equalling = true;
+	// 	boolean parametersEqual = true;
+	// 	int i = 0;
+	// 	List<Signature> otherPs = that.getParameterTypes();
+	// 	for (Signature p : getParameterTypes()) {
+	// 		if (i >= otherPs.size()) {
+	// 			parametersEqual = false;
+	// 			break;
+	// 		}
+	// 		parametersEqual = parametersEqual
+	// 		    && (entryEqualling || EqualsUtil.equal(p, otherPs.get(i)));
+	// 		i++;
+	// 	}
+	// 	// System.out.println("parameters " + (parametersEqual ? "equal" : "not equal"));
+	// 	// System.out.println("function " + EqualsUtil.equal(this.isFunction, that.isFunction));
+	// 	// System.out.println("returntype " + EqualsUtil.equal(this.returnType, that.returnType));
+	// 	// System.out.println(this.returnType + " vs. " + that.returnType);
+		
 	// 	boolean result = true 
-	// 	    && (entryEqualling || EqualsUtil.equal(this.parent, that.parent))
-	// 	    && (entryEqualling || EqualsUtil.equal(this.returnType, that.returnType))
-	// 	    && EqualsUtil.equal(this.isFunction, that.isFunction)
-	// 	    && (entryEqualling || EqualsUtil.equal(this.parameterTypes, that.parameterTypes))
-	// 	    && EqualsUtil.equal(this.parameterNames, that.parameterNames)
-	// 	    && EqualsUtil.equal(this.instruction, that.instruction)
-	// 	    && EqualsUtil.equal(this.isStatic, that.isStatic)
+	// 	    && EqualsUtil.equal(isFunction(), that.isFunction())
+	// 	    && (entryEqualling || EqualsUtil.equal(getReturnType(), that.getReturnType()))
+	// 	    && parametersEqual
 	// 	    ;
 
 	// 	equalling = false;
@@ -223,32 +214,17 @@ public class AnonymousType implements Type {
 	// 		return result;
 	// 	}
 		
-	// 	if (parent != null && !parent.equals(this)) {
-	// 		result = HashUtil.hash(result, parent);
+	// 	result = HashUtil.hash(result, isFunction());
+	// 	if (!getReturnType().equals(this)) {
+	// 		result = HashUtil.hash(result, getReturnType());
 	// 	}
-	// 	if (!returnType.equals(this)) {
-	// 		result = HashUtil.hash(result, returnType);
-	// 	}
-	// 	result = HashUtil.hash(result, isFunction);
-	// 	for (Type t: parameterTypes) {
+	// 	result = HashUtil.hash(result, isFunction());
+	// 	for (Signature t: parameterTypes) {
 	// 		if (!t.equals(this)) {
 	// 			result = HashUtil.hash(result, t);
 	// 		}
 	// 	}
-	// 	result = HashUtil.hash(result, parameterNames);
-	// 	result = HashUtil.hash(result, instruction);
-	// 	result = HashUtil.hash(result, isStatic);
 	// 	hashing = false;
 	// 	return result;
 	// }
-
-	public static AnonymousType referenceType(Type scope, Type t) {
-		AnonymousType r = new AnonymousType(t.getParent(),
-		                           t.getReturnType(),
-		                           t.isFunction(),
-		                           t.getParameterTypes(),
-		                           t.getParameterNames());
-		r.setInstruction(new FunctionCallInstruction(t, scope));
-		return r;
-	}
 }

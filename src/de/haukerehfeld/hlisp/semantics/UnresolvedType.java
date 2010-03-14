@@ -5,151 +5,76 @@ import de.haukerehfeld.hlisp.Utils;
 import de.haukerehfeld.hlisp.HashUtil;
 import de.haukerehfeld.hlisp.EqualsUtil;
 
-public class UnresolvedType implements Type {
-	private final static boolean transparent = true;
-	
-	private List<String> names;
-
-	private Type type;
-
+public class UnresolvedType extends UnresolvedSignature implements Type {
 	public UnresolvedType(String names) {
-		this.names = new ArrayList<String>();
-		this.names.add(names);
+		super(names);
 	}
 	public UnresolvedType(List<String> names) {
-		this.names = names;
+		super(names);
 	}
 
-	public void setResolved(Type t) {
-		this.type = t;
-	}
+	public void setResolved(Type t) { super.setResolved(t);}
 
 	/**
 	 * get resolvedType
 	 */
-	public Type getResolved() { resolvedOrException(); return type; }
+	public Type getResolved() { return (Type) super.getResolved(); }
 
-	public boolean isResolved() {
-		return type != null;
-	}
-
-	public List<String> getNames() { return names; }
-	public void setNames(List<String> names) { this.names = names; }
-
-
-	@Override public boolean hasName() { return true; }
-	@Override public String getName() {
-		if (isResolved()) {
-			return type.getName();
-		}
-		return Utils.join(names, ", ");
-	}
-
-	private void resolvedOrException() {
-		if (!isResolved()) {
-			throw new UnresolvedTypeException(this);
-		}
-	}
 
 	@Override public boolean isStatic() {
-		resolvedOrException();
-		return type.isStatic();
+		return getResolved().isStatic();
 	}
 
 	@Override public boolean isFunction() {
-		resolvedOrException();
-		return type.isFunction();
+		return getResolved().isFunction();
 	}
 
 	@Override public boolean isPublic() {
 		return getResolved().isPublic();
 	}
-	
+
 
 	@Override public Instruction getInstruction() {
-		resolvedOrException();
-		return type.getInstruction();
+		return getResolved().getInstruction();
 	}
 
 	@Override public void setInstruction(Instruction i) {
 		getResolved().setInstruction(i);
 	}
-	
 
-	
+
+
 	@Override public Type getParent() {
-		resolvedOrException();
-		return type.getParent();
+		return getResolved().getParent();
 	}
-	
-	@Override public List<Type> getParameterTypes() {
-		resolvedOrException();
-		return type.getParameterTypes();
-	}
+
 	@Override public List<String> getParameterNames() {
-		resolvedOrException();
-		return type.getParameterNames();
+		return getResolved().getParameterNames();
 	}
 	@Override public Type getDefinedType(String type) {
-		resolvedOrException();
-		return this.type.getDefinedType(type);
+		return this.getResolved().getDefinedType(type);
 	}
 	@Override public Type getDefinedTypeRecursive(String type) {
-		resolvedOrException();
-		return this.type.getDefinedTypeRecursive(type);
+		return this.getResolved().getDefinedTypeRecursive(type);
 	}
 
 	@Override public Collection<Type> getDefinedTypes() {
-		resolvedOrException();
-		return type.getDefinedTypes();
+		return getResolved().getDefinedTypes();
 	}
 
 	@Override public void defineType(Type t) {
-		resolvedOrException();
-		type.defineType(t);
+		getResolved().defineType(t);
 	}
 
-	@Override public boolean isTypeDefined(String t) {
-		resolvedOrException();
-		return type.isTypeDefined(t);
-	}
+	@Override public boolean isTypeDefined(String t) { return getResolved().isTypeDefined(t); }
 
 	@Override public boolean isTypeDefinedRecursive(String t) {
-		resolvedOrException();
-		return type.isTypeDefinedRecursive(t);
+		return getResolved().isTypeDefinedRecursive(t);
 	}
-	
+
 
 	@Override public <T> T runOnHierarchy(Type.TypeMethod<T> method) {
 		return getResolved().runOnHierarchy(method);
 	}
 
-	@Override public Type getReturnType() {
-		resolvedOrException();
-		return type.getReturnType();
-	}
-
-	@Override public String toString() {
-		if (!transparent || !isResolved()) {
-			return getClass().getSimpleName() + "(" + getName() + ", " + (isResolved() ? "resolved": "unresolved") + ")";
-		}
-		else {
-			return type.toString();
-		}
-	}
-
-	@Override public boolean equals(Object o) {
-		return
-		    (isResolved() && type.equals(o))
-		    || (o instanceof UnresolvedType
-		        && EqualsUtil.equal(isResolved(), ((UnresolvedType) o).isResolved())
-		        && (isResolved() ?
-		            EqualsUtil.equal(type, ((UnresolvedType) o).getResolved())
-                      : EqualsUtil.equal(((UnresolvedType) o).getName(), getName()))
-		    );
-	}
-
-	@Override public int hashCode() {
-		return isResolved() ? type.hashCode() : 435435 + names.hashCode();
-	}
 }

@@ -9,25 +9,25 @@ import de.haukerehfeld.hlisp.HashUtil;
 public class NamedType extends AnonymousType {
 	private String name;
 
-	public NamedType(String name, Type parent, Type returnType) {
+	public NamedType(String name, Type parent, Signature returnType) {
 		super(parent, returnType, false);
 		setName(name);
 	}
 
-	public NamedType(String name, Type parent, Type returnType, boolean isFunction) {
+	public NamedType(String name, Type parent, Signature returnType, boolean isFunction) {
 		super(parent, returnType, isFunction);
 		setName(name);
 	}
 	
 	
-	public NamedType(String name, Type parent, Type returnType, boolean isFunction,
-	                 List<Type> parameterTypes, List<String> parameterNames) {
+	public NamedType(String name, Type parent, Signature returnType, boolean isFunction,
+	                 List<Signature> parameterTypes, List<String> parameterNames) {
 		super(parent, returnType, isFunction, parameterTypes, parameterNames);
 		setName(name);
 	}
 
-	public NamedType(String name, Type parent, Type returnType,
-	                 List<Type> parameterTypes, List<String> parameterNames) {
+	public NamedType(String name, Type parent, Signature returnType,
+	                 List<Signature> parameterTypes, List<String> parameterNames) {
 		super(parent, returnType, parameterTypes, parameterNames);
 		setName(name);
 	}
@@ -36,22 +36,5 @@ public class NamedType extends AnonymousType {
 	private void setName(String name) { this.name = name; }
 	public String getName() { return name; }
 
-	@Override public String toString() { return getName() ; }
-
-	// @Override public boolean equals(Object o) {
-	// 	if ( this == o ) return true;
-
-	// 	if ( !(o instanceof NamedType) ) return false;
-		
-	// 	NamedType that = (NamedType) o;
-
-	// 	return super.equals(that) &&  EqualsUtil.equal(this.name, that.name);
-	// }
-
-	// @Override public int hashCode() {
-	// 	int result = super.hashCode();
-	// 	result = HashUtil.hash(result, name);
-	// 	return result;
-	// }	
-	
+	@Override public String toString() { return getName(); }
 }

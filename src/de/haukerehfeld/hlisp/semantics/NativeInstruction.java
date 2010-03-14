@@ -5,14 +5,16 @@ import java.util.*;
 public class NativeInstruction implements Instruction {
 	private final String nativeCode;
 
-	private final Type returnType;
+	private Signature returnType;
 	
-	public NativeInstruction(Type returnType, String nativeCode) {
+	public NativeInstruction(Signature returnType, String nativeCode) {
 		this.returnType = returnType;
 		this.nativeCode = nativeCode;
 	}
 
-	@Override public Type getReturnType() { return returnType; }
+	@Override public Signature getReturnType() { return returnType; }
+	public void setReturnType(Signature r) { this.returnType = r; }
+	
 
 	public String getNativeCode() { return nativeCode; }
 

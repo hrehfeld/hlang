@@ -13,7 +13,7 @@ public class VoidType implements Type {
 	/**
 	 * Factory method to get a voidtype reference
 	 */
-	public static UnresolvedType create() { return new UnresolvedType(NAME); }
+	public static UnresolvedSignature create() { return new UnresolvedSignature(NAME); }
 
 	public static VoidType create(RootType root) { return new VoidType(root); }
 
@@ -29,11 +29,20 @@ public class VoidType implements Type {
 	private final Type parent;
 	@Override public Type getParent() { return parent; }
 
-	@Override public List<Type> getParameterTypes() { return Collections.<Type>emptyList(); }
+	@Override public List<Signature> getParameterTypes() { return Collections.<Signature>emptyList(); }
+	@Override public void setParameterTypes(List<Signature> t) {
+		if (!t.isEmpty()) { throw new UnsupportedOperationException();}
+	}
 
 	public List<String> getParameterNames() { return Collections.<String>emptyList(); }
 
-	@Override public Type getReturnType() { return this; }
+
+	@Override public void setReturnType(Signature t) {
+		if (!t.equals(this)) {
+			throw new UnsupportedOperationException();
+		}
+	}
+	@Override public Signature getReturnType() { return this; }
 
 	@Override public Collection<Type> getDefinedTypes() { return Collections.<Type>emptyList(); }
 	@Override public boolean isTypeDefined(String v) { return false; }
@@ -50,14 +59,13 @@ public class VoidType implements Type {
 		return NAME;
 	}
 
-	@Override public boolean equals(Object o) {
-		if (!(o instanceof Type)) { return false; }
-		if (o instanceof UnresolvedType) { return o.equals(this); }
+	@Override public boolean isCompatible(Signature o) {
+		if (o instanceof UnresolvedSignature) { return o.equals(this); }
 		return o instanceof VoidType;
 	}
 
 	@Override public String toString() {
-		return "(" + getName() + ")";
+		return getName();
 	}
 	
 	

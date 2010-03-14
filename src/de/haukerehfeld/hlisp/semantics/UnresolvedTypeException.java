@@ -3,9 +3,9 @@ package de.haukerehfeld.hlisp.semantics;
 import java.util.*;
 
 public class UnresolvedTypeException extends RuntimeException {
-	private UnresolvedType type;
+	private UnresolvedSignature type;
 
-	public UnresolvedTypeException(UnresolvedType type) {
+	public UnresolvedTypeException(UnresolvedSignature type) {
 		super(type.getName() + " is unresolved.");
 		this.type = type;
 	}
@@ -13,5 +13,5 @@ public class UnresolvedTypeException extends RuntimeException {
 	/**
 	 * get type
 	 */
-	public UnresolvedType getType() { return type; }
+	public UnresolvedSignature getType() { return type; }
 }

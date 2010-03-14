@@ -82,7 +82,7 @@ public class TypeDefiner implements HLispParserVisitor {
 
 	private FunctionCallInstruction constructor(final String type, final String value) {
 		List<Instruction> v = new ArrayList<Instruction>() {{
-				add(new NativeInstruction(new UnresolvedType(type), value));
+				add(new NativeInstruction(new UnresolvedSignature(type), value));
 			}};
 		return new FunctionCallInstruction(new UnresolvedType(type), v);
 	}
@@ -106,6 +106,16 @@ public class TypeDefiner implements HLispParserVisitor {
 			if (result instanceof Instruction) {
 				instructions.add((Instruction) result);
 			}
+			//defines return null
+			else if (result == null) {
+			}
+			else if (result instanceof Type && !((Type) result).hasName()) {
+				instructions.add(new LambdaInstruction((Type) result));
+			}
+			else {
+				throw new SemanticException("Instruction expected, " + result + " given, from node "
+				                            + n + ".");
+			}
 		}
 		if (instructions.size() == 1) {
 			return instructions.get(0);
@@ -119,46 +129,39 @@ public class TypeDefiner implements HLispParserVisitor {
 	}
 
 	/** List */
-	public Object visit(AstList node, Type scope) throws SemanticException {
+	public Instruction visit(AstList node, Type scope) throws SemanticException {
 		return parseList(node, scope);
 	}
 
 	@Override public NativeInstruction visit(AstNativeCodeBlock node, Type scope) throws
 		SemanticException {
-		Type t = (Type) node.jjtGetChild(0).jjtAccept(this, scope);
+		Signature t = (Signature) node.jjtGetChild(0).jjtAccept(this, scope);
 		
 		return new NativeInstruction(t, (String) node.jjtGetValue());
 	}
 
-	@Override public Type visit(AstNativeType node, Type scope) throws SemanticException {
-		return new NativeType(scope, (String) node.jjtGetValue());
+	@Override public NativeSignature visit(AstNativeType node, Type scope) throws SemanticException {
+		return new NativeSignature((String) node.jjtGetValue());
 	}
 
 	@Override public AnonymousType visit(AstLambdaExpression b, Type scope) throws
 	    SemanticException {
 		Iterator<AstNode> children = b.iterator();
 		AstNode typeNode = children.next();
-		AnonymousType lambdaType = (AnonymousType) typeNode.jjtAccept(this, scope);
+		Signature lambdaSignature = (AnonymousSignature) typeNode.jjtAccept(this, scope);
 
 		AstNode paramNamesNode = children.next();
 		List<String> parameterNames = (List<String>) paramNamesNode.jjtAccept(this, scope);
 
-		// if (!lambdaType.getParameterTypes().isEmpty()) {
-		// 	Type first = parameterTypes.get(0);
-		// 	if (first instanceof VoidType || first.equals(VoidType.create())) {
-		// 		parameterTypes.remove(0);
-		// 	}
-		// }
-		
-		if (parameterNames.size() != lambdaType.getParameterTypes().size()) {
-			String e = lambdaType.getParameterTypes().size() + " Parameter types ("
-			    + Utils.join(lambdaType.getParameterTypes(), ", ") + "), but "
+		if (parameterNames.size() != lambdaSignature.getParameterTypes().size()) {
+			String e = lambdaSignature.getParameterTypes().size() + " Parameter types ("
+			    + Utils.join(lambdaSignature.getParameterTypes(), ", ") + "), but "
 			    + parameterNames.size() + " parameter identifiers ("
 			    + Utils.join(parameterNames, ", ") + ") given.";
 			throw new SemanticException(SemanticsUtils.errorLocation(paramNamesNode) + e);
 		}
 
-		lambdaType.setParameterNames(parameterNames);
+		AnonymousType lambdaType = new AnonymousType(scope, lambdaSignature, parameterNames);
 
 		Instruction instr = (Instruction) children.next().jjtAccept(this, lambdaType);
 		lambdaType.setInstruction(instr);
@@ -180,7 +183,7 @@ public class TypeDefiner implements HLispParserVisitor {
 
 	@Override public Type visit(AstVariable node, Type scope) throws SemanticException {
 		Iterator<AstNode> it = node.iterator();
-		Type type = (Type) it.next().jjtAccept(this, scope);
+		Signature type = (Signature) it.next().jjtAccept(this, scope);
 		Instruction r = (Instruction) it.next().jjtAccept(this, scope);
 
 		Type var = new AnonymousType(scope, type, false);
@@ -193,22 +196,23 @@ public class TypeDefiner implements HLispParserVisitor {
 		throw new RuntimeException(node.getClass().getSimpleName() + " should never be visited!");
 	}
 
-	@Override public Type visit(AstType node, Type scope) throws SemanticException {
-		return (Type) node.jjtGetChild(0).jjtAccept(this, scope);
+	@Override public Signature visit(AstType node, Type scope) throws SemanticException {
+		return (Signature) node.jjtGetChild(0).jjtAccept(this, scope);
 	}
-	@Override public Type visit(AstSimpleType node, Type scope) throws SemanticException {
+	@Override public Signature visit(AstSimpleType node, Type scope) throws SemanticException {
 		AstNode type = node.iterator().next();
 		if (type instanceof AstNativeType) {
-			return (Type)type.jjtAccept(this, scope);
+			return (Signature)type.jjtAccept(this, scope);
 		}
 		else if (type instanceof AstIdentifier) {
-			return new UnresolvedType(parseName(type));
+			return new UnresolvedSignature(parseName(type));
 		}
 		throw new SemanticException(SemanticsUtils.errorLocation(type)
 		                            + " NativeBlock or Identifier expected.");
 	}
-	@Override public Object visit(AstFunctionType typeNode, Type scope) throws SemanticException {
-		List<Type> types = new ArrayList<Type>();
+	@Override public AnonymousSignature visit(AstFunctionType typeNode, Type scope) throws
+		SemanticException {
+		List<Signature> types = new ArrayList<Signature>();
 		boolean returnTypeSeen = false;
 		{
 			boolean justEncounteredFunctionSymbol = false;
@@ -222,8 +226,7 @@ public class TypeDefiner implements HLispParserVisitor {
 					justEncounteredFunctionSymbol = true;
 					continue;
 				}
-				Type t = (Type) tN.jjtAccept(this, scope);
-				types.add(t);
+				types.add((Signature) tN.jjtAccept(this, scope));
 
 				if (justEncounteredFunctionSymbol) {
 					returnTypeSeen = true;
@@ -232,7 +235,7 @@ public class TypeDefiner implements HLispParserVisitor {
 				justEncounteredFunctionSymbol = false;
 			}
 		}
-		final Type returnType;
+		final Signature returnType;
 		// void returntype omitted
 		if (!returnTypeSeen) {
 			returnType = VoidType.create();
@@ -242,16 +245,17 @@ public class TypeDefiner implements HLispParserVisitor {
 			returnType = types.remove(last);
 		}
 		
-		return new AnonymousType(scope, returnType, types);
+		return new AnonymousSignature(returnType, true, types);
 	}
-	@Override public Object visit(AstQualifiedType node, Type scope) throws SemanticException {
+	@Override public UnresolvedSignature visit(AstQualifiedType node, Type scope) throws
+		SemanticException {
 		List<String> types = new ArrayList<String>();
 
 		for (AstNode part: node) {
 			
 			types.add(parseName(part));
 		}
-		return new UnresolvedType(types);
+		return new UnresolvedSignature(types);
 	}
 	
 	

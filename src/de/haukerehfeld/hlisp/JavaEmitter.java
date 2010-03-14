@@ -15,6 +15,8 @@ public class JavaEmitter {
 	private final static String run = "_run";
 	private final static String ANONYMOUSTYPEPREFIX = "type";
 	private final static String VOIDTYPE = "VoidType";
+
+	private final static String[] templateParameters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n" };
 	
 	private final static HashMap<String, String> illegal = new HashMap<String, String>() {{
 			put("+", "plus");
@@ -33,14 +35,14 @@ public class JavaEmitter {
 			add("Void");
 			add("void");
 			add("toString");
-
+			//add("String");
 		}};
 
 	private int indent = 0;
 	IndentStringBuilder r = new IndentStringBuilder();
 
 	private List<Type> emittedTypes = new ArrayList<Type>();
-	private Set<Type> anonymousTypes = new LinkedHashSet<Type>();
+	private Set<Signature> anonymousTypes = new LinkedHashSet<Signature>();
 
 	public String emitFunction(Type f) {
 		emitClassStart(f);
@@ -73,7 +75,7 @@ public class JavaEmitter {
 		r.append("/* variable " + s.getName() + " */");
 		r.append("private " + escapeIdentifier(getName(s.getReturnType()))
 		         + " " + escapeIdentifier(s) + " = ");
-		emit(s.getInstruction(), false, true);
+		emit(s, s.getInstruction(), false, true);
 		r.append("", true);
 		return r.toString();
 	}
@@ -155,7 +157,7 @@ public class JavaEmitter {
 		
 		if (!(v instanceof RootType)) {
 			r.append(" implements Function<");
-			r.append(escapeIdentifier(v.getReturnType()));
+			r.append(getName(v.getReturnType()));
 			r.append(">");
 		}
 		r.append(" {", true);
@@ -193,22 +195,23 @@ public class JavaEmitter {
 		}
 	}
 
-	private void emit(Instruction instr) {
-		emit(instr, true, true);
+	private void emit(Type scope, Instruction instr) {
+		emit(scope, instr, true, true);
 	}
-	private void emit(Instruction instr, boolean lastStatement, boolean completeStatement) {
-		emit(instr, lastStatement, completeStatement, new ArrayList<Instruction>());
+	private void emit(Type scope,Instruction instr, boolean lastStatement, boolean completeStatement) {
+		emit(scope, instr, lastStatement, completeStatement, new ArrayList<Instruction>());
 	}
 	
-	private void emit(Instruction instr, boolean lastStatement, boolean completeStatement,
-	    List<Instruction> checkedInstructions) {
-		r.append("/* " + instr + " */");
+	private void emit(Type scope, Instruction instr,
+	                  boolean lastStatement, boolean completeStatement,
+	                  List<Instruction> checkedInstructions) {
+		r.append("/* " + instr + " */", completeStatement);
 		if (instr instanceof ListInstruction) {
 			ListInstruction l = (ListInstruction) instr;
 			for (int i = 0; i < l.getInstructions().size(); ++i) {
 				Instruction child = l.getInstructions().get(i);
 				boolean last = lastStatement && i >= l.getInstructions().size() - 1;
-				emit(child, last, completeStatement, checkedInstructions);
+				emit(scope, child, last, completeStatement, checkedInstructions);
 			}
 		}
 		else {
@@ -233,15 +236,16 @@ public class JavaEmitter {
 			else if (instr instanceof FunctionCallInstruction) {
 				FunctionCallInstruction n = (FunctionCallInstruction) instr;
 
-				//emit(n.getScope().getInstruction(), lastStatement);
-				//r.append(".");
-
 				Type fun = n.getFunction();
+				if (n.equals(scope)) {
+					return;
+				}
+				
 				if (fun instanceof UnresolvedType) {
 					fun = ((UnresolvedType) fun).getResolved();
 				}
 				if (fun instanceof VoidType) {
-					emit(new VoidInstruction(), lastStatement, completeStatement, checkedInstructions);
+					emit(scope, new VoidInstruction(), lastStatement, completeStatement, checkedInstructions);
 					return;
 				}
 
@@ -254,29 +258,19 @@ public class JavaEmitter {
 					r.append(".this");
 				}
 				else {
-					Type scope = n.getScope();
-					r.append("/*" + scope + "*/");
-
-					if (scope != null &&
-					    !n.getFunction().equals(scope)
-					    && !scope.equals(n.getFunction())) {
-						if (scope.isFunction()) {
-							r.append("/* emitting scope: */");
-							Instruction child = scope.getInstruction();
-							if (!checkedInstructions.contains(child)) {
-								checkedInstructions.add(child);
-								emit(child, false, false, checkedInstructions);
-							}
-						}
-						else {
-							r.append(escapeIdentifier(scope.getName()));
-						}
+					Instruction in = n.getScope();
+					if (in != null
+					    && !in.equals(n)) {
+						checkedInstructions.add(n);
+						emit(scope, in, false, false, checkedInstructions);
+						r.append(".");
 					}
+					
 					if (fun.isFunction()) {
 						r.append(escapeIdentifier(fun.getName()));					
 						r.append("(");
 						for (Instruction param: n.getParameters()) {
-							emit(param, false, false);
+							emit(scope, param, false, false);
 						}
 						r.append(")._hlisp_run()");
 					}
@@ -288,6 +282,27 @@ public class JavaEmitter {
 					r.append(";", true);
 				}
 			}
+			else if (instr instanceof LambdaInstruction) {
+				if (lastStatement) {
+					r.append("return ");
+				}
+				r.append("new " + getName(instr.getReturnType()) + "() {", true);
+				r.indentMore();
+				r.append("@Override public " + getName(instr.getReturnType().getReturnType())
+				         + " " + prefix + run + "() {", true);
+				r.indentMore();
+				emit(scope, ((LambdaInstruction)instr).getFunction().getInstruction(), false, true);
+				r.indentLess();
+				r.append("}", true);
+				r.indentLess();
+				r.append("}");
+				if (completeStatement) {
+					r.append(";", true);
+				}
+				else {
+					r.append("", true);
+				}
+			}
 		}
 	}
 
@@ -295,13 +310,13 @@ public class JavaEmitter {
 		r.append("public " + getName(f.getReturnType())
 		         + " " + prefix + run + "() {", true);
 		r.indentMore();
-		emit(f.getInstruction());
+		emit(f, f.getInstruction());
 		r.indentLess();
 		r.append("}", true);
 		r.append("", true);
 	}
 
-	private String escapeIdentifier(Type id) {
+	private String escapeIdentifier(Signature id) {
 		return escapeIdentifier(id.getName());
 	}
 
@@ -330,12 +345,21 @@ public class JavaEmitter {
 	}
 
 	private void emitAnonymousTypes() {
-		for (Type t: anonymousTypes) {
+		// for (Signature t: anonymousTypes) {
+		// 	r.append("interface Function_" + t.getParameterTypes().size() + "<");
+		// 	int i = 0;
+		// 	for (Signature p: t.getParameterTypes()) {
+		// 		r.append(templateParameters[i] + ", ");
+		// 		i++;
+		// 	}
+		// 	r.append("RETURNTYPE");
+		// 	r.append("> {", true);
+		// 	r.append("}", true);
 			
-		}
+		// }
 	}
 
-	private String getAnonymousType(Type t) {
+	private String getAnonymousType(Signature t) {
 		StringBuilder name = new StringBuilder();
 		name.append("/* " + t + " */");
 		if (t.isFunction()) {
@@ -359,21 +383,26 @@ public class JavaEmitter {
 			name.append("self");
 		}
 		else {
+			if (t.getReturnType() instanceof UnresolvedType) {
+				r.append(t.toString(), true);
+				r.append(t.getReturnType().toString(), true);
+			}
 			name.append(getName(t.getReturnType()));
+			
 		}
 		name.append(">");
 		return name.toString();
 	}
 
-	private String getName(Type t) {
-		if (t instanceof UnresolvedType) {
-			t = ((UnresolvedType) t).getResolved();
+	private String getName(Signature t) {
+		if (t instanceof UnresolvedSignature) {
+			t = ((UnresolvedSignature) t).getResolved();
 		}
-		if (t instanceof DontCareType) {
+		if (t instanceof DontCareSignature) {
 			return "java.lang.Object";
 		}
-		else if (t instanceof NativeType) {
-			return ((NativeType) t).getName();
+		else if (t instanceof NativeSignature) {
+			return ((NativeSignature) t).getName();
 		}
 		else if (!t.hasName()) {
 			anonymousTypes.add(t);
@@ -389,7 +418,7 @@ public class JavaEmitter {
 		List<String> params = new ArrayList<String>();
 		int i = 0;
 		List<String> paramNames = v.getParameterNames();
-		for (Type t: v.getParameterTypes()) {
+		for (Signature t: v.getParameterTypes()) {
 			String p = paramNames.get(i);
 			String name = getName(t);
 			params.add(name + join + escapeIdentifier(p));

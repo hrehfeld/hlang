@@ -9,10 +9,10 @@ import java.util.*;
  * Walk the value structure and link unresolved values
  */
 public class Resolver {
-	private List<UnresolvedType> unresolvableTypes = new ArrayList<UnresolvedType>();
+	private List<UnresolvedSignature> unresolvableTypes = new ArrayList<UnresolvedSignature>();
 	private List<UnresolvedInstruction> unresolvableValues = new ArrayList<UnresolvedInstruction>();
-	private Set<Type> checkedTypes = new HashSet<Type>();
-	private Set<Type> checkedInstructionTypes = new HashSet<Type>();
+	private Set<Signature> checkedTypes = new LinkedHashSet<Signature>();
+	private Set<Type> checkedInstructionTypes = new LinkedHashSet<Type>();
 
 	private boolean runAgain = false;
 
@@ -44,81 +44,101 @@ public class Resolver {
 		System.out.println("Everything resolved...");
 	}
 
-	private Type getType(String name, Type scope) {
-		if (name.equals(Type.SELF)) {
-			return scope;
-		}
+	// private Type getType(String name, Type scope) {
+	// 	if (name.equals(Type.SELF)) {
+	// 		return scope;
+	// 	}
 		
-		else if (scope.isTypeDefinedRecursive(name)) {
-			return scope.getDefinedTypeRecursive(name);
-		}
-		return null;
-	}
+	// 	else if (scope.isTypeDefinedRecursive(name)) {
+	// 		return scope.getDefinedTypeRecursive(name);
+	// 	}
+	// 	return null;
+	// }
 
-	private void solve(Type t, Type scope) throws SemanticException {
+	private Signature solve(Signature t, Type scope) throws SemanticException {
 		if (checkedTypes.contains(t) || t instanceof SelfType) {
-			return;
+			return  t;
 		}
 		checkedTypes.add(t);
 
-		r.print("Checking Type " + t + " in " + scope + "... ");
-		if (!t.isResolved()) {
-			UnresolvedType u = (UnresolvedType) t;
-			//special case
-			if (u.getName().equals(Type.SELF)) {
-				r.print("resolved to " + scope + ".", true);
-				u.setResolved(scope);
-			}
-			else if (u.getName().equals(Type.DONTCARE)) {
-				Type n = new DontCareType(scope);
-				r.print("resolved to " + n + ".", true);
-				u.setResolved(n);
-			}
-			else {
-				if (scope.isTypeDefinedRecursive(u.getNames().get(0))) {
-					Type resolved = scope.getDefinedTypeRecursive(u.getNames().get(0));
+		r.print("Checking Signature " + t + " in " + scope + "... ");
 
-					for (int i = 1; i < u.getNames().size(); ++i) {
-						Type next = resolved.getDefinedTypeRecursive(u.getNames().get(i));
-						if (next == null) {
-							r.print("resolve failed", true);
-							unresolvableTypes.add(u);
-							return;
-						}
-						resolved = next;
-					}
-					
-					r.print("resolved to " + resolved + ".", true);
-					u.setResolved(resolved);
-				}
-				else {
-					r.print(" failed.", true);
-					unresolvableTypes.add(u);
-				}
-				return;
+		Signature result;
+		Type newScope = scope;
+		if (t.isResolved()) {
+			r.print("already resolved.", true);
+			result = t;
+			if (t instanceof Type) {
+				newScope = (Type) t;
 			}
 		}
 		else {
-			r.print("already resolved.", true);
+			UnresolvedSignature u = (UnresolvedSignature) t;
+			//special case
+			if (u.getName().equals(Type.SELF)) {
+				result = scope;
+				r.print("resolved to " + result + ".", true);
+			}
+			else if (u.getName().equals(Type.DONTCARE)) {
+				Signature res = new DontCareSignature();
+				r.print("resolved to " + res + ".", true);
+				return res;
+			}
+			else if (scope.isTypeDefinedRecursive(u.getNames().get(0))) {
+				Type resolved = scope.getDefinedTypeRecursive(u.getNames().get(0));
+
+				for (int i = 1; i < u.getNames().size(); ++i) {
+					Type next = resolved.getDefinedTypeRecursive(u.getNames().get(i));
+					if (next == null) {
+						r.print("resolve failed", true);
+						unresolvableTypes.add(u);
+						return null;
+					}
+					resolved = next;
+				}
+				
+				r.print("resolved to " + resolved + ".", true);
+				result = resolved;
+				newScope = resolved;
+			}
+			else {
+				r.print(" failed.", true);
+				unresolvableTypes.add(u);
+				return null;
+			}
 		}
 
-		for (Type child: collectTypes(t)) {
-			r.indentMore();
-			solve(child, t);
-			r.indentLess();
+		r.indentMore();
+		if (result.isFunction()) {
+			result.setParameterTypes(solve(result.getParameterTypes(), newScope));
+			
+			if (result instanceof Type) {
+				solve(Collections.list(Collections.enumeration(((Type) result).getDefinedTypes())), newScope);
+			}
 		}
-		
+		result.setReturnType(solve(result.getReturnType(), newScope));
+
+		r.indentLess();
+		return result;
 	}
 
-	void solveInstructions(Type t) throws SemanticException {
+	private List<Signature> solve(List<? extends Signature> types, Type scope) throws SemanticException {
+		List<Signature> result = new ArrayList<Signature>();
+		for (Signature t: types) {
+			result.add(solve(t, scope));
+		}
+		return result;
+	}
+
+	private void solveInstructions(Type t) throws SemanticException {
 		//don't check again, selftypes, or anonymous types
-		if (checkedInstructionTypes.contains(t) || t instanceof SelfType || !t.hasName()) {
+		if (checkedInstructionTypes.contains(t) || t instanceof SelfType ) {
 			return;
 		}
 		r.print("Instruction " + t.getInstruction() + " in " + t + " needs solving.", true);
 		checkedInstructionTypes.add(t);
 		Instruction instr = solve(t.getInstruction(), t);
-		if (!(t instanceof NativeType) && !instr.getReturnType().equals(t.getReturnType())) {
+		if (!instr.getReturnType().isCompatible(t.getReturnType())) {
 			throw new SemanticException("Type " + t + " with Returntype " + t.getReturnType()
 			                            + " has instruction with Returntype "
 			                            + instr.getReturnType() + ".");
@@ -127,8 +147,10 @@ public class Resolver {
 		t.setInstruction(instr);
 
 		r.indentMore();
-		for (Type child: collectTypes(t)) {
-			solveInstructions(child);
+		for (Signature child: collectTypes(t)) {
+			if (child instanceof Type) {
+				solveInstructions((Type) child);
+			}
 		}
 		r.indentLess();
 	}
@@ -148,26 +170,36 @@ public class Resolver {
 
 			Type t = scope.getDefinedTypeRecursive(id);
 
-			//first resolve return type
-			solve(t, scope);
-
-			return new FunctionCallInstruction(t, scope);
+			//resolve contained types
+			t = (Type) solve(t, scope);
+			//any unresolvedinstruction we encounter here is single,
+			//so we don't need to duplicate the scope into the
+			//function call
+			return new FunctionCallInstruction(t);
+		}
+		else if (instr instanceof LambdaInstruction) {
+			LambdaInstruction linstr = (LambdaInstruction) instr;
+			Type n = (Type) solve(linstr.getFunction(), scope);
+			r.print(linstr.getFunction() + "resolved to " + n.toString(), true);
+			linstr.setFunction(n);
+			solveInstructions(linstr.getFunction());
 		}
 		else if (instr instanceof FunctionCallInstruction) {
 			FunctionCallInstruction f = (FunctionCallInstruction) instr;
 			Type fun = f.getFunction();
 			
 			r.indentMore();
-			solve(fun, scope);
+			f.setFunction((Type) solve(fun, scope));
+			
 			if (!f.isStatic()) {
-				Type funScope = f.getScope();
-				solve(funScope, scope);
+				solve(f.getScope(), scope);
 			}
+			
 			r.indentLess();
 		}
 		else if (instr instanceof NativeInstruction) {
 			r.indentMore();
-			solve(instr.getReturnType(), scope);
+			((NativeInstruction) instr).setReturnType(solve(instr.getReturnType(), scope));
 			r.indentLess();
 		}
 		r.indentLess();
@@ -175,22 +207,22 @@ public class Resolver {
 	}
 
 	private Instruction solve(ListInstruction list, Type scope) throws SemanticException {
-		Instruction instr = new ListInstructionResolver(r).solve(list, scope, this);
+		Instruction instr = new ListInstructionResolver(new IndentStringBuilder()).solve(list, scope, this);
 		unresolvableValues.addAll(unresolvableValues);
 		return instr;
 	}
 
 
 
-	private List<Type> collectTypes(Type scope) {
-		List<Type> types = new ArrayList<Type>();
+	private List<Signature> collectTypes(Type scope) {
+		List<Signature> types = new ArrayList<Signature>();
 		//add return and parameter
 		types.addAll(scope.getParameterTypes());
 		types.add(scope.getReturnType());
 		types.addAll(scope.getDefinedTypes());
 
 		//filter self
-		Iterator<Type> it = types.iterator();
+		Iterator<Signature> it = types.iterator();
 		while (it.hasNext()) {
 			if (it.next().equals(scope)) {
 				it.remove();

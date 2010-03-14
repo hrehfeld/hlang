@@ -20,15 +20,19 @@ public class ListInstructionResolver {
 	private boolean singleStatements = true;
 	
 	private int lastFunctionI = -1;
-	private Instruction lastIdentifierCall = null;
+	private Type last;
+	private Instruction lastIdentifierCall;
 
 	private boolean lastIdentifierCallFinished = false;
+
+	private boolean inFunction = false;
 
 	private Solver solver = new LookupSolver();
 	
 	private boolean nextIterationNoParameterCheck = true;
 	private boolean nextIterationOnFailInsertCall = false;
-	private FunctionCallInstruction onFailCall = null;
+
+	private FunctionCallInstruction onFailCall;
 
 
 	private List<Instruction> result = new ArrayList<Instruction>();
@@ -50,11 +54,12 @@ public class ListInstructionResolver {
 	/**
 	 * check if the next type is a function that expects parameters
 	 */
-	private void parametersExpected(Type next, Type scope) throws SemanticException {
+	private void parametersExpected(Type next, Instruction scope) throws SemanticException {
 		if (next.isFunction()
 		    && !(next.getParameterTypes().isEmpty())) {
 			//expectedParameters.addAll(next.getParameterTypes());
 			lastFunctionI = i;
+			inFunction = true;
 
 			r.print("Next is a function " + next, true);
 			r.print("with parameters " + Utils.join(next.getParameterTypes(), ", ") + ".", true);
@@ -97,7 +102,7 @@ public class ListInstructionResolver {
 
 		public boolean solve(Instruction instr, Type scope, Type lastFunction) throws
 			SemanticException {
-			Type returnType = null;
+			Signature returnType = null;
 			boolean resolved = true;
 			if (isUnresolved(instr)) {
 				resolved = false;
@@ -108,6 +113,18 @@ public class ListInstructionResolver {
 					resolved = true;
 					
 					Type type = scope.getDefinedTypeRecursive(id);
+
+					r.print("Resolving " + id, true);
+					r.indentMore();
+					r.print("as " + type + " [" + Utils.join(type.getParameterTypes(), ", ")
+					        + ": " + type.getReturnType()
+					        + "]",
+					        true);
+					r.print("from " + scope, true);
+
+					new TypePrinter().print(type);
+					r.indentLess();
+					
 					returnType = type.getReturnType();
 					instr = new FunctionCallInstruction(type);
 				}
@@ -118,13 +135,18 @@ public class ListInstructionResolver {
 			else if (instr instanceof NativeInstruction) {
 				returnType = instr.getReturnType();
 			}
+			else if (instr instanceof LambdaInstruction) {
+				returnType = ((LambdaInstruction) instr).getFunction();
+			}
 			else {
-				resolved = false;
+				throw new SemanticException("Unexpected " + instr
+				                            + ", identifier, FunctionCall, Native or Lambda expected.");
 			}
 
 			if (!resolved || !checkParameter(lastFunction,
 			                                 parameterI,
 			                                 returnType)) {
+				inFunction = false;
 				nextIterationNoParameterCheck = true;
 				//-1 because for loop does ++i
 				i = i - parameterI - 1;
@@ -153,10 +175,13 @@ public class ListInstructionResolver {
 					//r.print("adding " + lastIdentifierCall + " to result.", true);
 					//result.add(lastIdentifierCall);
 					singleStatements = false;
+					inFunction = false;
+
+					last = (Type) lastIdentifierCall.getReturnType();
 					
 					//the return value of the function is a function that expects params
-					parametersExpected(lastIdentifierCall.getReturnType(),
-					                   makeAnonymousType(lastIdentifierCall, scope));
+					parametersExpected((Type) lastIdentifierCall.getReturnType(),
+					                   lastIdentifierCall);
 					r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 				}
 			}
@@ -165,9 +190,10 @@ public class ListInstructionResolver {
 		/**
 		 * is candidate of valid type as the next function parameter?
 		 */
-		private boolean checkParameter(Type function, int parameterI, Type candidate) throws
+		private boolean checkParameter(Type function, int parameterI, Signature candidate) throws
 			SemanticException {
-			return function.getParameterTypes().get(parameterI).equals(candidate);
+			r.print("Checking parameter " + candidate + " as #" + parameterI + " on " + function + ".", true);
+			return function.getParameterTypes().get(parameterI).isCompatible(candidate);
 		}
 
 	}
@@ -181,17 +207,20 @@ public class ListInstructionResolver {
 
 				r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 				if (lastIdentifierCall != null
-				    && lastIdentifierCall.getReturnType().isTypeDefined(id)) {
+				    && ((Type) lastIdentifierCall.getReturnType()).isTypeDefined(id)) {
 					/** @todo 2010-03-08 16:22 hrehfeld    also check in last itself? */
+
+					next = ((Type) lastIdentifierCall.getReturnType()).getDefinedTypeRecursive(id);
+
 					r.print("Resolving " + id, true);
 					r.indentMore();
-					r.print("as " + lastIdentifierCall.getReturnType().getDefinedTypeRecursive(id),
+					r.print("as " + next,
 					        true);
 					r.print("from " + lastIdentifierCall.getReturnType(), true);
 					r.indentLess();
 
-					next = lastIdentifierCall.getReturnType().getDefinedTypeRecursive(id);
-					lastIdentifierCall = new FunctionCallInstruction(next, lastFunction);
+					lastIdentifierCall = new FunctionCallInstruction(next, lastIdentifierCall);
+					last = next;
 
 					singleStatements = false;
 
@@ -211,7 +240,8 @@ public class ListInstructionResolver {
 							                            + id + " in scope " + scope);
 						}
 						next = scope.getDefinedTypeRecursive(id);
-						lastIdentifierCall = new FunctionCallInstruction(next, scope);
+						lastIdentifierCall = new FunctionCallInstruction(next);
+						last = next;
 						r.print(id + " found in current scope, setting to " + next, true);
 						r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 					}
@@ -219,7 +249,7 @@ public class ListInstructionResolver {
 						nextIterationOnFailInsertCall = false;
 						r.print("Using functioncall");
 						lastIdentifierCall = onFailCall;
-						next = onFailCall.getFunction();
+						last = next = onFailCall.getFunction();
 						r.print("lastIdentifierCall = " + lastIdentifierCall, true);
 					}
 					else {
@@ -233,9 +263,9 @@ public class ListInstructionResolver {
 						result.add(lastIdentifierCall);
 						r.print(lastIdentifierCall + " in single statement list", true);
 					}
-					//wrong?
 					lastIdentifierCall = instr;
-					next = makeAnonymousType(instr, scope);
+					last = (Type) instr.getReturnType();
+					next = last;//makeAnonymousType(instr, scope);
 				}
 				else {
 					throw new SemanticException("Unexpected " + instr + ", identifier expected.");
@@ -245,7 +275,7 @@ public class ListInstructionResolver {
 
 			if (first || !singleStatements) {
 				r.print("checking for function...", true);
-				parametersExpected(next, scope);
+				parametersExpected(next, lastIdentifierCall);
 			}
 			return true;
 		}
@@ -264,22 +294,15 @@ public class ListInstructionResolver {
 			if (!(instr instanceof UnresolvedInstruction)) {
 				instr = resolver.solve(instr, scope);
 			}
+			r.print("lastIdentifier " + last, true);
 
 			r.print(i + ". child " + instr, true);
 			int parameterI = i - lastFunctionI - 1;
 			
 			r.indentMore();
 
-			Type lastIdentifier = null;
-			if (lastIdentifierCall instanceof FunctionCallInstruction) {
-				lastIdentifier = ((FunctionCallInstruction) lastIdentifierCall).getFunction();
-			}
-			else if (lastIdentifierCall != null) {
-				lastIdentifier = lastIdentifierCall.getReturnType();
-			}
-			r.print("lastIdentifier " + lastIdentifier, true);
 
-			if ((i == 1 || !singleStatements) && !nextIterationNoParameterCheck) {
+			if ((inFunction || i == 1 || !singleStatements) && !nextIterationNoParameterCheck) {
 				r.print("Parameter check", true);
 				solver = new ParameterSolver(parameterI);
 			}
@@ -289,7 +312,7 @@ public class ListInstructionResolver {
 				solver = new LookupSolver();
 			}
 
-			boolean success = solver.solve(instr, scope, lastIdentifier);
+			boolean success = solver.solve(instr, scope, last);
 			r.indentLess();
 			if (!success) { continue; }
 

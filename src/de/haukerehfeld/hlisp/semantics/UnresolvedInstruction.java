@@ -17,7 +17,7 @@ public class UnresolvedInstruction implements Instruction {
 	public void setResolved(Instruction resolved) { this.resolved = resolved; }
 	public Instruction getResolved() { resolvedOrException(); return this.resolved; }	
 
-	public Type getReturnType() { return getResolved().getReturnType(); }	
+	public Signature getReturnType() { return getResolved().getReturnType(); }	
 
 	private void resolvedOrException() {
 		if (!isResolved()) {
