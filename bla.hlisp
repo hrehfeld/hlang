@@ -66,9 +66,9 @@
     (define println (->) (-> ((String this) + "\n") print))
 ))
 
-(define MyNamespace (->) 
-(->
-    (define nsParam Int 0)
+(define MyNamespace (Int ->) 
+(nsParam->
+#    (define nsParam Int 0)
 
     (define HelloWorldClass (-> this) 
     (->
