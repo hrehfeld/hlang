@@ -68,6 +68,7 @@
 
 (define MyNamespace (->) 
 (->
+    (define nsParam Int 0)
 
     (define HelloWorldClass (-> this) 
     (->
@@ -99,7 +100,14 @@
         
         (define helloClass HelloWorldClass HelloWorldClass)
 
-        (while ((-> Boolean) (-> i < param)) 
+        (while ((-> Boolean) (-> i < 5)) 
+        ((->) 
+        (->
+            ("bla" println)
+            (i ++)
+        )))
+
+        (while ((-> Boolean) (-> i < nsParam)) 
         ((->) 
         (->
             ("iteration" println)

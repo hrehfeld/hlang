@@ -205,7 +205,7 @@ public class JavaEmitter {
 	private void emit(Type scope, Instruction instr,
 	                  boolean lastStatement, boolean completeStatement,
 	                  List<Instruction> checkedInstructions) {
-		r.append("/* " + instr + " */", completeStatement);
+		//r.append("/* " + instr + " */", completeStatement);
 		if (instr instanceof ListInstruction) {
 			ListInstruction l = (ListInstruction) instr;
 			for (int i = 0; i < l.getInstructions().size(); ++i) {
@@ -269,8 +269,13 @@ public class JavaEmitter {
 					if (fun.isFunction()) {
 						r.append(escapeIdentifier(fun.getName()));					
 						r.append("(");
+						int i = n.getParameters().size() - 1;
 						for (Instruction param: n.getParameters()) {
 							emit(scope, param, false, false);
+							if (i > 0) {
+								r.append(", ");
+								i--;
+							}
 						}
 						r.append(")._hlisp_run()");
 					}
@@ -283,15 +288,22 @@ public class JavaEmitter {
 				}
 			}
 			else if (instr instanceof LambdaInstruction) {
+				LambdaInstruction linstr = (LambdaInstruction) instr;
+				Type lambda = linstr.getFunction();
 				if (lastStatement) {
 					r.append("return ");
 				}
 				r.append("new " + getName(instr.getReturnType()) + "() {", true);
 				r.indentMore();
+
+				if (!lambda.getParameterTypes().isEmpty()) {
+					emitConstructor(lambda);
+				}
+
 				r.append("@Override public " + getName(instr.getReturnType().getReturnType())
 				         + " " + prefix + run + "() {", true);
 				r.indentMore();
-				emit(scope, ((LambdaInstruction)instr).getFunction().getInstruction(), false, true);
+				emit(scope, lambda.getInstruction(), false, true);
 				r.indentLess();
 				r.append("}", true);
 				r.indentLess();

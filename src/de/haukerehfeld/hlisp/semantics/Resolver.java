@@ -178,6 +178,7 @@ public class Resolver {
 			return new FunctionCallInstruction(t);
 		}
 		else if (instr instanceof LambdaInstruction) {
+			r.print("#####Solving LambdaInstruction " + instr);
 			LambdaInstruction linstr = (LambdaInstruction) instr;
 			Type n = (Type) solve(linstr.getFunction(), scope);
 			r.print(linstr.getFunction() + "resolved to " + n.toString(), true);

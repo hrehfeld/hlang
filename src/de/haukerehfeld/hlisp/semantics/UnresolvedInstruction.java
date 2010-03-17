@@ -26,7 +26,7 @@ public class UnresolvedInstruction implements Instruction {
 	}
 
 	@Override public String toString() {
-		return getClass().getSimpleName() + "('" + getIdentifier() + "', "
-		    + (isResolved() ? "resolved as " + getResolved() : "unresolved") + ")";
+		return getClass().getSimpleName() + "('" + getIdentifier() + "'"
+		    + (isResolved() ? ", resolved as " + getResolved() : "") + ")";
 	}
 }

@@ -110,9 +110,11 @@ public class AnonymousType implements Type {
 		}
 		int i = getParameterNames().indexOf(name);
 		if (i >= 0) {
-			System.out.println("parameter " + name + "  from " + this);
-			new TypePrinter().print(this);
-			return new NamedType(name, this, signature.getParameterTypes().get(i), false);
+			Type p = new NamedType(name, this, signature.getParameterTypes().get(i), false);
+			System.out.println("parameter " + p + "  from " + this
+			                   + " (" + getParent() + ", " + Utils.join(getParameterTypes(), ", ") + ")");
+			new TypePrinter().print(p);
+			return p;
 		}
 		return null;
 	}

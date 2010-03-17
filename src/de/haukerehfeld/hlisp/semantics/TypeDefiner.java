@@ -145,10 +145,10 @@ public class TypeDefiner implements HLispParserVisitor {
 	}
 
 	@Override public AnonymousType visit(AstLambdaExpression b, Type scope) throws
-	    SemanticException {
+		SemanticException {
 		Iterator<AstNode> children = b.iterator();
 		AstNode typeNode = children.next();
-		Signature lambdaSignature = (AnonymousSignature) typeNode.jjtAccept(this, scope);
+		AnonymousSignature lambdaSignature = (AnonymousSignature) typeNode.jjtAccept(this, scope);
 
 		AstNode paramNamesNode = children.next();
 		List<String> parameterNames = (List<String>) paramNamesNode.jjtAccept(this, scope);
@@ -164,6 +164,7 @@ public class TypeDefiner implements HLispParserVisitor {
 		AnonymousType lambdaType = new AnonymousType(scope, lambdaSignature, parameterNames);
 
 		Instruction instr = (Instruction) children.next().jjtAccept(this, lambdaType);
+		System.out.println("Defining instruction " + instr + " in " + lambdaType);
 		lambdaType.setInstruction(instr);
 
 		return lambdaType;
@@ -187,7 +188,6 @@ public class TypeDefiner implements HLispParserVisitor {
 		Instruction r = (Instruction) it.next().jjtAccept(this, scope);
 
 		Type var = new AnonymousType(scope, type, false);
-		System.out.println("BLAAAAAAAA" + var.isFunction());
 		var.setInstruction(r);
 		return var;
 	}
