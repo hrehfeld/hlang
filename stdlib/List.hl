@@ -1,3 +1,0 @@
-(define List () = (
-  (define += (Object o) = (
-))
