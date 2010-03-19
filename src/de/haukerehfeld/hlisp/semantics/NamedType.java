@@ -32,6 +32,11 @@ public class NamedType extends AnonymousType {
 		setName(name);
 	}
 
+	public NamedType(String name, Type parent, Signature signature, List<String> parameterNames) {
+		super(parent, signature, parameterNames);
+		setName(name);
+	}
+
 	@Override public boolean hasName() { return true; }
 	private void setName(String name) { this.name = name; }
 	public String getName() { return name; }

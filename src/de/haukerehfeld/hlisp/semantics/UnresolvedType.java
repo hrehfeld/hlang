@@ -48,9 +48,15 @@ public class UnresolvedType extends UnresolvedSignature implements Type {
 		return getResolved().getParent();
 	}
 
+	@Override public void setParent(Type p) {
+		getResolved().setParent(p);
+	}
+
 	@Override public List<String> getParameterNames() {
 		return getResolved().getParameterNames();
 	}
+	@Override public void setParameterNames(List<String> names) { getResolved().setParameterNames(names); }
+
 	@Override public Type getDefinedType(String type) {
 		return this.getResolved().getDefinedType(type);
 	}

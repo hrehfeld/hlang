@@ -11,6 +11,7 @@ public interface Type extends Signature {
 	public static final String DONTCARE = "_";
 	
 	public Type getParent();
+	public void setParent(Type t);
 
 	/** Can the type be instantiated? */
 	public boolean isStatic();
@@ -21,6 +22,7 @@ public interface Type extends Signature {
 	public <T> T runOnHierarchy(TypeMethod<T> m);
 
 	public List<String> getParameterNames();
+	public void setParameterNames(List<String> names);
 	
 	/** access types directly defined in this type */
 	public Collection<Type> getDefinedTypes();

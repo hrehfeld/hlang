@@ -10,7 +10,7 @@ public class RootType extends NamedType {
 	= "List argList = new List();\n"
 	    + "\n"
 	    + "for (java.lang.String arg: args) {\n"
-	    + "    argList._hlisp_escape_plusequal(new String(arg))._hlisp_run();\n"
+	    + "    argList._hlisp_escape_plusequal(String(arg))._hlisp_run();\n"
 	    + "}";
 	
 	public RootType() {

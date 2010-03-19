@@ -21,12 +21,14 @@ public class SelfType implements Type {
 	/** Parent type */
 	private final Type parent;
 	@Override public Type getParent() { return this.parent.getParent(); }
+	@Override public void setParent(Type parent) { }
 
 	@Override public List<Signature> getParameterTypes() { return this.parent.getParameterTypes(); }
 	@Override public void setParameterTypes(List<Signature> t) { this.parent.setParameterTypes(t); }
 	
 
 	@Override public List<String> getParameterNames() { return this.parent.getParameterNames(); }
+	@Override public void setParameterNames(List<String> names) { parent.setParameterNames(names); }
 
 	@Override public Signature getReturnType() { return this.parent; }
 	@Override public void setReturnType(Signature t) { this.parent.setReturnType(t); }

@@ -1,6 +1,8 @@
 <project name="hlisp" default="compile" basedir=".">
 
   <property name="javacc.home" value="javacc-5.0/"/>
+  <property name="src" value="src"/>
+  <property name="find" value="c:/usr/msys/1.0/bin/find"/>
 
   <target name="clean">
         <delete includeemptydirs="true">
@@ -9,6 +11,14 @@
 		</delete>
   </target>
 
+  <target name="tags" description="Build tags for emacs">
+    <delete file="TAGS"/>
+    <apply executable="ctags" failonerror="true"
+		  parallel="true" skipemptyfilesets="true">
+      <arg line="-e --extra=+q --fields=+fksaiS --append -f TAGS"/>
+	  <fileset dir="${src}" includes="**/*.java" />
+    </apply>
+  </target>
 
   <target name="compile" description="Build compiler">
     <mkdir dir="tmp"/> 
@@ -17,11 +27,11 @@
 		  <fileset dir="src" includes="**/*.java" />
     </copy>
 
-    <copy file="src/HLisp.jjt" todir="tmp"/>
+    <copy file="${src}/HLisp.jjt" todir="tmp"/>
     <property name="outputdir"
               value="tmp/de/haukerehfeld/hlisp/parser" />
     <mkdir dir="${outputdir}" />
-    <jjtree target="src/HLisp.jjt"
+    <jjtree target="${src}/HLisp.jjt"
             outputdirectory="${outputdir}"
             javacchome="${javacc.home}"/>
 

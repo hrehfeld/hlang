@@ -28,6 +28,7 @@ public class VoidType implements Type {
 	/** Parent type */
 	private final Type parent;
 	@Override public Type getParent() { return parent; }
+	@Override public void setParent(Type p) { }
 
 	@Override public List<Signature> getParameterTypes() { return Collections.<Signature>emptyList(); }
 	@Override public void setParameterTypes(List<Signature> t) {
@@ -35,6 +36,9 @@ public class VoidType implements Type {
 	}
 
 	public List<String> getParameterNames() { return Collections.<String>emptyList(); }
+	@Override public void setParameterNames(List<String> t) {
+		if (!t.isEmpty()) { throw new UnsupportedOperationException();}
+	}
 
 
 	@Override public void setReturnType(Signature t) {

@@ -35,21 +35,29 @@ public class TypeDefiner implements HLispParserVisitor {
 			                            + "Define body isn't Variable or Lambda expression: " + b);
 		}
 
-		Type body = (Type) b.jjtAccept(this, scope);
 
-		NamedType type = new NamedType(identifier,
-		                               scope,
-		                               body.getReturnType(),
-		                               body.isFunction(),
-		                               body.getParameterTypes(), body.getParameterNames());
-		for (Type t: body.getDefinedTypes()) {
-			System.out.println("copying " + t + " into " + type);
-			if (t instanceof SelfType) {
-				continue;
-			}
-			type.defineType(t);
+		Type type; 
+		if (b instanceof AstLambdaExpression) {
+			type = parseLambda((AstLambdaExpression) b, identifier, scope);
 		}
-		type.setInstruction(body.getInstruction());
+		else {
+			Type body = (Type) b.jjtAccept(this, scope);
+
+			type = new NamedType(identifier,
+			                     scope,
+			                     body.getReturnType(),
+			                     body.isFunction(),
+			                     body.getParameterTypes(), body.getParameterNames());
+			for (Type t: body.getDefinedTypes()) {
+				//System.out.println("copying " + t + " into " + type);
+				if (t instanceof SelfType) {
+					continue;
+				}
+				type.defineType(t);
+				t.setParent(type);
+			}
+			type.setInstruction(body.getInstruction());
+		}
 		System.out.println("defining " + type + " in " + scope);
 		scope.defineType(type);
 
@@ -144,7 +152,7 @@ public class TypeDefiner implements HLispParserVisitor {
 		return new NativeSignature((String) node.jjtGetValue());
 	}
 
-	@Override public AnonymousType visit(AstLambdaExpression b, Type scope) throws
+	private Type parseLambda(AstLambdaExpression b, String identifier, Type scope) throws
 		SemanticException {
 		Iterator<AstNode> children = b.iterator();
 		AstNode typeNode = children.next();
@@ -161,13 +169,24 @@ public class TypeDefiner implements HLispParserVisitor {
 			throw new SemanticException(SemanticsUtils.errorLocation(paramNamesNode) + e);
 		}
 
-		AnonymousType lambdaType = new AnonymousType(scope, lambdaSignature, parameterNames);
 
+		Type lambdaType;
+		if (identifier == null) {
+			lambdaType = new AnonymousType(scope, lambdaSignature, parameterNames);
+		}
+		else {
+			lambdaType = new NamedType(identifier, scope, lambdaSignature, parameterNames);
+		}
+			
 		Instruction instr = (Instruction) children.next().jjtAccept(this, lambdaType);
 		System.out.println("Defining instruction " + instr + " in " + lambdaType);
 		lambdaType.setInstruction(instr);
-
 		return lambdaType;
+	}
+
+	@Override public Type visit(AstLambdaExpression b, Type scope) throws
+		SemanticException {
+		return parseLambda(b, null, scope);
 	}
 
 	@Override public List<String> visit(AstFunctionParameters parameters, Type scope) throws SemanticException {
