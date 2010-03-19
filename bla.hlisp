@@ -31,9 +31,10 @@
 (value ->
     (define + (Int -> Int) (other -> Int -{ value + other.value }- _{int}_))
     (define * (Int -> Int) (other -> Int -{ value * other.value }- _{int}_))
-    (define ++ (->) (-> ( -{value++;}- void)))
+    (define ++ (->) (-> -{value++;}- void void))
+    (define += (Int ->) (other -> -{value += other.value;}- void void))
     (define < (Int -> Boolean) (other -> Boolean -{value < other.value}- _{boolean}_))
-    (define toInt (-> _{java.lang.Integer}_) (-> -{ return value; }- _{ java.lang.Integer }_))
+    (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
     (define toString (-> String)
 
     (->
@@ -51,7 +52,7 @@
     ))
     (define toBoolean (-> _{boolean}_)
     (->
-        -{ return value; }- _{boolean}_
+        -{ value; }- _{boolean}_
     ))
 
     this
@@ -87,35 +88,37 @@
         this
     ))
 
-    (define main (Int -> (Int Int -> Int)) 
+    (define stuff (Int -> (Int Int -> Int)) 
     (param ->
-        (define i Int 0)
-        (define eval Int (5 + (i * 4)))
         (define error (-> Int) (-> 0))
         (define k List (List) )
 
         (define list List ( List += "some" += "elements") )
-        (define evalFun (-> Int) (-> 5 + (i * 4)))
         
         (define helloClass HelloWorldClass HelloWorldClass)
-
-        (while ((-> Boolean) (-> i < 5)) 
-        ((->) 
-        (->
-            ("bla" println)
-            (i ++)
-        )))
-
-        (while ((-> Boolean) (-> i < param)) 
-        ((->) 
-        (->
-            ("iteration" println)
-            (i ++)
-        )))
 
         ((Int Int -> Int) (a b -> a + b))
     ))
 
 ))
+(define main (->) 
+(->
+  (define i Int 0)
 
-(MyNamespace main 5)
+  (define j Int 0)
+
+  (define eval Int (5 + (i * 4)))
+  (define evalFun (-> Int) (-> 5 + (i * 4)))
+
+  (while ((-> Boolean) (-> i < eval)) 
+  ((->) 
+  (->
+      ("iteration" println)
+      ("j:" + (j toString) println)
+      ("i: " + (i toString) println)
+      (j += i)
+      (i ++)
+  )))
+))
+
+

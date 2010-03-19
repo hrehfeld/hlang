@@ -97,19 +97,23 @@ public class AnonymousSignature implements Signature {
 		return result;
 	}
 
-	// @Override public int hashCode() {
-	// 	int result = HashUtil.SEED;
+	@Override public boolean equals(Object o) {
+		return o instanceof Signature && this.isCompatible((Signature) o);
+	}
+
+	@Override public int hashCode() {
+		int result = HashUtil.SEED;
 		
-	// 	result = HashUtil.hash(result, isFunction);
-	// 	if (!returnType.equals(this)) {
-	// 		result = HashUtil.hash(result, returnType);
-	// 	}
-	// 	result = HashUtil.hash(result, isFunction);
-	// 	for (Signature t: parameterTypes) {
-	// 		if (!t.equals(this)) {
-	// 			result = HashUtil.hash(result, t);
-	// 		}
-	// 	}
-	// 	return result;
-	// }
+		result = HashUtil.hash(result, isFunction);
+		if (!returnType.equals(this)) {
+			result = HashUtil.hash(result, returnType);
+		}
+		result = HashUtil.hash(result, isFunction);
+		for (Signature t: parameterTypes) {
+			if (!t.equals(this)) {
+				result = HashUtil.hash(result, t);
+			}
+		}
+		return result;
+	}
 }

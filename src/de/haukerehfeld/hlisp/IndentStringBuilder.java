@@ -3,7 +3,7 @@ package de.haukerehfeld.hlisp;
 import java.util.*;
 
 public class IndentStringBuilder {
-	private final static String INDENT = "  ";
+	private final static String INDENT = "    ";
 
 	private int indent = 0;
 	private StringBuilder b = new StringBuilder();
