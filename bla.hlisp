@@ -1,72 +1,3 @@
-(define List (-> this)
-(->
-    (define list _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
-
-    (define += (_ -> List)
-    (element ->
-        (-{ list.add(element); }- void)
-        (List this)
-    ))
-
-    (define get (Int -> _{ java.lang.Object }_)
-    ( i ->
-         -{ list.get(i.toInt()._hlisp_run()); }- _{ java.lang.Object }_
-    ))
-
-    this
-))
-
-
-(define while ((-> Boolean) (->) ->) 
-(condition body ->
-    -{  while (condition._hlisp_run().toBoolean()._hlisp_run()) {
-            body._hlisp_run();
-        }
-    }- void
-    void
-))
-
-
-(define Int (_{int}_ -> this) 
-(value ->
-    (define + (Int -> Int) (other -> Int -{ value + other.value }- _{int}_))
-    (define * (Int -> Int) (other -> Int -{ value * other.value }- _{int}_))
-    (define ++ (->) (-> -{value++;}- void void))
-    (define += (Int ->) (other -> -{value += other.value;}- void void))
-    (define < (Int -> Boolean) (other -> Boolean -{value < other.value}- _{boolean}_))
-    (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
-    (define toString (-> String)
-
-    (->
-        (String -{ java.lang.String.valueOf(value) }- _{java.lang.String}_)
-    ))
-    this
-))
-
-(define Boolean (_{boolean}_ -> this) 
-(value ->
-    (define ! (-> Boolean) (-> Boolean -{ !value }- _{boolean}_))
-    (define toString (-> String) 
-    (->
-        (String -{ java.lang.Boolean.toString(value) }- _{java.lang.String}_)
-    ))
-    (define toBoolean (-> _{boolean}_)
-    (->
-        -{ value; }- _{boolean}_
-    ))
-
-    this
-))
-
-
-(define String (_{java.lang.String}_ -> this) (value ->
-    this        
-
-    (define + (String -> String) (other -> (String -{ value + other.value }- _{java.lang.String}_)))
-    (define print (->) (-> -{ System.out.print(value); }- void))
-    (define println (->) (-> ((String this) + "\n") print))
-))
-
 (define MyNamespace (Int ->) 
 (nsParam ->
 
@@ -101,24 +32,32 @@
     ))
 
 ))
-(define main (->) 
-(->
-  (define i Int 0)
+(define main (List ->) 
+(args ->
+    (define i Int 0)
+  
+    (define j Int 0)
+  
+    (define eval Int (5 + (i * 4)))
+    (define evalFun (-> Int) (-> 5 + (i * 4)))
+  
+    (while ((-> Boolean) (-> i < eval)) 
+    ((->) 
+    (->
+        ("iteration" println)
+        ("j:" + (j toString) println)
+        ("i: " + (i toString) println)
+        (j += i)
+        (addToI)
+    )))
+    
+    (args map ((String -> String) (a ->
+        (define i Int 0)
+        ((i toString) + "th argument is " + a)
+    )))
+        
 
-  (define j Int 0)
-
-  (define eval Int (5 + (i * 4)))
-  (define evalFun (-> Int) (-> 5 + (i * 4)))
-
-  (while ((-> Boolean) (-> i < eval)) 
-  ((->) 
-  (->
-      ("iteration" println)
-      ("j:" + (j toString) println)
-      ("i: " + (i toString) println)
-      (j += i)
-      (i ++)
-  )))
+    (define addToI (->) (-> i ++))
 ))
 
 

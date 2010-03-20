@@ -8,6 +8,9 @@ import de.haukerehfeld.hlisp.semantics.*;
 
 
 public class Lisp {
+	public static final String STDLIBPATH = "../stdlib";
+	public static final String STDLIBFILE = "stdlib.hlang";
+	
 	public static void main(String[] args) {
 		Lisp l = new Lisp();
 		try {
@@ -15,16 +18,19 @@ public class Lisp {
 		}
 		catch (Exception e) {
 			e.printStackTrace(System.out);
+			System.exit(1);
 		}
-		
 	}
 
 	public void run(String[] args) throws Exception {
 		List<File> sourcefiles = checkFileArgs(Arrays.asList(args));
+		
 		if (sourcefiles.size() < 1) {
 			System.err.println("No input files given.");
 			System.exit(1);
 		}
+
+		sourcefiles.add(new File(STDLIBPATH + File.separator + STDLIBFILE));
 
 		List<AstRoot> rootnodes = parse(sourcefiles);
 		RootType root = new RootType();

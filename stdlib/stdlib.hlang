@@ -1,0 +1,87 @@
+(define List (-> this)
+(->
+    (define list _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
+
+    (define size (-> Int) (->
+        Int -{ list.size() }- _{int}_
+    ))
+
+    (define += (_ -> List)
+    (element ->
+        (-{ list.add(element); }- void)
+        (List this)
+    ))
+
+    (define get (Int -> _{ java.lang.Object }_)
+    ( i ->
+         -{ list.get(i.toInt()._hlisp_run()); }- _{ java.lang.Object }_
+    ))
+
+    (define map ((_ -> _) -> List) 
+    (f ->
+        (define mapped List List)
+
+        -{
+            for (java.lang.Object o: list) {
+                mapped._hlisp_escape_plusequal()
+                    ._hlisp_create(f._hlisp_create(o)._hlisp_run())
+                    ._hlisp_run();
+            }
+        }- void
+        mapped
+    ))
+
+    this
+))
+
+
+(define while ((-> Boolean) (->) ->) 
+(condition body ->
+    -{  while (condition._hlisp_run().toBoolean()._hlisp_run()) {
+            body._hlisp_run();
+        }
+    }- void
+    void
+))
+
+
+(define Int (_{int}_ -> this) 
+(value ->
+    (define + (Int -> Int) (other -> Int -{ value + other.value }- _{int}_))
+    (define * (Int -> Int) (other -> Int -{ value * other.value }- _{int}_))
+    (define ++ (->) (-> -{value++;}- void void))
+    (define += (Int ->) (other -> -{value += other.value;}- void void))
+    (define < (Int -> Boolean) (other -> Boolean -{value < other.value}- _{boolean}_))
+    (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
+    (define toString (-> String)
+
+    (->
+        (String -{ java.lang.String.valueOf(value) }- _{java.lang.String}_)
+    ))
+    this
+))
+
+(define Boolean (_{boolean}_ -> this) 
+(value ->
+    (define ! (-> Boolean) (-> Boolean -{ !value }- _{boolean}_))
+    (define toString (-> String) 
+    (->
+        (String -{ java.lang.Boolean.toString(value) }- _{java.lang.String}_)
+    ))
+    (define toBoolean (-> _{boolean}_)
+    (->
+        -{ value; }- _{boolean}_
+    ))
+
+    this
+))
+
+
+(define String (_{java.lang.String}_ -> this) (value ->
+    this        
+
+    (define + (String -> String) (other -> (String -{ value + other.value }- _{java.lang.String}_)))
+    (define print (->) (-> -{ System.out.print(value); }- void))
+    (define println (->) (-> ((String this) + "\n") print))
+))
+

@@ -79,8 +79,7 @@ public class AnonymousSignature implements Signature {
 				parametersEqual = false;
 				break;
 			}
-			parametersEqual = parametersEqual
-			    && (EqualsUtil.equal(p, otherPs.get(i)));
+			parametersEqual = parametersEqual && p.isCompatible(otherPs.get(i));
 			i++;
 		}
 		// System.out.println("parameters " + (parametersEqual ? "equal" : "not equal"));
@@ -90,7 +89,7 @@ public class AnonymousSignature implements Signature {
 		
 		boolean result = true 
 		    && EqualsUtil.equal(this.isFunction, that.isFunction())
-		    && (EqualsUtil.equal(this.returnType, that.getReturnType()))
+		    && (this.returnType.isCompatible(that.getReturnType()))
 		    && parametersEqual
 		    ;
 
