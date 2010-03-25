@@ -28,7 +28,14 @@ public class AnonymousSignature implements Signature {
 		StringBuilder name = new StringBuilder();
 		List<String> parameters = new ArrayList<String>();
 		for (Signature t: getParameterTypes()) {
-			parameters.add(t.toString());
+			final String tname;
+			if (t.equals(this)) {
+				tname = "this";
+			}
+			else {
+				tname = t.toString();
+			}
+			parameters.add(tname);
 		}
 		if (isFunction()) {
 			name.append("(");
@@ -69,50 +76,62 @@ public class AnonymousSignature implements Signature {
 	}
 
 	@Override public boolean isCompatible(Signature that) {
-		if (this == that) return true;
-
-		boolean parametersEqual = true;
-		int i = 0;
-		List<Signature> otherPs = that.getParameterTypes();
-		for (Signature p : getParameterTypes()) {
-			if (i >= otherPs.size()) {
-				parametersEqual = false;
-				break;
-			}
-			parametersEqual = parametersEqual && p.isCompatible(otherPs.get(i));
-			i++;
-		}
+		System.out.println(this + ".isCompatible(" + that + ")");
 		// System.out.println("parameters " + (parametersEqual ? "equal" : "not equal"));
 		// System.out.println("function " + EqualsUtil.equal(this.isFunction, that.isFunction));
 		// System.out.println("returntype " + EqualsUtil.equal(this.returnType, that.returnType));
-		// System.out.println(this.returnType + " vs. " + that.returnType);
 		
-		boolean result = true 
-		    && EqualsUtil.equal(this.isFunction, that.isFunction())
-		    && (this.returnType.isCompatible(that.getReturnType()))
-		    && parametersEqual
-		    ;
+		if (this == that) return true;
 
-		return result;
-	}
+		int i = 0;
+		List<Signature> otherPs = that.getParameterTypes();
 
-	@Override public boolean equals(Object o) {
-		return o instanceof Signature && this.isCompatible((Signature) o);
-	}
-
-	@Override public int hashCode() {
-		int result = HashUtil.SEED;
-		
-		result = HashUtil.hash(result, isFunction);
-		if (!returnType.equals(this)) {
-			result = HashUtil.hash(result, returnType);
+		if (otherPs.size() != getParameterTypes().size()) {
+			return false;
 		}
-		result = HashUtil.hash(result, isFunction);
-		for (Signature t: parameterTypes) {
-			if (!t.equals(this)) {
-				result = HashUtil.hash(result, t);
+		else {
+			for (Signature p : getParameterTypes()) {
+				Signature otherP = otherPs.get(i);
+				if (p.equals(this) || otherP.equals(this)) {
+					if (!otherP.equals(this) || !p.equals(this)) {
+						return false;
+					}
+					continue;
+				}
+				if (!p.isCompatible(otherPs.get(i))) {
+					return false;
+				}
+				i++;
 			}
 		}
-		return result;
+		
+		System.out.println(this.returnType + " vs. " + that.getReturnType());
+		if (!(equals(returnType) && that.equals(that.getReturnType()))
+		    && !returnType.equals(that.getReturnType())
+		    && !returnType.isCompatible(that.getReturnType())) {
+			return false;
+		}
+		
+		return EqualsUtil.equal(this.isFunction, that.isFunction());
 	}
+
+	// @Override public boolean equals(Object o) {
+	// 	return o instanceof Signature && this.isCompatible((Signature) o);
+	// }
+
+	// @Override public int hashCode() {
+	// 	int result = HashUtil.SEED;
+		
+	// 	result = HashUtil.hash(result, isFunction);
+	// 	if (!returnType.equals(this)) {
+	// 		result = HashUtil.hash(result, returnType);
+	// 	}
+	// 	result = HashUtil.hash(result, isFunction);
+	// 	for (Signature t: parameterTypes) {
+	// 		if (!t.equals(this)) {
+	// 			result = HashUtil.hash(result, t);
+	// 		}
+	// 	}
+	// 	return result;
+	// }
 }

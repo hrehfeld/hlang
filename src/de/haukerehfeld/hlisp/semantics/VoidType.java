@@ -64,8 +64,12 @@ public class VoidType implements Type {
 	}
 
 	@Override public boolean isCompatible(Signature o) {
-		if (o instanceof UnresolvedSignature) { return o.equals(this); }
 		return o instanceof VoidType;
+	}
+
+	@Override public boolean equals(Object o) {
+		if (!(o instanceof VoidType)) { return false; }
+		return true;
 	}
 
 	@Override public String toString() {

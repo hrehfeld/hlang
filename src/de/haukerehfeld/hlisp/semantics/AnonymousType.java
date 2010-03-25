@@ -6,7 +6,7 @@ import de.haukerehfeld.hlisp.Utils;
 import de.haukerehfeld.hlisp.EqualsUtil;
 import de.haukerehfeld.hlisp.HashUtil;
 
-public class AnonymousType implements Type {
+public class AnonymousType extends AnonymousSignature implements Type {
 	private static boolean hashing = false;
 	private static boolean equalling = false;
 
@@ -41,17 +41,19 @@ public class AnonymousType implements Type {
 	                     boolean isFunction,
 	                     List<Signature> parameterTypes,
 	                     List<String> parameterNames) {
-		this(parent,
-		     new AnonymousSignature(returnType, isFunction, parameterTypes),
-		     parameterNames);
+		super(returnType, isFunction, parameterTypes);
+		this.parent = parent;
+		this.parameterNames = parameterNames;
+
+		this.types.put("this", new SelfType(this));
 	}
 	
 	public AnonymousType(Type parent, Signature signature, List<String> parameterNames) {
-		this.parent = parent;
-		this.signature = signature;
-
-		this.parameterNames = parameterNames;
-		this.types.put("this", new SelfType(this));
+		this(parent,
+		     signature.getReturnType(),
+		     signature.isFunction(),
+		     signature.getParameterTypes(),
+		     parameterNames);
 	}
 
 	@Override public boolean hasName() { return false; }
@@ -60,11 +62,11 @@ public class AnonymousType implements Type {
 	@Override public Instruction getInstruction() { return instruction; }
 	@Override public void setInstruction(Instruction instruction) { this.instruction = instruction; }
 
-	@Override public boolean isResolved() { return signature.isResolved(); }
+	@Override public boolean isResolved() { return super.isResolved(); }
 	
 
-	@Override public boolean isFunction() { return signature.isFunction(); }
-	//@Override public void setIsFunction(boolean isFunction) { signature.setIsFunction(isFunction); }
+	@Override public boolean isFunction() { return super.isFunction(); }
+	//@Override public void setIsFunction(boolean isFunction) { super.setIsFunction(isFunction); }
 
 	private boolean isStatic = false;
 	public void setStatic(boolean isStatic) { this.isStatic = isStatic; }
@@ -81,9 +83,9 @@ public class AnonymousType implements Type {
 	@Override public void setParent(Type parent) { this.parent = parent; }
 
 	/** params */
-	@Override public List<Signature> getParameterTypes() { return signature.getParameterTypes(); }
+	@Override public List<Signature> getParameterTypes() { return super.getParameterTypes(); }
 	@Override public void setParameterTypes(List<Signature> parameterTypes) {
-		signature.setParameterTypes(parameterTypes);
+		super.setParameterTypes(parameterTypes);
 	}
 
 	private List<String> parameterNames;
@@ -92,9 +94,9 @@ public class AnonymousType implements Type {
 	
 
 	/** return type */
-	@Override public Signature getReturnType() { return signature.getReturnType(); }
+	@Override public Signature getReturnType() { return super.getReturnType(); }
 	@Override public void setReturnType(Signature returnType) {
-		signature.setReturnType(returnType);
+		super.setReturnType(returnType);
 	}
 
 	/** child types */
@@ -111,7 +113,7 @@ public class AnonymousType implements Type {
 		}
 		int i = getParameterNames().indexOf(name);
 		if (i >= 0) {
-			Type p = new NamedType(name, this, signature.getParameterTypes().get(i), false);
+			Type p = new NamedType(name, this, super.getParameterTypes().get(i), false);
 			System.out.println("parameter " + p + "  from " + this
 			                   + " (" + getParent() + ", " + Utils.join(getParameterTypes(), ", ") + ")");
 			new TypePrinter().print(p);
@@ -160,74 +162,27 @@ public class AnonymousType implements Type {
 		    });
 	}
 
-	@Override public boolean isCompatible(Signature s) { return signature.isCompatible(s); }
+	@Override public boolean isCompatible(Signature s) {
+		if (equals(s)) {
+			return true;
+		}
+		return super.isCompatible(s);
+	}
 
 	@Override public String getName() {
-		return signature.getName();
+		return super.getName();
 	}
 
 
 	@Override public String toString() {
-		return signature.toString();
+		return super.toString();
 	}
 
-	// @Override public boolean equals(Object o) {
-	// 	if (o instanceof UnresolvedType) {
-	// 		return o.equals(this);
-	// 	}
-	// 	if (!(o instanceof AnonymousType)) { return false; }
-	// 	if (hasName()) { return super.equals(o); }
+	@Override public boolean equals(Object o) {
+		if (!(o instanceof AnonymousType)) { return false; }
+		if (o == this) { return true; }
+		AnonymousType that = (AnonymousType) o;
+		return super.equals(o);
+	}
 
-	// 	if ( this == o ) return true;
-
-	// 	boolean entryEqualling = equalling;
-	// 	AnonymousType that = (AnonymousType) o;
-	// 	equalling = true;
-	// 	boolean parametersEqual = true;
-	// 	int i = 0;
-	// 	List<Signature> otherPs = that.getParameterTypes();
-	// 	for (Signature p : getParameterTypes()) {
-	// 		if (i >= otherPs.size()) {
-	// 			parametersEqual = false;
-	// 			break;
-	// 		}
-	// 		parametersEqual = parametersEqual
-	// 		    && (entryEqualling || EqualsUtil.equal(p, otherPs.get(i)));
-	// 		i++;
-	// 	}
-	// 	// System.out.println("parameters " + (parametersEqual ? "equal" : "not equal"));
-	// 	// System.out.println("function " + EqualsUtil.equal(this.isFunction, that.isFunction));
-	// 	// System.out.println("returntype " + EqualsUtil.equal(this.returnType, that.returnType));
-	// 	// System.out.println(this.returnType + " vs. " + that.returnType);
-		
-	// 	boolean result = true 
-	// 	    && EqualsUtil.equal(isFunction(), that.isFunction())
-	// 	    && (entryEqualling || EqualsUtil.equal(getReturnType(), that.getReturnType()))
-	// 	    && parametersEqual
-	// 	    ;
-
-	// 	equalling = false;
-	// 	return result;
-	// }
-
-	// @Override public int hashCode() {
-	// 	hashing = true;
-	// 	int result = HashUtil.SEED;
-	// 	if (hashing) {
-	// 		return result;
-	// 	}
-		
-	// 	result = HashUtil.hash(result, isFunction());
-	// 	if (!getReturnType().equals(this)) {
-	// 		result = HashUtil.hash(result, getReturnType());
-	// 	}
-	// 	result = HashUtil.hash(result, isFunction());
-	// 	for (Signature t: parameterTypes) {
-	// 		if (!t.equals(this)) {
-	// 			result = HashUtil.hash(result, t);
-	// 		}
-	// 	}
-	// 	hashing = false;
-	// 	return result;
-	// }
 }
