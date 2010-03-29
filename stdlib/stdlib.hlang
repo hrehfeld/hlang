@@ -2,7 +2,8 @@
 (->
     (define list _{java.util.ArrayList}_ -{ new java.util.ArrayList(); }- _{ java.util.ArrayList }_)
 
-    (define size (-> Int) (->
+    (define size (-> Int) 
+    (->
         Int -{ list.size() }- _{int}_
     ))
 
@@ -22,12 +23,10 @@
         (define mapped List List)
 
         -{
-            System.out.println("List.map: list has " + list.size() + " entries.");
             for (java.lang.Object o: list) {
                 mapped._hlisp_escape_plusequal()
                     .create(f.create(o).call())
                     .call();
-                System.out.println("List.map: " + o);
             }
         }- void
         mapped
@@ -50,14 +49,14 @@
 (define Int (_{int}_ -> this) 
 (value ->
     (define + (Int -> Int) (other -> Int -{ value + other.value }- _{int}_))
+    (define - (Int -> Int) (other -> Int -{ value - other.value }- _{int}_))
     (define * (Int -> Int) (other -> Int -{ value * other.value }- _{int}_))
     (define ++ (->) (-> -{value++;}- void void))
-    (define += (Int ->) (other -> -{value += other.value;}- void void))
+    (define += (Int ->) (other -> -{ value += other.value; }- void))
+    (define -= (Int ->) (other -> -{ value -= other.value; }- void))
     (define < (Int -> Boolean) (other -> Boolean -{value < other.value}- _{boolean}_))
     (define toInt (-> _{java.lang.Integer}_) (-> -{ value; }- _{ java.lang.Integer }_))
-    (define toString (-> String)
-
-    (->
+    (define toString (-> String) (->
         (String -{ java.lang.String.valueOf(value) }- _{java.lang.String}_)
     ))
     this
