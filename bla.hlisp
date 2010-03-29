@@ -51,10 +51,15 @@
         (addToI)
     )))
     
-    (args map ((String -> String) (a ->
+    ((List += "f" += "foo") map ((String -> String) (a ->
         (define i Int 0)
-        ((i toString) + "th argument is " + a)
-    )))
+        (define result String ((i toString) + "th argument is \"" + a + "\""))
+        (i ++)
+        result
+        ))
+         map ((String ->) (a -> a println))
+     )
+    void
         
 
     (define addToI (->) (-> i ++))

@@ -150,7 +150,7 @@ public class AnonymousType extends AnonymousSignature implements Type {
 		        private boolean success = false;
 		        
 		        @Override public Type run(Type scope) {
-					System.out.println("Searching " + scope + " for " + name);
+					//System.out.println("Searching " + scope + " for " + name);
 
 					if (scope.isTypeDefined(name)) {
 						success = true;

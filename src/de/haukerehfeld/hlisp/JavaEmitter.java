@@ -17,17 +17,18 @@ public class JavaEmitter {
 	private final static String escapePrefix = "escape";
 	private final static String reservedPrefix = "reserved";
 	private final static String nativePrefix = "native";
-	private final static String run = "run";
+	private final static String run = "call";
 	private final static String create = "create";
 	private final static String DONTCARE = "DONTCARE";
 	private final static String NATIVE = "native";
-	private final static String ANONYMOUSTYPEPREFIX = "type";
+	private final static String ANONYMOUSTYPEPREFIX = "Function";
 	private final static String VOIDTYPE = "VoidType";
 
 	private final static boolean TRACE = false;
 
+	private final static String[] templateParameters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+	private final static int MAXPARAMETERNUMBER = templateParameters.length;
 
-	private final static String[] templateParameters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n" };
 	private final static String[] anonymousParameters = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n" };
 	
 	private final static HashMap<String, String> illegal = new HashMap<String, String>() {{
@@ -77,6 +78,7 @@ public class JavaEmitter {
 
 	private List<Type> emittedTypes = new ArrayList<Type>();
 	private Set<Signature> anonymousTypes = new LinkedHashSet<Signature>();
+	private Set<String> emittedInterfaces = new HashSet<String>();
 
 	public String emitFunction(Type f) {
 		emitClassStart(f);
@@ -131,8 +133,8 @@ public class JavaEmitter {
 
 			String[] rootDefs = {
 				"public static void main(java.lang.String[] args) {"
-				,"    new Root()." + prefix + psep + create + "(args)."
-				    + prefix + psep + run + "();"
+				,"    new Root()." + create + "(args)."
+				    + run + "();"
 				,"}"
 			};
 
@@ -177,19 +179,30 @@ public class JavaEmitter {
 		r.append(" * Type " + v.getName(), true);
 		r.append(" */", true);
 
-		if (!(v instanceof RootType)) {
+		if (v.hasName() && !(v instanceof RootType)) {
 			emitCreateFunction(v);
 		}
 
-		r.append("public ");
-		// if (!(s instanceof RootType)) {
-		// 	r.append("static ");
-		// }
-		r.append("class " + escapeIdentifier(v.getName()));
-		
-		if (!(v instanceof RootType)) {
-			r.append(" implements " + getAnonymousType(v));
+		if (v.hasName()) {
+			r.append("public ");
+			// if (!(s instanceof RootType)) {
+			// 	r.append("static ");
+			// }
+			r.append("class " + escapeIdentifier(v.getName()));
+			r.indentMore();
+			r.append(" implements ", true);
+			r.indentMore();
+			if (!(v instanceof RootType)) {
+				r.append(getAnonymousTypeName(v) + ",", true);
+			}
+			r.append("java.util.concurrent.Callable<" + getName(v.getReturnType(), false, true) + ">", true);
+			r.indentLess();
+			r.indentLess();
 		}
+		else {
+			r.append("new " + getAnonymousType(v) + "()");
+		}
+
 		r.append(" {", true);
 	}
 
@@ -210,7 +223,7 @@ public class JavaEmitter {
 				List<String> paramNames = s.getParameterNames();
 				for (int i = 0; i < s.getParameterTypes().size(); ++i) {
 					Signature t = s.getParameterTypes().get(i);
-					String type = getName(t, false);
+					String type = getName(t, false, false);
 					String name = paramNames.get(i);
 					r.append("private " + type + " " + escapeIdentifier(name) + ";", true);
 				}
@@ -228,9 +241,15 @@ public class JavaEmitter {
 			// if (!(s instanceof RootType)) {
 			// 	r.append("@Override ");
 			// }
-			r.append("public " + retName + " "
-			         + prefix + psep + create + "(");
-			List<String> params = getParameterStrings(s, " ");
+			r.append("public " + autoBox(retName) + " "
+			         + create + "(");
+			List<String> params = new ArrayList<String>();
+			for (int j = 0; j < s.getParameterTypes().size(); ++j) {
+				String p = autoBox(getName(s.getParameterTypes().get(j)))
+				    + " " + s.getParameterNames().get(j);
+				params.add(p);
+				
+			}
 			r.append(Utils.join(params.subList(0, i), ", "));
 			r.append(")");
 			if (_abstract) {
@@ -252,7 +271,7 @@ public class JavaEmitter {
 				}
 
 				if (!last) {
-					r.append(retName + "." + prefix + psep + create + "("
+					r.append(retName + "." + create + "("
 					         + Utils.join(activeParameterNames, ", ") + ");", true);
 				}
 				r.append("return this;", true);
@@ -364,7 +383,7 @@ public class JavaEmitter {
 					
 					if (fun.isFunction()) {
 						r.append(escapeIdentifier(fun.getName()) + "()");					
-						r.append("." + prefix + psep + create + "(");
+						r.append("." + create + "(");
 						int i = n.getParameters().size() - 1;
 						for (Instruction param: n.getParameters()) {
 							emit(scope, param, false, false);
@@ -373,7 +392,7 @@ public class JavaEmitter {
 								i--;
 							}
 						}
-						r.append(")." + prefix + psep + run + "()");
+						r.append(")." + run + "()");
 					}
 					else {
 						r.append(escapeIdentifier(fun.getName()));
@@ -386,29 +405,13 @@ public class JavaEmitter {
 			else if (instr instanceof LambdaInstruction) {
 				LambdaInstruction linstr = (LambdaInstruction) instr;
 				Type lambda = linstr.getFunction();
-				String className = getAnonymousType(lambda);
 
 				if (lastStatement) {
 					r.append("return ");
 				}
 
-				r.append("new " + className + "()");
-				         
-
-				//r.append("." + prefix + psep + create + "()");
-				r.append(" {", true);
-				r.indentMore();
-
-				emitConstructor(lambda);
+				emit(lambda);
 				
-				r.append("@Override public " + getName(instr.getReturnType().getReturnType())
-				         + " " + prefix + psep + run + "() {", true);
-				r.indentMore();
-				emit(scope, lambda.getInstruction(), true, true);
-				r.indentLess();
-				r.append("}", true);
-				r.indentLess();
-				r.append("}");
 				if (completeStatement) {
 					r.append(";", true);
 				}
@@ -426,8 +429,8 @@ public class JavaEmitter {
 		// if (!(f instanceof RootType)) {
 		// 	r.append("@Override ");
 		// }
-		r.append("public " + getName(f.getReturnType())
-		         + " " + prefix + psep + run + "(");
+		r.append("@Override public " + autoBox(getName(f.getReturnType()))
+		         + " " + run + "(");
 		r.append(")");
 		if (_abstract) { r.append(";", true); }
 		else {
@@ -435,6 +438,9 @@ public class JavaEmitter {
 			
 			r.indentMore();
 			{
+				if (TRACE) {
+					r.append("System.out.println(\"Calling " + run + " on " + f + "\");", true);
+				}
 
 				emit(f, f.getInstruction());
 			}
@@ -481,47 +487,91 @@ public class JavaEmitter {
 		return escaped;
 	}
 
-	private String getAnonymousTypeName(Signature t) {
+	private String getAnonymousTypeName(Signature v) {
 		StringBuilder name = new StringBuilder();
-		name.append(prefix + psep + ANONYMOUSTYPEPREFIX);
-		if (t.isFunction()) { name.append(psep + "function"); }
+		name.append(ANONYMOUSTYPEPREFIX + v.getParameterTypes().size());
+		boolean noGenerics = false;
+		for (Signature t: v.getParameterTypes()) {
+			if (t instanceof DontCareSignature) { noGenerics = true; }
+		}
 
-		List<String> params = new ArrayList<String>();
-		for (Signature s: t.getParameterTypes()) {
-			params.add(getName(s, true));
+		if (!noGenerics) {
+			name.append("<");
+			for (int i = 0; i < v.getParameterTypes().size(); ++i) {
+				name.append(getName(v.getParameterTypes().get(i), false, true) + ", ");
+			}
+			name.append(getName(v.getReturnType(), false, true) + ">");
 		}
-		if (!params.isEmpty()) {
-			name.append(psep + Utils.join(params, psep));
-		}
-		name.append(psep + getName(t.getReturnType(), true));
 		return name.toString();
 	}
 
-	private void emitAnonymousTypes() {
-		Set<String> emittedInterfaces = new HashSet<String>();
-		for (Signature t: anonymousTypes) {
-			String name = getAnonymousTypeName(t);
-			if (emittedInterfaces.contains(name)) {
-				continue;
-			}
-			r.append("interface " + name);
-			emittedInterfaces.add(name);
+private void emitAnonymousSignature(Signature t) {
+			// String name = getAnonymousTypeName(t);
+			// if (emittedInterfaces.contains(name)) {
+			// 	return;
+			// }
+			// emittedInterfaces.add(name);
+			// r.append("interface " + name);
 
-			r.append(" {", true);
-			r.indentMore();
-
-			List<String> params = new ArrayList<String>();
-			for (int i = 0; i < t.getParameterTypes().size(); ++i) {
-				params.add(anonymousParameters[i]);
-			}
-			//r.append("/* " + t + "*/", true);
-			Type type = new NamedType(name, null, t, params);
-			emitConstructor(type, true);
-			emitAction(type, true);
+			// Signature dontcare = null;
+			// if (extendDontcare) {
+			// 	dontcare = new AnonymousSignature(new DontCareSignature(),
+			// 	                                            t.isFunction(),
+			// 	                                            Collections.<Signature>nCopies(t.getParameterTypes().size(),
+			// 	                                                                           new DontCareSignature()));
+			// 	r.append(" extends "
+			// 	         + getAnonymousTypeName(dontcare));
+			// }			         
+			                                                  
 			
+			// r.append(" {", true);
+			// r.indentMore();
+
+			// List<String> params = new ArrayList<String>();
+			// for (int i = 0; i < t.getParameterTypes().size(); ++i) {
+			// 	params.add(anonymousParameters[i]);
+			// }
+			// //r.append("/* " + t + "*/", true);
+			// Type type = new NamedType(name, null, t, params);
+			// emitConstructor(type, true);
+			// emitAction(type, true);
+			
+			// r.indentLess();
+			// r.append("}", true);
+			// r.append("", true);
+
+			// if (extendDontcare) {
+			// 	emitAnonymousSignature(dontcare, false);
+			// }
+
+}
+
+	private void emitAnonymousTypes() {
+		for (Signature t: anonymousTypes) {
+			emitAnonymousSignature(t);
+		}
+
+		for (int i = 0; i < MAXPARAMETERNUMBER; ++i) {
+			r.append("public interface " + ANONYMOUSTYPEPREFIX + i
+			         + "<");
+			for (int j = 0; j < i; ++j) {
+				r.append(templateParameters[j] + ", ");
+			}
+			r.append("RETURN");
+			r.append(">  {", true);
+
+			r.indentMore();
+			r.append("public " + ANONYMOUSTYPEPREFIX + i + " " + create + "(");
+			for (int j = 0; j < i; ++j) {
+				r.append(templateParameters[j] + " " + templateParameters[j]);
+				if (!(j == i - 1)) {
+					r.append(", ");
+				}
+			}
+			r.append(");", true);
+			r.append("public RETURN call();", true);
 			r.indentLess();
 			r.append("}", true);
-			r.append("", true);
 			
 		}
 	}
@@ -531,22 +581,23 @@ public class JavaEmitter {
 		return getAnonymousTypeName(t);
 	}
 	private String getName(Signature t) {
-		return getName(t, false);
+		return getName(t, false, false);
 	}
 
-	private String getName(Signature t, boolean partialName) {
+	private String getName(Signature t, boolean partialName, boolean asTypeParameter) {
 		if (t instanceof UnresolvedSignature) {
 			t = ((UnresolvedSignature) t).getResolved();
 		}
 
 		if (t instanceof DontCareSignature) {
-			return partialName ? prefix + psep + DONTCARE : "java.lang.Object";
+			return partialName ? prefix + psep + DONTCARE :
+			    asTypeParameter ? "java.lang.Object" : "java.lang.Object";
 		}
 		else if (t instanceof NativeSignature) {
 			String n = ((NativeSignature) t).getName();
 			return partialName ?
 			    (NATIVE + psep + escapeIdentifier(n, partialName))
-			    : n;
+			    : asTypeParameter ? autoBox(n) : n;
 		}
 		else if (!t.hasName()) {
 			return getAnonymousType(t);

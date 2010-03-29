@@ -14,7 +14,7 @@
 
     (define get (Int -> _{ java.lang.Object }_)
     ( i ->
-         -{ list.get(i.toInt()._hlisp_run()); }- _{ java.lang.Object }_
+         -{ list.get(i.toInt().call()); }- _{ java.lang.Object }_
     ))
 
     (define map ((_ -> _) -> List) 
@@ -22,10 +22,12 @@
         (define mapped List List)
 
         -{
+            System.out.println("List.map: list has " + list.size() + " entries.");
             for (java.lang.Object o: list) {
                 mapped._hlisp_escape_plusequal()
-                    ._hlisp_create(f._hlisp_create(o)._hlisp_run())
-                    ._hlisp_run();
+                    .create(f.create(o).call())
+                    .call();
+                System.out.println("List.map: " + o);
             }
         }- void
         mapped
@@ -37,8 +39,8 @@
 
 (define while ((-> Boolean) (->) ->) 
 (condition body ->
-    -{  while (condition._hlisp_run().toBoolean()._hlisp_run()) {
-            body._hlisp_run();
+    -{  while (condition.call().toBoolean().call()) {
+            body.call();
         }
     }- void
     void
