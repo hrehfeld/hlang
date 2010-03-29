@@ -30,4 +30,29 @@ public class RootType extends NamedType {
 		                add(new VoidInstruction());
 		            }}));
 	}
+
+	@Override public Type getDefinedType(String name) {
+		Type t = super.getDefinedType(name);
+
+		if (t != null) {
+			return t;
+		}
+
+		Class c; 
+		try {
+			c = Class.forName(name);
+		}
+		catch (ClassNotFoundException e) {
+			return null;
+		}
+		catch (ExceptionInInitializerError e) {
+			return null;
+		}
+		catch (LinkageError e) {
+			return null;
+		}
+
+		System.out.println("##############" + name + " found: " + c);
+		return null;
+	}
 }

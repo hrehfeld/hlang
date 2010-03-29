@@ -41,6 +41,8 @@
     (define eval Int (5 + (i * 4)))
     (define evalFun (-> Int) (-> 5 + (i * 4)))
   
+    (define h java.util.ArrayList java.util.ArrayList)
+
     (while ((-> Boolean) (-> i < eval)) 
     ((->) 
     (->
