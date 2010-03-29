@@ -80,41 +80,46 @@ public class JavaEmitter {
 	private Set<Signature> anonymousTypes = new LinkedHashSet<Signature>();
 	private Set<String> emittedInterfaces = new HashSet<String>();
 
-	public String emitFunction(Type f) {
-		emitClassStart(f);
-		r.indentMore();
-
-		emitConstructor(f);
-		emitAction(f);
-		emitMembers(f);
-
-		r.indentLess();
-		emitClassEnd();
-		return r.toString();
-	}
-
-	public String emit(Type s) {
+	public void emit(Type s) {
 		if (emittedTypes.contains(s)) {
 			System.out.println("Skipping emit of " + s + ", already emitted.");
-			return "";
+			return;
 		}
 		if (s instanceof SelfType) {
 			System.out.println("Skipping " + s + ".");
-			return "";
+			return;
 		}
-		emittedTypes.add(s);
-		
-		if (s.isFunction()) {
-			return emitFunction(s);
+		if (!s.isFunction()) {
+			emitVariableDeclaration(s);
+			return;
 		}
 
-		r.append("/* variable " + s.getName() + " */");
-		r.append("private " + getName(s.getReturnType())
-		         + " " + escapeIdentifier(s) + " = ");
-		emit(s, s.getInstruction(), false, true);
-		r.append("", true);
-		return r.toString();
+		emittedTypes.add(s);
+		
+		emitClassStart(s);
+		r.indentMore();
+
+		emitConstructor(s);
+		emitAction(s);
+		emitMembers(s);
+
+		r.indentLess();
+		emitClassEnd();
 	}
+
+	public void emitVariableInit(Type s) {
+		r.append(escapeIdentifier(s) + " = ");
+		emit(s, s.getInstruction(), false, true);
+	}
+
+	public void emitVariableDeclaration(Type s) {
+		r.append("/* variable " + s.getName() + " */");
+		r.append("private ");
+		r.append(getName(s.getReturnType())
+		         + " " + escapeIdentifier(s) + ";");
+		r.append("", true);
+	}
+	
 
 	public String emit(RootType root) {
 		String name = "Root";
@@ -441,6 +446,14 @@ public class JavaEmitter {
 				if (TRACE) {
 					r.append("System.out.println(\"Calling " + run + " on " + f + "\");", true);
 				}
+
+				//init variables
+				for (Type member: f.getDefinedTypes()) {
+					if (!member.isFunction()) {
+						emitVariableInit(member);
+					}
+				}
+				
 
 				emit(f, f.getInstruction());
 			}
