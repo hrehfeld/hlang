@@ -37,14 +37,10 @@ public class Lisp {
 		
 
 		for (AstRoot rootnode: rootnodes) {
-			rootnode.dump("");
-			
 			System.out.println("Defining Types...");
 			TypeDefiner definer = new TypeDefiner(root);
 			rootnode.jjtAccept(definer, root);
 		}
-
-		new TypePrinter().print(root);
 
 		Resolver s = new Resolver();
 		s.solve(root);
