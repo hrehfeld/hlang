@@ -37,6 +37,10 @@ PARSER_END(HLispParser)
 
 SKIP: { " " | "\t"  | "\r" | "\n"}
 
+SKIP: {
+  <COMMENT_START: "#" (~["\n", "\r"])* ("\n" | "\r" | "\r\n")? >
+}
+
 TOKEN:
 {
   <DEFINE: "define" >
@@ -80,12 +84,6 @@ TOKEN: {
 }
 
 
-TOKEN: {
-  <COMMENT_START: "#" >: COMMENT
-}
-<COMMENT> SPECIAL_TOKEN: {
-  <COMMENT_END: "\n"> : DEFAULT
-}
 
 /** Main production. */
 AstRoot Start() #Root: {}
